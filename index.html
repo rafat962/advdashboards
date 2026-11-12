@@ -3260,6 +3260,13 @@
 @keyframes spin{to{transform:rotate(360deg)}}
 body.viewing{overflow:hidden}
 @media(max-width:600px){.vclose span{display:none}.vclose{padding:8px 10px}}
+
+/* PDF viewer (renders in page; avoids browser download behaviour) */
+.vbody.pdfmode{background:#2a3350;overflow:auto}
+.vbody.pdfmode iframe{display:none}
+#pdfPages{display:none;flex-direction:column;align-items:center;gap:14px;padding:18px}
+.vbody.pdfmode #pdfPages{display:flex}
+#pdfPages img{max-width:min(1100px,100%);height:auto!important;background:#fff;box-shadow:0 8px 24px rgba(0,0,0,.45);border-radius:4px}
 </style>
     </head>
     <body class="locked">
@@ -3787,7 +3794,7 @@ body.viewing{overflow:hidden}
     <div class="vtitle"><span class="vdot"></span><b id="vTitle"></b></div>
     <a class="vext" id="vExt" href="#" target="_blank" rel="noopener" title="فتح في تبويب جديد"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-9 9M19 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h5"/></svg></a>
   </div>
-  <div class="vbody"><div class="vload" id="vLoad"><span></span>جاري تحميل اللوحة...</div><iframe id="vFrame" title="لوحة المتابعة" allow="fullscreen; geolocation" allowfullscreen></iframe></div>
+  <div class="vbody"><div class="vload" id="vLoad"><span></span>جاري تحميل اللوحة...</div><div id="pdfPages"></div><iframe id="vFrame" title="لوحة المتابعة" allow="fullscreen; geolocation" allowfullscreen></iframe></div>
 </div>
 <script>
             /* ============================ الإعدادات — عدّلي هنا فقط ============================
@@ -3973,7 +3980,7 @@ body.viewing{overflow:hidden}
             const fmt = (lat, lon) =>
                 `${lat.toFixed(2)}°N · ${lon.toFixed(2)}°E`;
             const ARROW = svgI('<path d="M15 6l-6 6 6 6"/>', 16, 2.2);
-            const CONTRACTS = {"jeddah": [{"n": "يونيبول", "t": "لوحة معلومات جدة", "no": "CN-135274", "party": "أمانة محافظة جدة", "url": "https://www.arcgis.com/apps/dashboards/6c8e854d1af94d618e003781da9eef36"}, {"n": "الجسور والأنفاق", "no": "—", "party": "أمانة محافظة جدة"}, {"n": "جسور المشاة", "no": "—", "party": "أمانة محافظة جدة"}], "makkah": [{"n": "العقد الموحد", "t": "لوحة معلومات مكة المكرمة", "no": "ABAM-30011", "party": "شركة البلد الأمين", "url": "https://www.arcgis.com/apps/dashboards/f81f583b18984b7f8d4d137114964ab7"}, {"n": "أراض بيضاء", "t": "عقد الأراضي البيضاء", "no": "PROJ-30326", "party": "شركة البلد الأمين"}, {"n": "لوحة المراكز", "no": "—", "party": "شركة البلد الأمين"}], "eastern": [{"n": "العقد الموحد", "t": "لوحة معلومات المنطقة الشرقية", "no": "CN46-41", "party": "شركة إشراق", "url": "https://www.arcgis.com/apps/dashboards/1d73b8761980496bbeffc271ee89f82c"}, {"n": "شاشات العقد الأول", "no": "CN-37100", "party": "أمانة المنطقة الشرقية"}, {"n": "شاشات العقد الثاني", "no": "CN-48868", "party": "أمانة المنطقة الشرقية"}], "riyadh": [{"n": "العقد الأول", "no": "440491", "party": "ريمات الرياض"}, {"n": "العقد الثاني", "no": "447205", "party": "ريمات الرياض"}, {"n": "العقد الثالث", "no": "866304", "party": "ريمات الرياض"}]};
+            const CONTRACTS = {"jeddah": [{"n": "يونيبول", "t": "لوحة معلومات جدة", "no": "CN-135274", "party": "أمانة محافظة جدة", "url": "Jeddah/Unipole/index.html"}, {"n": "الجسور والأنفاق", "no": "—", "party": "أمانة محافظة جدة"}, {"n": "جسور المشاة", "no": "—", "party": "أمانة محافظة جدة"}], "makkah": [{"n": "العقد الموحد", "t": "لوحة معلومات مكة المكرمة", "no": "ABAM-30011", "party": "شركة البلد الأمين", "url": "https://www.arcgis.com/apps/dashboards/f81f583b18984b7f8d4d137114964ab7"}, {"n": "أراض بيضاء", "t": "عقد الأراضي البيضاء", "no": "PROJ-30326", "party": "شركة البلد الأمين"}, {"n": "لوحة سكافولدينج المركاز", "no": "—", "party": "شركة البلد الأمين"}], "eastern": [{"n": "العقد الموحد", "t": "لوحة معلومات المنطقة الشرقية", "no": "CN46-41", "party": "شركة إشراق", "url": "https://www.arcgis.com/apps/dashboards/1d73b8761980496bbeffc271ee89f82c"}, {"n": "شاشات العقد الأول", "no": "CN-37100", "party": "أمانة المنطقة الشرقية"}, {"n": "شاشات العقد الثاني", "no": "CN-48868", "party": "أمانة المنطقة الشرقية"}], "riyadh": [{"n": "العقد الأول", "no": "440491", "party": "ريمات الرياض"}, {"n": "العقد الثاني", "no": "447205", "party": "ريمات الرياض"}, {"n": "العقد الثالث", "no": "866304", "party": "ريمات الرياض"}]};
             // كل عقد له لوحة متابعة — ضعي رابطها في url داخل CONTRACTS
             PROJECTS.forEach((p) => {
                 (CONTRACTS[p.id] || []).forEach((c) => {
@@ -4636,7 +4643,7 @@ body.viewing{overflow:hidden}
                     '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>';
                 G.innerHTML = FORMS.map(
                     (f) =>
-                        `<article class="fcard"><div class="fthumb"><span class="pdf">PDF</span><img src="${f.img}" alt="${f.t}" loading="lazy"></div><div class="finfo"><h4>${f.t}</h4><p>${f.d}</p><div class="meta">${f.m}</div></div><div class="factions"><a class="v" href="${f.f}" target="_blank" rel="noopener">${eye}عرض</a><a class="d" href="${f.f}" download>${dl}تحميل</a></div></article>`,
+                        `<article class="fcard"><div class="fthumb"><span class="pdf">PDF</span><img src="${f.img}" alt="${f.t}" loading="lazy"></div><div class="finfo"><h4>${f.t}</h4><p>${f.d}</p><div class="meta">${f.m}</div></div><div class="factions"><a class="v pdfv" href="${f.f}" data-title="${f.t}">${eye}عرض</a><a class="d" href="${f.f}" download>${dl}تحميل</a></div></article>`,
                 ).join("");
                 const open = () => {
                         M.classList.add("open");
@@ -4667,7 +4674,7 @@ body.viewing{overflow:hidden}
   const V=document.getElementById("viewer"),F=document.getElementById("vFrame"),T=document.getElementById("vTitle"),X=document.getElementById("vExt"),LD=document.getElementById("vLoad");
   let open=false;
   const show=(url,title,push)=>{
-    T.textContent=title||"لوحة المتابعة";X.href=url;LD.classList.remove("done");F.src=url;
+    V.querySelector(".vbody").classList.remove("pdfmode");document.getElementById("pdfPages").innerHTML="";T.textContent=title||"لوحة المتابعة";X.href=url;LD.classList.remove("done");F.src=url;clearTimeout(window.__vt);window.__vt=setTimeout(()=>LD.classList.add("done"),2500);
     V.hidden=false;document.body.classList.add("viewing");open=true;
     if(typeof closeDrawer==="function")closeDrawer();
     if(push)history.pushState({dash:url,title:title},"","#view");
@@ -4688,6 +4695,34 @@ body.viewing{overflow:hidden}
     if(e.state&&e.state.dash){show(e.state.dash,e.state.title,false);}else hide(true);
   });
   if(location.hash==="#view")history.replaceState(null,"",location.pathname+location.search);
+})();
+
+/* ---------- PDF forms in viewer ---------- */
+const PAGES={"site-completion-certificate": 1, "site-completion-form": 2, "site-description-card": 1, "site-handover-minutes": 1, "work-commencement-order": 1};
+(function(){
+  const V=document.getElementById("viewer"),B=V.querySelector(".vbody"),P=document.getElementById("pdfPages"),
+        T=document.getElementById("vTitle"),X=document.getElementById("vExt"),LD=document.getElementById("vLoad");
+  async function showPdf(url,title){
+    const fm=document.getElementById("fmodal");if(fm){fm.classList.remove("open");}
+    pdfOn=true;T.textContent=title;X.href=url;P.innerHTML="";B.classList.add("pdfmode");LD.classList.remove("done");
+    V.hidden=false;document.body.classList.add("viewing");history.pushState({pdf:url,title:title},"","#view");
+    try{
+      const base=url.replace(/\.pdf$/i,"").split("/").pop(), n=PAGES[base]||0;
+      if(!n) throw new Error("no pages");
+      let first=true;
+      for(let i=1;i<=n;i++){const im=new Image();im.alt=title+" — صفحة "+i;im.src="forms/pages/"+base+"-"+i+".jpg";
+        im.onload=()=>{if(first){first=false;LD.classList.add("done");}};im.onerror=()=>{LD.classList.add("done");};P.appendChild(im);}
+    }catch(e){
+      B.classList.remove("pdfmode");document.getElementById("vFrame").src=url;LD.classList.add("done");
+    }
+  }
+  document.addEventListener("click",e=>{const a=e.target.closest("a.pdfv");if(!a)return;e.preventDefault();showPdf(a.getAttribute("href"),a.dataset.title);});
+  let pdfOn=false;
+  const reset=()=>{B.classList.remove("pdfmode");P.innerHTML="";};
+  const closePdf=()=>{if(!pdfOn)return;pdfOn=false;reset();document.getElementById("vFrame").src="about:blank";V.hidden=true;document.body.classList.remove("viewing");if(location.hash==="#view")history.back();};
+  document.getElementById("vClose").addEventListener("click",closePdf);
+  window.addEventListener("popstate",()=>{if(pdfOn&&!(history.state&&history.state.pdf)){pdfOn=false;reset();V.hidden=true;document.body.classList.remove("viewing");}});
+  document.addEventListener("keydown",e=>{if(e.key==="Escape")closePdf();});
 })();
 </script>
     </body>

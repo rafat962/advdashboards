@@ -140,4 +140,5 @@ f.sort((a,b)=>a.seq-b.seq);
 document.getElementById('rows').innerHTML=f.map(r=>`<tr class="${r.p?'pr':''}"><td>${r.seq}</td><td>${r.code}</td><td>${r.type}</td><td>${r.no}</td><td><span class="tag ${r.p?'p':'c'}">${r.p?'مقترح بديل/إضافي':'أساسي'}</span></td><td>${r.lat.toFixed(6)}</td><td>${r.lon.toFixed(6)}</td><td><a target="_blank" href="https://maps.google.com/?q=${r.lat},${r.lon}">↗</a></td></tr>`).join('');
 document.getElementById('shown').textContent=`المعروض: ${f.length} موقع`;document.getElementById('dcount').textContent=`جدول المواقع (${f.length})`}
 draw();
-</script></body></html>
+</script><script>try{if(window.top!==window.self){document.querySelectorAll("a.back").forEach(function(e){e.style.display="none";});}}catch(e){document.querySelectorAll("a.back").forEach(function(x){x.style.display="none";});}</script>
+</body></html>
