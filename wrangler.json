@@ -7,6 +7,10 @@
         {
             "pattern": "advdaashboards.almahagroup.org",
             "custom_domain": true
+        },
+        {
+            "pattern": "ads-dashboard.almahagroup.org",
+            "custom_domain": true
         }
     ],
     "assets": {
