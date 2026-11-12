@@ -3861,7 +3861,7 @@ body.viewing{overflow:hidden}
                             desc: "متابعة مشروع الجسرين الإعلانيين",
                         },
                         {
-                            title: "لوحة متابعة تسليم المواقع", after: "CN46-41",
+                            title: "لوحة متابعة تسليم المواقع", before: "CN46-41",
                             type: "other",
                             url: "EasternRegion/SiteHandover/index.html",
                             desc: "سجل استلام المواقع من أمانة المنطقة الشرقية على الخريطة",
@@ -3995,6 +3995,12 @@ body.viewing{overflow:hidden}
             });
             PROJECTS.forEach((p) => {
                 // dashboards linked to a contract (after: رقم العقد) are listed directly under it
+                p.dashboards.filter((d) => d.before).forEach((d) => {
+                    p.dashboards.splice(p.dashboards.indexOf(d), 1);
+                    d.isContract = true;
+                    const i = p.dashboards.findIndex((x) => x.no === d.before);
+                    p.dashboards.splice(i < 0 ? p.dashboards.length : i, 0, d);
+                });
                 p.dashboards.filter((d) => d.after).forEach((d) => {
                     p.dashboards.splice(p.dashboards.indexOf(d), 1);
                     d.isContract = true;
