@@ -706,18 +706,31 @@ h1{margin:0;font-size:30px;font-weight:900;line-height:1.3}
 .kpi{position:relative;overflow:hidden;background:var(--glass);border:1px solid var(--hair);border-radius:var(--r);padding:16px 18px 14px;backdrop-filter:blur(8px);box-shadow:0 16px 36px rgba(0,0,0,.35)}
 .kpi::before{content:"";position:absolute;top:0;right:0;width:100%;height:3px;background:var(--c,var(--gold))}
 .kpi::after{content:"";position:absolute;left:-30px;bottom:-40px;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,color-mix(in srgb,var(--c,var(--gold)) 22%,transparent),transparent 70%)}
+.kpi{cursor:pointer;transition:transform .15s,border-color .15s,box-shadow .15s}
+.kpi:hover{transform:translateY(-2px);border-color:color-mix(in srgb,var(--c) 55%,transparent)}
+.kpi.act{border-color:var(--c);box-shadow:0 0 0 1px var(--c),0 18px 40px rgba(0,0,0,.45),0 0 28px color-mix(in srgb,var(--c) 30%,transparent)}
+.kpi.act::before{height:5px}
+.kpi.dimk{opacity:.55}
+.kpi .hint{position:absolute;left:12px;top:10px;font-size:10.5px;font-weight:700;color:var(--c);opacity:0;transition:.15s}
+.kpi:hover .hint,.kpi.act .hint{opacity:1}
+.kpi.act .hint{font-size:0}.kpi.act .hint::after{content:'✓ معروض على الخريطة';font-size:10.5px}
+.nowbar{display:none;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 18px;border-bottom:1px solid var(--hair);background:linear-gradient(90deg,color-mix(in srgb,var(--nc,var(--gold)) 16%,transparent),rgba(3,9,21,.4));font-size:13.5px}
+.nowbar.on{display:flex}
+.nowbar .big{font-size:20px;font-weight:900;color:#fff;font-feature-settings:"tnum"}
+.nowbar .ft{display:inline-flex;align-items:center;gap:6px;background:rgba(3,9,21,.6);border:1px solid var(--nc,var(--gold));color:#fff;border-radius:999px;padding:3px 6px 3px 12px;font-weight:700;font-size:12.5px}
+.nowbar .ft button{background:rgba(255,255,255,.1);border:0;color:#fff;border-radius:50%;width:20px;height:20px;cursor:pointer;font-size:12px;line-height:1}
 .kpi .lab{font-size:13px;color:var(--muted);font-weight:600}
 .kpi .val{font-size:34px;font-weight:900;line-height:1.15;margin-top:4px;font-feature-settings:"tnum";color:#fff}
 .kpi .note{font-size:12px;color:var(--muted);margin-top:2px}
 
 /* filter bar */
 .fbar{position:sticky;top:0;z-index:1000;margin-top:14px;background:rgba(6,17,41,.92);backdrop-filter:blur(10px);border:1px solid var(--hair);border-radius:var(--r);padding:10px 14px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;box-shadow:0 12px 28px rgba(0,0,0,.35)}
-.fbar .ttl{font-weight:800;color:var(--gl);font-size:13.5px;margin-left:4px;display:flex;align-items:center;gap:6px}
-select,input[type=search]{font-family:'Cairo';font-size:13px;padding:7px 11px;border:1px solid var(--hair);border-radius:10px;background:rgba(3,9,21,.65);color:var(--ink);outline:none;max-width:150px}
+.fbar .ttl{white-space:nowrap;font-weight:800;color:var(--gl);font-size:13.5px;margin-left:4px;display:flex;align-items:center;gap:6px}
+select,input[type=search]{font-family:'Cairo';font-size:13px;padding:7px 11px;border:1px solid var(--hair);border-radius:10px;background:rgba(3,9,21,.65);color:var(--ink);outline:none;max-width:128px;padding-inline:9px}
 select option{background:#0b1a40}
 select.on{border-color:var(--gold);color:var(--gl)}
 select:focus,input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(212,168,83,.12)}
-input[type=search]{min-width:150px;flex:1;max-width:260px}
+input[type=search]{min-width:120px;flex:1;max-width:220px}
 input::placeholder{color:var(--muted)}
 .reset{white-space:nowrap;font:700 12.5px 'Cairo';background:rgba(212,168,83,.12);color:var(--gl);border:1px solid var(--line);border-radius:10px;padding:7px 14px;cursor:pointer;margin-inline-start:auto}
 .reset:hover{background:rgba(212,168,83,.22)}
@@ -733,9 +746,12 @@ input::placeholder{color:var(--muted)}
 .seg{display:inline-flex;border:1px solid var(--hair);border-radius:999px;overflow:hidden;margin-left:8px}
 .seg button{font:700 12.5px 'Cairo';background:rgba(3,9,21,.55);color:var(--ink2);border:0;padding:6px 14px;cursor:pointer}
 .seg button.on{background:linear-gradient(180deg,var(--gl),var(--gold));color:#1a1405}
-.chip{border:1px solid var(--hair);background:rgba(3,9,21,.55);border-radius:999px;padding:5px 12px;font:600 12.5px 'Cairo';cursor:pointer;color:var(--ink);display:flex;align-items:center;gap:7px;transition:.15s}
+.chip{border:1px solid var(--hair);background:rgba(3,9,21,.55);border-radius:12px;padding:6px 14px;font:700 13.5px 'Cairo';cursor:pointer;color:var(--ink);display:flex;align-items:center;gap:7px;transition:.15s}
 .chip i{width:10px;height:10px;border-radius:50%;display:inline-block;box-shadow:0 0 6px currentColor}
-.chip b{color:var(--gl);font-feature-settings:"tnum"}
+.chip b{color:#fff;font-size:16px;font-weight:900;font-feature-settings:"tnum"}
+.chip s{text-decoration:none;color:var(--muted);font-size:12px;font-weight:600}
+.chip .cb{display:block;width:54px;height:5px;border-radius:3px;background:rgba(255,255,255,.1);overflow:hidden}
+.chip .cb span{display:block;height:100%}
 .chip.off{opacity:.38}
 .chip:hover{border-color:var(--gold)}
 .leaflet-container{font-family:'Cairo'}
@@ -818,11 +834,11 @@ footer b{color:var(--gl)}
 <div class="wrap">
 
   <div class="kpis">
-    <div class="kpi" style="--c:var(--gold)"><div class="lab">المواقع المستلمة</div><div class="val" id="kAll">0</div><div class="note" id="kAllN">—</div></div>
-    <div class="kpi" style="--c:var(--green)"><div class="lab">استلام دون ملاحظات</div><div class="val" id="kOk">0</div><div class="note" id="kOkN">—</div></div>
-    <div class="kpi" style="--c:var(--amber)"><div class="lab">استلام مع ملاحظات</div><div class="val" id="kNt">0</div><div class="note" id="kNtN">—</div></div>
-    <div class="kpi" style="--c:var(--red)"><div class="lab">مواقع عليها معوقات</div><div class="val" id="kOb">0</div><div class="note">رصيف ضيق · رؤية · خدمات · عقود قائمة</div></div>
-    <div class="kpi" style="--c:var(--teal)"><div class="lab">يوجد قاعدة بالموقع</div><div class="val" id="kBase">0</div><div class="note">قواعد لوحات قائمة يمكن الاستفادة منها</div></div>
+    <div class="kpi" data-k="all" style="--c:var(--gold)"><span class="hint">عرض الكل</span><div class="lab">المواقع المستلمة</div><div class="val" id="kAll">0</div><div class="note" id="kAllN">—</div></div>
+    <div class="kpi" data-k="ok" style="--c:var(--green)"><span class="hint">اضغط للعرض</span><div class="lab">استلام دون ملاحظات</div><div class="val" id="kOk">0</div><div class="note" id="kOkN">—</div></div>
+    <div class="kpi" data-k="nt" style="--c:var(--amber)"><span class="hint">اضغط للعرض</span><div class="lab">استلام مع ملاحظات</div><div class="val" id="kNt">0</div><div class="note" id="kNtN">—</div></div>
+    <div class="kpi" data-k="ob" style="--c:var(--red)"><span class="hint">اضغط للعرض</span><div class="lab">مواقع عليها معوقات</div><div class="val" id="kOb">0</div><div class="note">رصيف ضيق · رؤية · خدمات · عقود قائمة</div></div>
+    <div class="kpi" data-k="base" style="--c:var(--teal)"><span class="hint">اضغط للعرض</span><div class="lab">يوجد قاعدة بالموقع</div><div class="val" id="kBase">0</div><div class="note">قواعد لوحات قائمة يمكن الاستفادة منها</div></div>
   </div>
 
   <div class="fbar">
@@ -832,6 +848,7 @@ footer b{color:var(--gl)}
     <select id="fHay"><option value="">كل الأحياء</option></select>
     <select id="fDec"><option value="">كل قرارات التسليم</option></select>
     <select id="fCat"><option value="">كل الملاحظات</option></select>
+    <select id="fOb"><option value="">المعوقات: الكل</option><option value="1">عليها معوقات</option><option value="0">بدون معوقات</option></select>
     <select id="fBase"><option value="">القاعدة: الكل</option><option value="نعم">يوجد قاعدة</option><option value="لا">لا يوجد قاعدة</option></select>
     <select id="fDate"><option value="">كل تواريخ الاستلام</option></select>
     <input type="search" id="fQ" placeholder="بحث بكود الموقع أو الحي أو الملاحظة…">
@@ -845,6 +862,7 @@ footer b{color:var(--gl)}
       <span class="seg" id="mode"><button data-m="type" class="on">نوع اللوحة</button><button data-m="dec">قرار التسليم</button></span>
       <span id="chips" style="display:contents"></span>
     </div>
+    <div class="nowbar" id="nowbar"></div>
     <div id="map"></div>
   </div>
 
@@ -905,8 +923,8 @@ const dates = [...new Set(D.map(s=>s.date))].sort();
 $('#bRange').textContent = fmtD(dates[0])+' – '+fmtD(dates[dates.length-1])+'/2026';
 
 /* ---------- filters ---------- */
-const F = {type:'',bal:'',hay:'',dec:'',cat:'',base:'',date:'',q:''};
-const SEL = {type:'#fType',bal:'#fBal',hay:'#fHay',dec:'#fDec',cat:'#fCat',base:'#fBase',date:'#fDate'};
+const F = {type:'',bal:'',hay:'',dec:'',cat:'',base:'',ob:'',date:'',q:''};
+const SEL = {type:'#fType',bal:'#fBal',hay:'#fHay',dec:'#fDec',cat:'#fCat',base:'#fBase',ob:'#fOb',date:'#fDate'};
 const uniq = k => [...new Set(D.map(s=>s[k]).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'ar'));
 uniq('type').forEach(v=>$('#fType').add(new Option(v,v)));
 uniq('bal').forEach(v=>$('#fBal').add(new Option(v,v)));
@@ -920,7 +938,7 @@ function fillHay(){
 }
 fillHay();
 function pass(s, skip){
-  for (const k in SEL){ if(k===skip) continue; if(F[k] && s[k]!==F[k]) return false; }
+  for (const k in SEL){ if(k===skip) continue; if(k==='ob'){ if(F.ob && (s.ob?'1':'0')!==F.ob) return false; continue; } if(F[k] && s[k]!==F[k]) return false; }
   if(F.q){ const h=[s.code,s.hay,s.bal,s.note,s.type].join(' '); if(!h.includes(F.q)) return false; }
   return true;
 }
@@ -971,7 +989,7 @@ const legendKey = s => mode==='type' ? s.type : s.dec;
 function drawMap(V){
   const pal = mode==='type'?TYPE_C:DEC_C;
   const cnt={}; V.forEach(s=>cnt[legendKey(s)]=(cnt[legendKey(s)]||0)+1);
-  $('#chips').innerHTML = Object.keys(pal).filter(k=>D.some(s=>legendKey(s)===k)).map(k=>`<button class="chip${hidden.has(k)?' off':''}" data-k="${k}"><i style="background:${pal[k]};color:${pal[k]}"></i>${k} <b>${cnt[k]||0}</b></button>`).join('');
+  $('#chips').innerHTML = Object.keys(pal).filter(k=>D.some(s=>legendKey(s)===k)).map(k=>{const tot=D.filter(s=>legendKey(s)===k).length,c=cnt[k]||0,filt=V.length!==D.length;return `<button class="chip${hidden.has(k)?' off':''}" data-k="${k}" title="${k}: ${c} من ${tot}"><i style="background:${pal[k]};color:${pal[k]}"></i>${k} <b>${c}</b>${filt?`<s>من ${tot}</s><span class="cb"><span style="width:${tot?c*100/tot:0}%;background:${pal[k]}"></span></span>`:''}</button>`}).join('');
   document.querySelectorAll('#chips .chip').forEach(c=>c.onclick=()=>{ const k=c.dataset.k; hidden.has(k)?hidden.delete(k):hidden.add(k); update(); });
   if(!map) return;
   let shown=0;
@@ -1023,18 +1041,45 @@ $('#csv').onclick=()=>{
 /* ---------- update ---------- */
 function update(){
   const V=D.filter(s=>pass(s));
-  const ok=V.filter(s=>s.dec==='استلام الموقع').length, nt=V.filter(s=>s.dec==='استلام مع ملاحظات').length;
+  const KB=D.filter(s=>{for(const k of ['type','bal','hay','cat','date']) if(F[k]&&s[k]!==F[k]) return false; if(F.q){const h=[s.code,s.hay,s.bal,s.note,s.type].join(' '); if(!h.includes(F.q)) return false;} return true;});
+  const ok=KB.filter(s=>s.dec==='استلام الموقع').length, nt=KB.filter(s=>s.dec==='استلام مع ملاحظات').length;
   $('#kAll').textContent=V.length; $('#kAllN').textContent=V.length===D.length?'إجمالي المواقع المسجّلة بالسجل':'من أصل '+D.length+' موقعًا';
-  $('#kOk').textContent=ok; $('#kOkN').textContent=pct(ok,V.length)+' من المواقع المعروضة';
-  $('#kNt').textContent=nt; $('#kNtN').textContent=pct(nt,V.length)+' من المواقع المعروضة';
-  $('#kOb').textContent=V.filter(s=>s.ob).length;
-  $('#kBase').textContent=V.filter(s=>s.base==='نعم').length;
+  $('#kOk').textContent=ok; $('#kOkN').textContent=pct(ok,KB.length)+' من المواقع المستلمة';
+  $('#kNt').textContent=nt; $('#kNtN').textContent=pct(nt,KB.length)+' من المواقع المستلمة';
+  $('#kOb').textContent=KB.filter(s=>s.ob).length;
+  $('#kBase').textContent=KB.filter(s=>s.base==='نعم').length;
   stacked('#cType','type',group(D.filter(s=>pass(s,'type')),'type'));
   stacked('#cBal','bal',group(D.filter(s=>pass(s,'bal')),'bal'));
   simple('#cCat','cat',group(D.filter(s=>pass(s,'cat')),'cat'),CAT_C);
   simple('#cHay','hay',group(D.filter(s=>pass(s,'hay')),'hay').slice(0,9));
   drawDates(D.filter(s=>pass(s,'date')));
-  drawMap(V); drawTable(V);
+  drawMap(V); drawTable(V); drawNow(V);
+}
+const KF = {all:null, ok:{dec:'استلام الموقع'}, nt:{dec:'استلام مع ملاحظات'}, ob:{ob:'1'}, base:{base:'نعم'}};
+const KC = {ok:'var(--green)',nt:'var(--amber)',ob:'var(--red)',base:'var(--teal)'};
+function kActive(k){ const f=KF[k]; if(!f) return false; return Object.entries(f).every(([a,b])=>F[a]===b); }
+document.querySelectorAll('.kpi').forEach(el=>el.onclick=()=>{
+  const k=el.dataset.k;
+  if(k==='all'){ for(const x in F)F[x]=''; $('#fQ').value=''; fillHay(); }
+  else { const on=kActive(k); F.dec=''; F.ob=''; F.base=''; if(!on) Object.assign(F,KF[k]); }
+  sync(); update();
+  if(k!=='all') document.getElementById('map').closest('.card').scrollIntoView({behavior:'smooth',block:'start'});
+});
+const LBL = {type:'النوع',bal:'البلدية',hay:'الحي',dec:'القرار',cat:'الملاحظة',base:'قاعدة',ob:'المعوقات',date:'التاريخ'};
+function drawNow(V){
+  const act=Object.keys(SEL).filter(k=>F[k]);
+  document.querySelectorAll('.kpi').forEach(el=>{const k=el.dataset.k, a=k!=='all'&&kActive(k); el.classList.toggle('act',a);});
+  const anyK=['ok','nt','ob','base'].some(kActive);
+  document.querySelectorAll('.kpi').forEach(el=>el.classList.toggle('dimk',anyK&&!el.classList.contains('act')&&el.dataset.k!=='all'));
+  const nb=$('#nowbar');
+  if(!act.length && !F.q){ nb.classList.remove('on'); return; }
+  const kk=['ok','nt','ob','base'].find(kActive); nb.style.setProperty('--nc', kk?KC[kk]:'var(--gold)');
+  const val=k=> k==='ob'?(F.ob==='1'?'عليها معوقات':'بدون معوقات'):k==='date'?F.date.split('-').reverse().join('/'):F[k];
+  nb.innerHTML=`<span>يُعرض الآن على الخريطة</span><span class="big">${V.length}</span><span style="color:var(--muted)">موقعًا من أصل ${D.length} (${pct(V.length,D.length)})</span>`+
+    act.map(k=>`<span class="ft">${LBL[k]}: ${val(k)} <button data-k="${k}" title="إزالة">✕</button></span>`).join('')+
+    (F.q?`<span class="ft">بحث: ${esc(F.q)} <button data-k="q">✕</button></span>`:'');
+  nb.classList.add('on');
+  nb.querySelectorAll('button').forEach(b=>b.onclick=()=>{const k=b.dataset.k; F[k]=''; if(k==='q')$('#fQ').value=''; if(k==='bal')fillHay(); sync(); update();});
 }
 sync(); update();
 </script>
