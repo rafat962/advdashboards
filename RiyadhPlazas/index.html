@@ -778,7 +778,7 @@ footer{color:var(--mute);font-size:12px;text-align:center;padding:16px}
       </div>
       <div class="tbl"><table id="t"><thead><tr>
         <th data-k="Seq" class="num">م</th><th data-k="Name_AR">البلازا</th><th data-k="MobiStatus">الحالة</th>
-        <th data-k="Municipality">البلدية</th><th data-k="Mobi_Total" class="num">شاشات</th>
+        <th data-k="Municipality">البلدية</th><th data-k="Mobi_Total" class="num">المواقع</th><th data-k="Faces_Total" class="num">الأوجه</th>
       </tr></thead><tbody></tbody></table></div>
     </div>
   </div>
@@ -850,7 +850,7 @@ function render(){
   document.querySelector('#t tbody').innerHTML=r.map(d=>{const g=false?`<tr class="grp"><td colspan="5">${d.Category==='أساسية'?'البلازات الأساسية — مدرجة بخطة التركيب الحالية (22)':'بلازات إضافية بالرياض — غير مدرجة بخطة التركيب الحالية (10)'}</td></tr>`:''; lastC=d.Category; return g+`<tr data-id="${d.PlazaID}" class="${d.PlazaID===selId?'sel':''}">
    <td class="num">${d.Seq}</td><td title="${d.Name_EN}">${d.Name_AR}</td>
    <td><span class="badge ${d.InPlan==='نعم'?'b-ok':'b-rem'}">${d.InPlan==='نعم'?'مدرجة':'إضافية'}</span></td>
-   <td>${d.Municipality||'—'}</td><td class="num">${d.Mobi_Total||'—'}</td></tr>`}).join('');
+   <td>${d.Municipality||'—'}</td><td class="num">${d.Mobi_Total||'—'}</td><td class="num">${d.Faces_Total||'—'}</td></tr>`}).join('');
   document.querySelectorAll('#t tbody tr[data-id]').forEach(tr=>tr.onclick=()=>select(tr.dataset.id,false));
   const vis=new Set(r.map(d=>d.PlazaID));
   for(const id in mk){ if(vis.has(id)) mk[id].addTo(map); else map.removeLayer(mk[id]); }
