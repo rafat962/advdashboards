@@ -3238,6 +3238,28 @@
 .mstats{gap:8px!important}.mst{padding:10px 14px!important}.mst b{font-size:24px!important}
 
 .di .cno{flex-shrink:0;margin-inline-start:6px}
+
+/* ===== In-page dashboard viewer ===== */
+.viewer{position:fixed;inset:0;z-index:80;display:flex;flex-direction:column;background:var(--n0);animation:vin .3s ease}
+.viewer[hidden]{display:none}
+@keyframes vin{from{opacity:0;transform:scale(.985)}to{opacity:1;transform:none}}
+.vbar{position:relative;height:56px;flex-shrink:0;display:flex;align-items:center;gap:14px;padding:0 16px;background:rgba(3,9,21,.95);border-bottom:1px solid var(--hair)}
+.vbar::after{content:"";position:absolute;inset:auto 0 -1px 0;height:1px;background:linear-gradient(90deg,transparent 5%,rgba(240,212,142,.6) 50%,transparent 95%)}
+.vclose{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;border-radius:10px;border:none;cursor:pointer;font:700 14px "Cairo",sans-serif;color:#1c1405;background:linear-gradient(180deg,var(--gl),var(--gold) 60%,var(--gd))}
+.vclose:hover{filter:brightness(1.08)}
+.vtitle{flex:1;min-width:0;display:flex;align-items:center;justify-content:center;gap:10px}
+.vtitle b{font-size:16.5px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vdot{width:8px;height:8px;border-radius:50%;background:#4fd18b;box-shadow:0 0 8px #4fd18b;flex-shrink:0}
+.vext{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;border:1px solid var(--line);color:var(--gl);background:rgba(212,168,83,.05)}
+.vext:hover{background:rgba(212,168,83,.15)}
+.vbody{position:relative;flex:1;min-height:0;background:#fff}
+.vbody iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.vload{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:var(--n0);color:var(--ink2);font-size:14px;z-index:1;transition:opacity .3s}
+.vload.done{opacity:0;pointer-events:none}
+.vload span{width:38px;height:38px;border-radius:50%;border:3px solid rgba(212,168,83,.2);border-top-color:var(--gold);animation:spin .9s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+body.viewing{overflow:hidden}
+@media(max-width:600px){.vclose span{display:none}.vclose{padding:8px 10px}}
 </style>
     </head>
     <body class="locked">
@@ -3759,7 +3781,15 @@
                 <path d="M12 19V5M5 12l7-7 7 7" />
             </svg>
         </button>
-        <script>
+        <div class="viewer" id="viewer" role="dialog" aria-modal="true" aria-labelledby="vTitle" hidden>
+  <div class="vbar">
+    <button class="vclose" id="vClose" type="button"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg><span>إغلاق اللوحة</span></button>
+    <div class="vtitle"><span class="vdot"></span><b id="vTitle"></b></div>
+    <a class="vext" id="vExt" href="#" target="_blank" rel="noopener" title="فتح في تبويب جديد"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-9 9M19 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h5"/></svg></a>
+  </div>
+  <div class="vbody"><div class="vload" id="vLoad"><span></span>جاري تحميل اللوحة...</div><iframe id="vFrame" title="لوحة المتابعة" allow="fullscreen; geolocation" allowfullscreen></iframe></div>
+</div>
+<script>
             /* ============================ الإعدادات — عدّلي هنا فقط ============================
    لكل مشروع قائمة dashboards بأي عدد. لكل لوحة:
      title : اسم اللوحة
@@ -3943,7 +3973,7 @@
             const fmt = (lat, lon) =>
                 `${lat.toFixed(2)}°N · ${lon.toFixed(2)}°E`;
             const ARROW = svgI('<path d="M15 6l-6 6 6 6"/>', 16, 2.2);
-            const CONTRACTS = {"jeddah": [{"n": "يونيبول", "t": "لوحة معلومات جدة", "no": "CN-135274", "party": "أمانة محافظة جدة", "url": "https://www.arcgis.com/apps/dashboards/6c8e854d1af94d618e003781da9eef36"}, {"n": "الجسور والأنفاق", "no": "—", "party": "أمانة محافظة جدة"}, {"n": "جسور المشاة", "no": "—", "party": "أمانة محافظة جدة"}], "makkah": [{"n": "العقد الموحد", "t": "لوحة معلومات مكة المكرمة", "no": "ABAM-30011", "party": "شركة البلد الأمين", "url": "https://www.arcgis.com/apps/dashboards/f81f583b18984b7f8d4d137114964ab7"}, {"n": "أراض بيضاء", "no": "PROJ-30326", "party": "شركة البلد الأمين"}, {"n": "لوحة المراكز", "no": "—", "party": "شركة البلد الأمين"}], "eastern": [{"n": "العقد الموحد", "t": "لوحة معلومات المنطقة الشرقية", "no": "CN46-41", "party": "شركة إشراق", "url": "https://www.arcgis.com/apps/dashboards/1d73b8761980496bbeffc271ee89f82c"}, {"n": "شاشات العقد الأول", "no": "CN-37100", "party": "أمانة المنطقة الشرقية"}, {"n": "شاشات العقد الثاني", "no": "CN-48868", "party": "أمانة المنطقة الشرقية"}], "riyadh": [{"n": "العقد الأول", "no": "440491", "party": "ريمات الرياض"}, {"n": "العقد الثاني", "no": "447205", "party": "ريمات الرياض"}, {"n": "العقد الثالث", "no": "866304", "party": "ريمات الرياض"}]};
+            const CONTRACTS = {"jeddah": [{"n": "يونيبول", "t": "لوحة معلومات جدة", "no": "CN-135274", "party": "أمانة محافظة جدة", "url": "https://www.arcgis.com/apps/dashboards/6c8e854d1af94d618e003781da9eef36"}, {"n": "الجسور والأنفاق", "no": "—", "party": "أمانة محافظة جدة"}, {"n": "جسور المشاة", "no": "—", "party": "أمانة محافظة جدة"}], "makkah": [{"n": "العقد الموحد", "t": "لوحة معلومات مكة المكرمة", "no": "ABAM-30011", "party": "شركة البلد الأمين", "url": "https://www.arcgis.com/apps/dashboards/f81f583b18984b7f8d4d137114964ab7"}, {"n": "أراض بيضاء", "t": "عقد الأراضي البيضاء", "no": "PROJ-30326", "party": "شركة البلد الأمين"}, {"n": "لوحة المراكز", "no": "—", "party": "شركة البلد الأمين"}], "eastern": [{"n": "العقد الموحد", "t": "لوحة معلومات المنطقة الشرقية", "no": "CN46-41", "party": "شركة إشراق", "url": "https://www.arcgis.com/apps/dashboards/1d73b8761980496bbeffc271ee89f82c"}, {"n": "شاشات العقد الأول", "no": "CN-37100", "party": "أمانة المنطقة الشرقية"}, {"n": "شاشات العقد الثاني", "no": "CN-48868", "party": "أمانة المنطقة الشرقية"}], "riyadh": [{"n": "العقد الأول", "no": "440491", "party": "ريمات الرياض"}, {"n": "العقد الثاني", "no": "447205", "party": "ريمات الرياض"}, {"n": "العقد الثالث", "no": "866304", "party": "ريمات الرياض"}]};
             // كل عقد له لوحة متابعة — ضعي رابطها في url داخل CONTRACTS
             PROJECTS.forEach((p) => {
                 (CONTRACTS[p.id] || []).forEach((c) => {
@@ -4175,7 +4205,7 @@
                 const inner = `<span class="ti">${d.icon && DICONS[d.icon] ? svgI(DICONS[d.icon], 15) : ticon(t)}</span><span class="tt">${d.title}${d.en ? `<bdi class="ten">${d.en}</bdi>` : ""}${desc && d.desc ? `<span class="desc">${d.desc}</span>` : ""}</span>${desc && d.no ? `<span class="cno">${d.no}</span>` : ""}`;
                 return `<li class="di${dim}" style="--c:${TYPES[t].c}">${
                     d.url
-                        ? `<a href="${d.url}">${inner}<span class="go">${ARROW}</span></a>`
+                        ? `<a class="dlink" href="${d.url}" data-title="${d.title}">${inner}<span class="go">${ARROW}</span></a>`
                         : `<span class="row">${inner}<span class="soon">جاري العمل</span></span>`
                 }</li>`;
             }
@@ -4631,6 +4661,34 @@
                 document
                     .querySelector(".shead")
                     .scrollIntoView({ behavior: "smooth", block: "start" });
-        </script>
+        
+/* ---------- Dashboard viewer (same tab) ---------- */
+(function(){
+  const V=document.getElementById("viewer"),F=document.getElementById("vFrame"),T=document.getElementById("vTitle"),X=document.getElementById("vExt"),LD=document.getElementById("vLoad");
+  let open=false;
+  const show=(url,title,push)=>{
+    T.textContent=title||"لوحة المتابعة";X.href=url;LD.classList.remove("done");F.src=url;
+    V.hidden=false;document.body.classList.add("viewing");open=true;
+    if(typeof closeDrawer==="function")closeDrawer();
+    if(push)history.pushState({dash:url,title:title},"","#view");
+  };
+  const hide=(fromPop)=>{
+    if(!open)return;open=false;V.hidden=true;document.body.classList.remove("viewing");F.src="about:blank";
+    if(!fromPop&&location.hash==="#view")history.back();
+  };
+  F.addEventListener("load",()=>{if(F.src!=="about:blank")LD.classList.add("done");});
+  document.addEventListener("click",e=>{
+    const a=e.target.closest("a.dlink");if(!a)return;
+    if(e.ctrlKey||e.metaKey||e.shiftKey||e.button===1)return;
+    e.preventDefault();show(a.getAttribute("href"),a.dataset.title,true);
+  });
+  document.getElementById("vClose").onclick=()=>hide(false);
+  document.addEventListener("keydown",e=>{if(e.key==="Escape"&&open)hide(false);});
+  window.addEventListener("popstate",e=>{
+    if(e.state&&e.state.dash){show(e.state.dash,e.state.title,false);}else hide(true);
+  });
+  if(location.hash==="#view")history.replaceState(null,"",location.pathname+location.search);
+})();
+</script>
     </body>
 </html>
