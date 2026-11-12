@@ -121,10 +121,22 @@ export default {
         }
 
         let USERS = {};
-        try {
-            USERS = JSON.parse(rawUsers);
-        } catch (e) {
-            return new Response("Invalid AUTH_USERS JSON format", {
+        let secretKeyStr = "";
+        if (typeof rawUsers === "object" && rawUsers !== null) {
+            USERS = rawUsers;
+            secretKeyStr = JSON.stringify(rawUsers);
+        } else if (typeof rawUsers === "string") {
+            try {
+                USERS = JSON.parse(rawUsers);
+                secretKeyStr = rawUsers;
+            } catch (e) {
+                return new Response("Invalid AUTH_USERS JSON format", {
+                    status: 500,
+                    headers: { "Content-Type": "text/plain; charset=utf-8" },
+                });
+            }
+        } else {
+            return new Response("Invalid AUTH_USERS format", {
                 status: 500,
                 headers: { "Content-Type": "text/plain; charset=utf-8" },
             });
@@ -149,7 +161,7 @@ export default {
                 ) {
                     // Max-Age: 30 days if remember is true, otherwise 12 hours
                     const maxAgeSec = remember ? 30 * 86400 : 12 * 3600;
-                    const token = await createToken(username, maxAgeSec, rawUsers);
+                    const token = await createToken(username, maxAgeSec, secretKeyStr);
                     const cookie = `auth_token=${token}; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=${maxAgeSec}`;
 
                     return new Response(
@@ -180,7 +192,7 @@ export default {
         // 2. GET /api/session
         if (pathname === "/api/session" && request.method === "GET") {
             const token = getCookie(request, "auth_token");
-            const user = await verifyToken(token, rawUsers, USERS);
+            const user = await verifyToken(token, secretKeyStr, USERS);
             if (user) {
                 return new Response(
                     JSON.stringify({ authenticated: true, user }),
@@ -219,7 +231,7 @@ export default {
 
         // 4. Route Protection Middleware
         const token = getCookie(request, "auth_token");
-        const user = await verifyToken(token, rawUsers, USERS);
+        const user = await verifyToken(token, secretKeyStr, USERS);
 
         // Public routes: allow the root portal and index.html so the login screen can load
         const isPublic = pathname === "/" || pathname === "/index.html" || pathname === "/favicon.ico";

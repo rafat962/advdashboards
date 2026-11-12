@@ -3,6 +3,9 @@
     "compatibility_date": "2026-01-01",
     "main": "worker.js",
     "workers_dev": true,
+    "vars": {
+        "AUTH_USERS": "{\"MahaViewer\":\"Almaha@2030\"}"
+    },
     "routes": [
         {
             "pattern": "advdaashboards.almahagroup.org",
