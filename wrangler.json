@@ -4,7 +4,7 @@
     "main": "worker.js",
     "workers_dev": true,
     "vars": {
-        "AUTH_USERS": "{\"MahaViewer\":\"Almaha@2030\"}"
+        "AUTH_USERS": "{\"MahaViewer\":\"Almaha@2030\"},{\"Heba\":\"1234\"}"
     },
     "routes": [
         {
