@@ -811,6 +811,7 @@ const mobi=inst.reduce((s,d)=>s+d.Mobi_Total,0), faces=inst.reduce((s,d)=>s+d.Fa
 const kp=[
  [inst.length,'البلازات المدرجة بخطة التركيب الحالية'],
  [mobi,'إجمالي الشاشات على البلازات (22)'],
+ [faces,'إجمالي الأوجه على البلازات (22)'],
 ];
 document.getElementById('kpis').innerHTML=kp.map(k=>`<div class="kpi"><div class="v">${k[0]}</div><div class="l">${k[1]}</div>${k[2]!=null?`<div class="bar"><i style="width:${Math.round(k[2]*100)}%"></i></div>`:''}</div>`).join('');
 
