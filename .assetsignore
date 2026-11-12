@@ -4,3 +4,5 @@ wrangler.json
 .dev.vars
 .git
 .gitignore
+
+.gitignore
