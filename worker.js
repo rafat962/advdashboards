@@ -229,7 +229,122 @@ export default {
             return new Response(null, { status: 302, headers });
         }
 
-        // 4. Route Protection Middleware
+        // 4. GET /api/esri-token
+        if (pathname === "/api/esri-token") {
+            const corsHeaders = {
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+                "Access-Control-Allow-Headers": "Content-Type",
+            };
+
+            if (request.method === "OPTIONS") {
+                return new Response(null, { status: 204, headers: corsHeaders });
+            }
+
+            const clientId = env.ESRI_CLIENT_ID || "6ttJbMd8nlGNpChz";
+            const clientSecret = env.ESRI_CLIENT_SECRET || "05ef1fd000954620a10dd34907d9c8aa";
+            const portalUrl = (env.ESRI_PORTAL_URL || "https://mahagroup.maps.arcgis.com/").replace(/\/+$/, "");
+
+            try {
+                const body = new URLSearchParams({
+                    client_id: clientId,
+                    client_secret: clientSecret,
+                    grant_type: "client_credentials",
+                    expiration: "60",
+                    f: "json",
+                });
+                const tokenRes = await fetch(`${portalUrl}/sharing/rest/oauth2/token`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                    body: body.toString(),
+                });
+                const tokenData = await tokenRes.json();
+                return new Response(JSON.stringify(tokenData), {
+                    status: 200,
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Cache-Control": "no-store",
+                        ...corsHeaders,
+                    },
+                });
+            } catch (err) {
+                return new Response(JSON.stringify({ error: err.message }), {
+                    status: 500,
+                    headers: { "Content-Type": "application/json", ...corsHeaders },
+                });
+            }
+        }
+
+        // 5. GET /api/attachment
+        if (pathname === "/api/attachment") {
+            const corsHeaders = {
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Methods": "GET, OPTIONS",
+                "Access-Control-Allow-Headers": "X-Viewer-Mode, Content-Type",
+                "Access-Control-Expose-Headers": "X-User-Identity",
+            };
+
+            if (request.method === "OPTIONS") {
+                return new Response(null, { status: 204, headers: corsHeaders });
+            }
+
+            // Gate 1: Reject direct browser navigation
+            const fetchDest = request.headers.get("Sec-Fetch-Dest");
+            if (fetchDest === "document") {
+                return new Response("403 Forbidden — Direct access not allowed", {
+                    status: 403,
+                    headers: { "Content-Type": "text/plain", ...corsHeaders },
+                });
+            }
+
+            // Gate 2: Require viewer mode header
+            const viewerMode = request.headers.get("X-Viewer-Mode");
+            if (viewerMode !== "canvas-render") {
+                return new Response("403 Forbidden — Use in-app viewer", {
+                    status: 403,
+                    headers: { "Content-Type": "text/plain", ...corsHeaders },
+                });
+            }
+
+            const key = url.searchParams.get("key");
+            if (!key || key.includes("..") || key.startsWith("/")) {
+                return new Response("400 Bad Request — Invalid key", {
+                    status: 400,
+                    headers: { "Content-Type": "text/plain", ...corsHeaders },
+                });
+            }
+
+            if (!env.MY_BUCKET) {
+                return new Response("503 Service Unavailable — R2 bucket not bound", {
+                    status: 503,
+                    headers: { "Content-Type": "text/plain", ...corsHeaders },
+                });
+            }
+
+            const object = await env.MY_BUCKET.get(key);
+            if (!object) {
+                return new Response("404 Not Found — File does not exist", {
+                    status: 404,
+                    headers: { "Content-Type": "text/plain", ...corsHeaders },
+                });
+            }
+
+            const userIdentity = request.headers.get("Cf-Access-Authenticated-User-Email") || "Authorized-Viewer";
+
+            return new Response(object.body, {
+                status: 200,
+                headers: {
+                    "Content-Type": "application/octet-stream",
+                    "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0",
+                    "X-Content-Type-Options": "nosniff",
+                    "X-Frame-Options": "DENY",
+                    "X-User-Identity": userIdentity,
+                    ...corsHeaders,
+                },
+            });
+        }
+
+        // 6. Route Protection Middleware
         const token = getCookie(request, "auth_token");
         const user = await verifyToken(token, secretKeyStr, USERS);
 

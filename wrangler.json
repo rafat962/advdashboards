@@ -4,8 +4,17 @@
     "main": "worker.js",
     "workers_dev": true,
     "vars": {
-        "AUTH_USERS": "{\"MahaViewer\":\"Almaha@2030\",\"Heba\":\"1234\"}"
+        "AUTH_USERS": "{\"MahaViewer\":\"Almaha@2030\",\"Heba\":\"1234\"}",
+        "ESRI_CLIENT_ID": "6ttJbMd8nlGNpChz",
+        "ESRI_CLIENT_SECRET": "05ef1fd000954620a10dd34907d9c8aa",
+        "ESRI_PORTAL_URL": "https://mahagroup.maps.arcgis.com/"
     },
+    "r2_buckets": [
+        {
+            "binding": "MY_BUCKET",
+            "bucket_name": "gis-contracts-bucket"
+        }
+    ],
     "routes": [
         {
             "pattern": "advdaashboards.almahagroup.org",

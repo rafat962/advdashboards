@@ -798,7 +798,45 @@ footer b{color:var(--gl)}
 .leaflet-div-icon.pin{background:none;border:0}
 .pin svg{transition:transform .15s;transform-origin:50% 100%}
 .pin:hover svg{transform:scale(1.25)}
+
+/* ===== Attachment Viewer ===== */
+.att-btn{background:var(--glass);border:1px solid var(--hair);color:var(--gl);font-family:Cairo,sans-serif;font-size:12px;padding:4px 10px;border-radius:6px;cursor:pointer;margin-top:8px;display:inline-flex;align-items:center;gap:5px;transition:background .2s}
+.att-btn:hover{background:rgba(212,168,83,.18)}
+.att-link{display:inline-flex;align-items:center;gap:4px;background:rgba(79,209,139,.12);border:1px solid rgba(79,209,139,.3);color:#4fd18b;font-family:Cairo,sans-serif;font-size:11px;padding:3px 9px;border-radius:5px;cursor:pointer;margin:3px 2px 0;transition:background .2s}
+.att-link:hover{background:rgba(79,209,139,.22)}
+.att-err{font-size:11px;color:var(--muted);font-family:Cairo,sans-serif;margin-top:4px}
+.att-loading{font-size:11px;color:var(--gold);font-family:Cairo,sans-serif;margin-top:6px}
+
+/* Attachment Modal */
+#att-modal{display:none;position:fixed;inset:0;z-index:9999;background:rgba(3,9,21,.93);flex-direction:column;align-items:center;justify-content:center}
+#att-modal-inner{background:var(--glass,rgba(255,255,255,.04));border:1px solid var(--hair,rgba(255,255,255,.08));border-radius:14px;padding:18px;max-width:94vw;max-height:94vh;overflow:auto;position:relative;display:flex;flex-direction:column}
+#att-modal-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:16px}
+#att-modal-title{font-weight:800;font-family:Cairo,sans-serif;color:var(--gl,#e8e4d4);font-size:14px}
+#att-modal-close{background:none;border:none;color:var(--muted,#8a8a8a);font-size:22px;cursor:pointer;line-height:1;padding:0 4px}
+#att-modal-close:hover{color:#fff}
+#att-canvas-wrap{overflow:auto;max-height:80vh}
+#att-canvas{display:block;max-width:100%}
+.att-canvas{pointer-events:none;user-select:none;-webkit-user-select:none}
+#att-modal-footer{font-size:11px;color:var(--muted,#8a8a8a);margin-top:10px;text-align:center;font-family:Cairo,sans-serif}
+#att-modal-spinner{font-family:Cairo,sans-serif;color:var(--gold,#d4a853);font-size:13px;padding:40px;text-align:center}
+#att-modal-err{font-family:Cairo,sans-serif;color:#ff6b5e;font-size:13px;padding:40px;text-align:center;display:none}
+
+/* Print protection */
+@media print{body{display:none!important}}
 </style>
+
+<!-- PDF.js for secure canvas rendering of PDF attachments -->
+<script>
+  // Namespace placeholder — will be populated after PDF.js module loads
+  window.__pdfjsLib = null;
+</script>
+<script type="module">
+  try {
+    const pdfjsLib = await import('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.min.mjs');
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.worker.min.mjs';
+    window.__pdfjsLib = pdfjsLib;
+  } catch(e) { console.warn('PDF.js load failed:', e); }
+</script>
 </head>
 <body>
 
@@ -904,6 +942,332 @@ const $ = s => document.querySelector(s);
 const realFlags = s => (s.flag || '').split('|').map(t => t.trim())
                         .filter(t => t && !t.includes('خارج قائمة'));
 
+/* ===================================================================
+   CANVAS PROTECTION — Disable all data-extraction APIs
+   =================================================================== */
+(function() {
+  'use strict';
+  const proto = HTMLCanvasElement.prototype;
+  const blocked = () => '';
+  const blockedBlob = () => {};
+  proto.toDataURL = blocked;
+  proto.toBlob = blockedBlob;
+  if (typeof OffscreenCanvas !== 'undefined') {
+    try {
+      OffscreenCanvas.prototype.convertToBlob = () => Promise.reject(new Error('blocked'));
+      OffscreenCanvas.prototype.toBlob = blockedBlob;
+    } catch(e) {}
+  }
+})();
+
+// Block keyboard shortcuts for saving/printing/viewing source
+document.addEventListener('keydown', e => {
+  if (e.ctrlKey || e.metaKey) {
+    if (['s','p','u','a'].includes(e.key.toLowerCase())) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  }
+});
+
+// Block right-click on canvas
+document.addEventListener('contextmenu', e => {
+  if (e.target && e.target.id === 'att-canvas') e.preventDefault();
+});
+
+/* ===================================================================
+   ESRI TOKEN MANAGER
+   =================================================================== */
+let esriToken = null;
+let tokenExpiry = 0;
+let tokenFetchPromise = null;
+
+async function fetchEsriToken() {
+  // Return cached token if still valid (with 90s buffer)
+  if (esriToken && Date.now() < tokenExpiry - 90000) return esriToken;
+  // Coalesce concurrent calls
+  if (tokenFetchPromise) return tokenFetchPromise;
+
+  tokenFetchPromise = (async () => {
+    try {
+      const r = await fetch('/api/esri-token');
+      if (!r.ok) throw new Error(`Token endpoint returned ${r.status}`);
+      const d = await r.json();
+      if (d.error) throw new Error(d.error);
+      esriToken = d.access_token;
+      const expiresIn = (d.expires_in || 3600);
+      tokenExpiry = Date.now() + expiresIn * 1000;
+      // Auto-refresh 90s before expiry
+      setTimeout(() => { esriToken = null; tokenFetchPromise = null; }, (expiresIn - 90) * 1000);
+      return esriToken;
+    } catch(err) {
+      console.warn('Esri token fetch failed:', err.message);
+      esriToken = null;
+      tokenExpiry = 0;
+      return null;
+    } finally {
+      tokenFetchPromise = null;
+    }
+  })();
+  return tokenFetchPromise;
+}
+
+// Pre-fetch token on page load (non-blocking)
+fetchEsriToken().catch(() => {});
+
+/* ===================================================================
+   ATTACHMENT SYSTEM
+   =================================================================== */
+
+// Track which sites have already had attachments loaded (cache)
+const attCache = {};
+
+async function loadAttachments(btn) {
+  const siteId = btn.dataset.site;
+  let globalId = btn.dataset.gid;
+  let objectId = btn.dataset.oid;
+
+  const listEl = document.querySelector(`.att-list-${CSS.escape(siteId)}`);
+  if (!listEl) return;
+
+  // Show from cache if available
+  if (attCache[siteId]) {
+    renderAttachmentList(listEl, attCache[siteId]);
+    return;
+  }
+
+  // Loading state
+  listEl.innerHTML = '<span class="att-loading">⟳ جاري جلب المرفقات...</span>';
+  btn.disabled = true;
+
+  try {
+    const token = await fetchEsriToken();
+    if (!token) throw new Error('تعذّر الحصول على تصريح الوصول (Esri Token)');
+
+    let features = [];
+
+    // Option A: If we already have a valid GlobalID, query FeatureServer/1 directly
+    if (globalId && globalId.trim() !== '') {
+      const url = `https://services-ap1.arcgis.com/HRZVvitYCIwFb7oA/arcgis/rest/services/Sites/FeatureServer/1/query?` +
+        `where=${encodeURIComponent(`Parent_GlobalID='${globalId}'`)}&` +
+        `outFields=Attachment_Title,File_Type,R2_File_Key&f=json&token=${encodeURIComponent(token)}`;
+      const r = await fetch(url);
+      const d = await r.json();
+      if (!d.error && d.features) features = d.features;
+    }
+    // Option B: If we have an ObjectId, use queryRelatedRecords on FeatureServer/0
+    else if (objectId && objectId.trim() !== '') {
+      const url = `https://services-ap1.arcgis.com/HRZVvitYCIwFb7oA/arcgis/rest/services/Sites/FeatureServer/0/queryRelatedRecords?` +
+        `objectIds=${encodeURIComponent(objectId)}&relationshipId=0&` +
+        `outFields=Attachment_Title,File_Type,R2_File_Key&f=json&token=${encodeURIComponent(token)}`;
+      const r = await fetch(url);
+      const d = await r.json();
+      if (!d.error && d.relatedRecordGroups && d.relatedRecordGroups[0]) {
+        features = d.relatedRecordGroups[0].relatedRecords || [];
+      }
+    }
+    // Option C: If neither is yet resolved, query FeatureServer/0 by site code / ID to locate GlobalID/OBJECTID
+    else {
+      const qUrl = `https://services-ap1.arcgis.com/HRZVvitYCIwFb7oA/arcgis/rest/services/Sites/FeatureServer/0/query?` +
+        `where=${encodeURIComponent(`Site_ID='${siteId}' OR ID='${siteId}' OR Code='${siteId}'`)}&` +
+        `outFields=OBJECTID,GlobalID&f=json&token=${encodeURIComponent(token)}`;
+      const qr = await fetch(qUrl);
+      const qd = await qr.json();
+
+      if (qd.features && qd.features.length > 0) {
+        const feat = qd.features[0];
+        const g = feat.attributes.GlobalID || feat.attributes.globalid || feat.attributes.GLOBALID;
+        const o = feat.attributes.OBJECTID || feat.attributes.objectid;
+
+        if (g) btn.dataset.gid = globalId = g;
+        if (o) btn.dataset.oid = objectId = o;
+
+        if (g) {
+          const url1 = `https://services-ap1.arcgis.com/HRZVvitYCIwFb7oA/arcgis/rest/services/Sites/FeatureServer/1/query?` +
+            `where=${encodeURIComponent(`Parent_GlobalID='${g}'`)}&` +
+            `outFields=Attachment_Title,File_Type,R2_File_Key&f=json&token=${encodeURIComponent(token)}`;
+          const r1 = await fetch(url1);
+          const d1 = await r1.json();
+          if (!d1.error && d1.features) features = d1.features;
+        } else if (o) {
+          const url2 = `https://services-ap1.arcgis.com/HRZVvitYCIwFb7oA/arcgis/rest/services/Sites/FeatureServer/0/queryRelatedRecords?` +
+            `objectIds=${encodeURIComponent(o)}&relationshipId=0&` +
+            `outFields=Attachment_Title,File_Type,R2_File_Key&f=json&token=${encodeURIComponent(token)}`;
+          const r2 = await fetch(url2);
+          const d2 = await r2.json();
+          if (!d2.error && d2.relatedRecordGroups && d2.relatedRecordGroups[0]) {
+            features = d2.relatedRecordGroups[0].relatedRecords || [];
+          }
+        }
+      } else {
+        // Fallback: Query FeatureServer/1 directly using siteId as Parent_GlobalID
+        const urlFallback = `https://services-ap1.arcgis.com/HRZVvitYCIwFb7oA/arcgis/rest/services/Sites/FeatureServer/1/query?` +
+          `where=${encodeURIComponent(`Parent_GlobalID='${siteId}'`)}&` +
+          `outFields=Attachment_Title,File_Type,R2_File_Key&f=json&token=${encodeURIComponent(token)}`;
+        const rf = await fetch(urlFallback);
+        const df = await rf.json();
+        if (!df.error && df.features) features = df.features;
+      }
+    }
+
+    attCache[siteId] = features;
+    renderAttachmentList(listEl, features);
+  } catch(err) {
+    listEl.innerHTML = `<span class="att-err">⚠ تعذّر تحميل المرفقات: ${err.message}</span>`;
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+function renderAttachmentList(listEl, features) {
+  if (!features.length) {
+    listEl.innerHTML = '<span class="att-err">لا توجد مرفقات لهذا الموقع</span>';
+    return;
+  }
+  listEl.innerHTML = features.map(f => {
+    const a = f.attributes;
+    const icon = a.File_Type === 'pdf' ? '📄' : '🖼';
+    const title = a.Attachment_Title || a.R2_File_Key;
+    return `<button class="att-link" onclick="openAttachment(${JSON.stringify(a.R2_File_Key)},${JSON.stringify(a.File_Type)},${JSON.stringify(title)})">${icon} عرض: ${title}</button>`;
+  }).join('');
+}
+
+/* ===================================================================
+   CANVAS VIEWER
+   =================================================================== */
+
+async function openAttachment(r2Key, fileType, title) {
+  const modal = document.getElementById('att-modal');
+  const spinner = document.getElementById('att-modal-spinner');
+  const errEl = document.getElementById('att-modal-err');
+  const canvas = document.getElementById('att-canvas');
+  const titleEl = document.getElementById('att-modal-title');
+
+  // Reset modal
+  titleEl.textContent = title || 'مرفق';
+  spinner.style.display = 'block';
+  errEl.style.display = 'none';
+  canvas.style.display = 'none';
+  modal.style.display = 'flex';
+
+  try {
+    let apiBase = '';
+    if (location.protocol === 'file:') {
+      try {
+        const ping = await fetch('http://localhost:3000/api/attachment?key=ping', { method: 'OPTIONS' });
+        apiBase = 'http://localhost:3000';
+      } catch(e) {
+        apiBase = 'https://ads-dashboard.almahagroup.org';
+      }
+    }
+    let resp;
+    try {
+      resp = await fetch(apiBase + '/api/attachment?key=' + encodeURIComponent(r2Key), {
+        headers: { 'X-Viewer-Mode': 'canvas-render' }
+      });
+    } catch(netErr) {
+      throw new Error('تعذّر الاتصال بخادم المرفقات (R2). خدمة سحب المرفقات المحمية تتطلب استضافة Cloudflare أو تشغيل خادم محلي للوصول إلى الملفات.');
+    }
+
+    if (!resp.ok) {
+      throw new Error(`خطأ ${resp.status}: ${resp.statusText}`);
+    }
+
+    const userIdentity = resp.headers.get('X-User-Identity') || 'Authorized-Viewer';
+    const buffer = await resp.arrayBuffer();
+
+    spinner.style.display = 'none';
+    canvas.style.display = 'block';
+
+    const ctx = canvas.getContext('2d');
+
+    if (fileType === 'pdf') {
+      await renderPDF(buffer, canvas, ctx, userIdentity);
+    } else {
+      await renderImage(buffer, canvas, ctx, userIdentity);
+    }
+  } catch(err) {
+    spinner.style.display = 'none';
+    errEl.style.display = 'block';
+    errEl.textContent = `⚠ تعذّر تحميل الملف: ${err.message}`;
+  }
+}
+
+async function renderPDF(buffer, canvas, ctx, userIdentity) {
+  const pdfjsLib = window.__pdfjsLib;
+  if (!pdfjsLib) {
+    throw new Error('مكتبة PDF.js غير محملة. يرجى تحديث الصفحة.');
+  }
+
+  const loadingTask = pdfjsLib.getDocument({ data: new Uint8Array(buffer) });
+  const pdf = await loadingTask.promise;
+  const page = await pdf.getPage(1);
+
+  const viewport = page.getViewport({ scale: 1.6 });
+  canvas.width = viewport.width;
+  canvas.height = viewport.height;
+
+  await page.render({ canvasContext: ctx, viewport }).promise;
+  drawWatermark(ctx, canvas.width, canvas.height, userIdentity);
+}
+
+async function renderImage(buffer, canvas, ctx, userIdentity) {
+  const blob = new Blob([buffer]);
+  const objectUrl = URL.createObjectURL(blob);
+
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => {
+      // Scale to max 1200px wide for performance
+      const maxW = 1200;
+      const scale = img.width > maxW ? maxW / img.width : 1;
+      canvas.width = Math.round(img.width * scale);
+      canvas.height = Math.round(img.height * scale);
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      drawWatermark(ctx, canvas.width, canvas.height, userIdentity);
+      URL.revokeObjectURL(objectUrl);
+      resolve();
+    };
+    img.onerror = () => {
+      URL.revokeObjectURL(objectUrl);
+      reject(new Error('تعذّر تحميل الصورة'));
+    };
+    img.src = objectUrl;
+  });
+}
+
+function drawWatermark(ctx, w, h, identity) {
+  ctx.save();
+  ctx.globalAlpha = 0.16;
+  ctx.fillStyle = '#d4a853';
+  ctx.font = `bold ${Math.max(14, Math.round(w / 40))}px Cairo, sans-serif`;
+  ctx.textAlign = 'center';
+  ctx.translate(w / 2, h / 2);
+  ctx.rotate(-Math.PI / 6);
+  const dateStr = new Date().toLocaleString('ar-SA', { dateStyle: 'short', timeStyle: 'short' });
+  const text = `${identity} · ${dateStr}`;
+  const lineH = Math.max(80, Math.round(h / 8));
+  const lineW = Math.max(280, Math.round(w / 2));
+  for (let j = -h; j < h; j += lineH) {
+    for (let i = -w; i < w; i += lineW) {
+      ctx.fillText(text, i, j);
+    }
+  }
+  ctx.restore();
+}
+
+function closeAttachmentModal() {
+  document.getElementById('att-modal').style.display = 'none';
+  // Clear canvas to free memory
+  const canvas = document.getElementById('att-canvas');
+  if (canvas) {
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    canvas.width = 0;
+    canvas.height = 0;
+  }
+}
+
 
 /* ---------- KPIs ---------- */
 const execAll = S.filter(s => s.ex);
@@ -954,6 +1318,15 @@ function popup(s){
   h += rows.map(r => `<div><span class="k">${r[0]}</span><span>${esc(r[1])}</span></div>`).join('');
   const rf = realFlags(s);
   if (rf.length) h += `<span class="warn">⚠ ${rf.join(' — ')}</span>`;
+
+  // Attachments Section
+  const gid = s.globalId || s.GlobalID || '';
+  const oid = s.objectId || s.OBJECTID || '';
+  h += `<div class="att-section" style="margin-top:10px;padding-top:8px;border-top:1px dashed rgba(255,255,255,.14)">
+    <button class="att-btn" data-site="${s.id}" data-gid="${gid}" data-oid="${oid}" onclick="loadAttachments(this)">📎 عرض المرفقات الرسمية</button>
+    <div class="att-list-${s.id}" style="margin-top:6px;display:flex;flex-wrap:wrap;gap:4px"></div>
+  </div>`;
+
   return h + '</div>';
 }
 
@@ -1067,6 +1440,36 @@ document.querySelectorAll('th').forEach(th => th.onclick = () => {
 ['#fSrc','#fExec','#fFlag'].forEach(s => $(s).onchange = render);
 $('#fQ').oninput = render;
 render();
+
+// Close attachment modal on click outside or Escape key
+window.addEventListener('click', e => {
+  const modal = document.getElementById('att-modal');
+  if (e.target === modal) closeAttachmentModal();
+});
+window.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeAttachmentModal();
+});
 </script>
+
+<!-- Attachment Modal (View-Only Protected Canvas Viewer) -->
+<div id="att-modal">
+  <div id="att-modal-inner">
+    <div id="att-modal-hdr">
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="font-size:16px">🔒</span>
+        <span id="att-modal-title">عارض المستندات المحمي</span>
+      </div>
+      <button id="att-modal-close" onclick="closeAttachmentModal()" title="إغلاق">✕</button>
+    </div>
+    <div id="att-modal-spinner">⟳ جاري جلب المستند المشفر وتحضير العرض...</div>
+    <div id="att-modal-err"></div>
+    <div id="att-canvas-wrap">
+      <canvas id="att-canvas" class="att-canvas"></canvas>
+    </div>
+    <div id="att-modal-footer">
+      <span>🛡️ هذا المستند للعرض فقط ومحمي بعلامة مائية رقمية — يُمنع التحميل أو النسخ أو التداول</span>
+    </div>
+  </div>
+</div>
 </body>
 </html>
