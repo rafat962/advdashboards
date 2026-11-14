@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>لوحة المتابعة المالية — محفظة اللوحات الإعلانية</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--n0:#030915;--n1:#061129;--n2:#0a1a3f;--gold:#d4a853;--gl:#f0d48e;--gd:#9f7430;--ink:#eef2fa;--ink2:#c3cce0;--muted:#94a3c4;
+ --line:rgba(212,168,83,.28);--hair:rgba(255,255,255,.08);--teal:#3fc1c9;--green:#4fd18b;--amber:#f0bf5a;--red:#ff6b5e;--violet:#b38cff;--blue:#5aa9ff;
+ --r:16px;--glass:linear-gradient(160deg,rgba(16,40,92,.55),rgba(6,17,41,.82))}
+*{box-sizing:border-box}html,body{margin:0}
+body{font-family:'Cairo',system-ui,sans-serif;color:var(--ink);font-size:14px;line-height:1.65;min-height:100vh;background:radial-gradient(1100px 650px at 85% -10%,rgba(36,84,196,.22),transparent 65%),radial-gradient(900px 600px at 0% 70%,rgba(212,168,83,.06),transparent 60%),linear-gradient(180deg,var(--n1),var(--n0) 60%);background-color:var(--n0)}
+.mono{font-family:'JetBrains Mono',monospace;direction:ltr;unicode-bidi:isolate}
+.gold-text{background:linear-gradient(180deg,#fff0c4,var(--gold) 60%,var(--gd));-webkit-background-clip:text;background-clip:text;color:transparent}
+header{position:relative;padding:18px 0;border-bottom:1px solid var(--hair);background:linear-gradient(180deg,rgba(3,9,21,.6),transparent)}
+header::after{content:"";position:absolute;inset:auto 0 -1px 0;height:1px;background:linear-gradient(90deg,transparent 5%,rgba(240,212,142,.6) 50%,transparent 95%)}
+.hw,.wrap{max-width:1560px;margin:0 auto;padding:0 24px}
+.hw{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap}
+.brandrow{display:flex;align-items:center;gap:12px}.brandrow img{height:30px}.brandrow .sep{width:1px;height:28px;background:linear-gradient(180deg,transparent,var(--gold),transparent)}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:12px;color:var(--gl);border:1px solid var(--line);border-radius:999px;padding:3px 12px;background:rgba(212,168,83,.06)}
+.eyebrow i{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 0 4px rgba(79,209,139,.15)}
+h1{margin:6px 0 0;font-size:27px;font-weight:900}
+.hsub{color:var(--ink2);font-size:13.5px}
+.ctrls{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:11px;overflow:hidden;background:rgba(3,9,21,.5)}
+.seg button{font:700 12.5px 'Cairo';color:var(--ink2);background:transparent;border:0;padding:7px 13px;cursor:pointer}
+.seg button.on{background:linear-gradient(180deg,var(--gl),var(--gold));color:#1a1405}
+.wrap{padding-top:18px;padding-bottom:50px;position:relative;z-index:1}
+.kpis{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px}
+.kpi{position:relative;background:var(--glass);border:1px solid var(--hair);border-radius:var(--r);padding:14px 16px 13px;overflow:hidden}
+.kpi::before{content:"";position:absolute;inset:0 0 auto 0;height:3px;background:var(--c,var(--gold))}
+.kpi .lab{font-size:12.5px;color:var(--muted);font-weight:700}
+.kpi .val{font-size:25px;font-weight:900;color:#fff;line-height:1.25;margin-top:4px;white-space:nowrap}
+.kpi .val small{font-size:12px;color:var(--muted);font-weight:700;margin-inline-start:4px}
+.kpi .note{font-size:11.5px;color:var(--ink2);margin-top:3px;min-height:18px}
+.kpi .note b{color:var(--gl)}
+.grid{display:grid;gap:14px;margin-top:14px}
+.g-2-1{grid-template-columns:minmax(0,2fr) minmax(0,1fr)}
+.g-1-1{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.card{background:var(--glass);border:1px solid var(--hair);border-radius:var(--r);box-shadow:0 16px 36px rgba(0,0,0,.28);overflow:hidden;min-width:0}
+.card>h3{margin:0;padding:13px 18px;font-size:15.5px;font-weight:800;border-bottom:1px solid var(--hair);display:flex;justify-content:space-between;align-items:center;gap:10px;position:relative;flex-wrap:wrap}
+.card>h3::after{content:"";position:absolute;bottom:-1px;right:18px;width:46px;height:2px;background:linear-gradient(270deg,var(--gold),transparent)}
+.card>h3 small{font-weight:600;color:var(--muted);font-size:12px}
+.pad{padding:14px 18px}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--ink2);padding:0 18px 12px}
+.legend span{display:inline-flex;align-items:center;gap:6px;cursor:pointer;user-select:none}
+.legend span.off{opacity:.35}
+.legend i{width:11px;height:11px;border-radius:3px;display:inline-block}
+svg{direction:ltr}svg text{font-family:'Cairo',sans-serif}
+.tip{position:fixed;pointer-events:none;z-index:50;background:rgba(6,17,41,.97);border:1px solid var(--line);border-radius:10px;padding:8px 11px;font-size:12px;color:var(--ink);box-shadow:0 10px 28px rgba(0,0,0,.5);max-width:300px;display:none}
+.tip b{color:var(--gl)}
+.tbl{width:100%;border-collapse:collapse;font-size:12.8px}
+.tbl th{position:sticky;top:0;background:#0b1838;color:var(--gl);font-weight:800;padding:9px 10px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+.tbl td{padding:9px 10px;border-bottom:1px solid var(--hair);vertical-align:top}
+.tbl tr:hover td{background:rgba(255,255,255,.025)}
+.tbl .num{font-family:'JetBrains Mono',monospace;direction:ltr;text-align:left;white-space:nowrap}
+.tw{overflow:auto}
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:800;padding:2px 10px;border-radius:999px;border:1px solid currentColor;white-space:nowrap}
+.chip::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.risk{display:inline-block;width:9px;height:9px;border-radius:50%;margin-inline-end:6px}
+.cname b{color:#fff;display:block}.cname small{color:var(--muted)}
+.mx{border-collapse:separate;border-spacing:3px;font-size:11.5px;width:100%}
+.mx th{color:var(--muted);font-weight:700;padding:3px 2px;text-align:center;white-space:nowrap}
+.mx th.rh{text-align:right;color:var(--ink2);padding-inline-end:8px;white-space:nowrap}
+.mx td{height:34px;border-radius:7px;text-align:center;background:rgba(255,255,255,.03);color:#fff;font-weight:800;font-family:'JetBrains Mono',monospace;font-size:11px;cursor:default;min-width:46px}
+.mx td.now{outline:1px dashed var(--gl);outline-offset:-1px}
+.mx tr.yr th{color:var(--gl)}
+.acts{list-style:none;margin:0;padding:6px 18px 14px}
+.acts li{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:start;padding:11px 0;border-bottom:1px dashed var(--hair)}
+.acts li:last-child{border-bottom:0}
+.acts .pr{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;font-weight:900;font-size:13px}
+.acts b{color:#fff;font-size:13.5px}.acts p{margin:2px 0 0;color:var(--ink2);font-size:12.5px}
+.acts .amt{font-family:'JetBrains Mono',monospace;color:var(--gl);font-weight:700;white-space:nowrap;font-size:12.5px}
+details.cd{border-top:1px solid var(--hair)}
+details.cd>summary{list-style:none;cursor:pointer;padding:12px 18px;display:grid;grid-template-columns:minmax(0,2.2fr) repeat(4,minmax(0,1fr)) 24px;gap:10px;align-items:center}
+details.cd>summary::-webkit-details-marker{display:none}
+details.cd>summary:hover{background:rgba(255,255,255,.025)}
+details.cd>summary .ar{color:var(--gl);transition:transform .2s;text-align:center}
+details.cd[open]>summary .ar{transform:rotate(180deg)}
+.sm .k{font-size:11px;color:var(--muted)}.sm .v{font-weight:800;color:#fff;font-size:13px}
+.cdb{padding:4px 18px 18px;display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:16px}
+.cdb .box{background:rgba(3,9,21,.35);border:1px solid var(--hair);border-radius:12px;overflow:hidden}
+.cdb .box h4{margin:0;padding:9px 12px;font-size:13px;color:var(--gl);border-bottom:1px solid var(--hair)}
+.cdb ul{margin:0;padding:8px 26px 10px 12px;color:var(--ink2);font-size:12.5px}
+.cdb ul li{margin:4px 0}
+.cdb .terms{padding:10px 12px;color:var(--ink2);font-size:12.5px}
+.empty{padding:14px;color:var(--muted);font-size:12.5px;text-align:center}
+.foot{margin-top:18px;color:var(--muted);font-size:12px;text-align:center;line-height:1.9}
+.foot b{color:var(--gl)}
+.srcnote{font-size:11.5px;color:var(--muted);padding:0 18px 12px}
+.bar-row{display:grid;grid-template-columns:150px 1fr 110px;gap:10px;align-items:center;margin:8px 0;font-size:12.5px}
+.bar-row .t{color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar-row .b{height:12px;border-radius:6px;background:rgba(255,255,255,.05);overflow:hidden}
+.bar-row .b span{display:block;height:100%;border-radius:6px}
+.bar-row .n{font-family:'JetBrains Mono',monospace;text-align:left;direction:ltr;color:#fff;font-weight:700}
+#toTop{position:fixed;left:24px;bottom:24px;z-index:60;width:46px;height:46px;border-radius:14px;border:1px solid rgba(212,168,83,.45);background:rgba(6,17,41,.88);color:#f0d48e;display:grid;place-items:center;cursor:pointer;opacity:0;transform:translateY(14px);pointer-events:none;transition:.25s}
+#toTop.show{opacity:1;transform:none;pointer-events:auto}
+@media(max-width:1300px){.kpis{grid-template-columns:repeat(3,minmax(0,1fr))}.g-2-1,.g-1-1{grid-template-columns:1fr}}
+@media(max-width:760px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.cdb{grid-template-columns:1fr}details.cd>summary{grid-template-columns:1fr 1fr 24px}details.cd>summary .sm.hm{display:none}}
+</style>
+</head>
+<body>
+<header><div class="hw">
+  <div>
+    <span class="eyebrow"><i></i>المتابعة المالية · محفظة عقود اللوحات الإعلانية</span>
+    <h1><span class="gold-text">لوحة المتابعة المالية</span> — الاستحقاقات والسيولة<span style="display:inline-block;vertical-align:middle;font-size:13px;font-weight:800;padding:2px 12px;border-radius:999px;background:rgba(255,107,94,.16);color:#ffb3ab;border:1px solid rgba(255,107,94,.55);margin-inline-start:10px">نسخة تجريبية · قيد التطوير</span></h1>
+    <div class="hsub">جداول الدفعات، الاستحقاق الشهري، السيولة المطلوبة، والموقف المالي لكل عقد · بيانات حتى <b class="mono" id="asOf"></b></div>
+  </div>
+  <div class="ctrls">
+    <div class="seg" id="vatSeg"><button data-v="0" class="on">غير شامل الضريبة</button><button data-v="1">شامل 15%</button></div>
+    <div class="seg" id="hzSeg"><button data-h="6">6 أشهر</button><button data-h="12" class="on">12 شهراً</button><button data-h="24">24 شهراً</button></div>
+    
+  </div>
+</div></header>
+
+<div class="wrap">
+  <div role="note" style="display:flex;gap:14px;align-items:center;margin:0 0 18px;padding:14px 20px;border-radius:14px;border:1px solid rgba(255,107,94,.55);background:linear-gradient(90deg,rgba(255,107,94,.16),rgba(240,191,90,.08))">
+    <div style="flex:none;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:rgba(255,107,94,.18);border:1px solid rgba(255,107,94,.6);color:#ff9d93;font-size:20px;font-weight:800">!</div>
+    <div><div style="color:#ffc2bb;font-size:17px;font-weight:800;margin-bottom:2px">تنبيه: نسخة تجريبية قيد التطوير — البيانات الحالية تجريبية وليست حقيقية</div><div style="color:#e8ecf5;font-size:14px">لوحة المعلومات قيد التطوير، والأرقام المعروضة للتوضيح فقط ولا يُعتمد عليها في أي قرار مالي.</div></div>
+  </div>
+  <section class="kpis" id="kpis"></section>
+
+  <div class="grid g-2-1">
+    <div class="card">
+      <h3>خريطة السيولة المطلوبة <small id="liqSub"></small></h3>
+      <div class="pad" style="padding-bottom:4px"><svg id="liq" width="100%" height="400"></svg></div>
+      <div class="legend" id="liqLeg"></div>
+      <div class="srcnote">الأعمدة: الاستحقاق الشهري لكل عقد · الخط: السيولة التراكمية المطلوبة خلال الفترة · العقود المعلّقة أو المرحّلة لا تدخل في السيولة حتى صدور توجيه بالسداد.</div>
+    </div>
+    <div class="card">
+      <h3>ما يجب توفيره <small>حسب الأفق الزمني</small></h3>
+      <div class="pad" id="buckets"></div>
+      <h3 style="border-top:1px solid var(--hair)">الاستحقاقات القادمة <small>أقرب 5 دفعات</small></h3>
+      <ul class="acts" id="nextList"></ul>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:14px">
+    <h3>مصفوفة الاستحقاقات الشهرية <small>القيمة بالمليون ريال · الإطار المنقّط = الشهر الحالي · مرّر المؤشر للتفاصيل</small></h3>
+    <div class="pad tw"><table class="mx" id="mx"></table></div>
+    <div class="legend" id="mxLeg"></div>
+  </div>
+
+  <div class="grid g-1-1">
+    <div class="card">
+      <h3>منحنى الالتزامات السنوية على عمر العقود <small>إجمالي الأجرة المستحقة سنوياً</small></h3>
+      <div class="pad" style="padding-bottom:4px"><svg id="life" width="100%" height="260"></svg></div>
+      <div class="srcnote">يعكس الزيادة التعاقدية 10% بعد السنة الخامسة في عقود الرياض، وخصم فترات التجهيز في السنوات الأولى.</div>
+    </div>
+    <div class="card">
+      <h3>تركّز الالتزامات <small>الأجرة السنوية الجارية حسب المنطقة والعقد</small></h3>
+      <div class="pad" style="display:grid;grid-template-columns:200px 1fr;gap:18px;align-items:center">
+        <svg id="donut" width="200" height="200" viewBox="0 0 200 200"></svg>
+        <div id="conc"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid g-2-1">
+    <div class="card">
+      <h3>الموقف المالي للعقود <small>اضغط على أي عقد لعرض جدول دفعاته وملاحظاته</small></h3>
+      <div style="padding:8px 18px;display:grid;grid-template-columns:minmax(0,2.2fr) repeat(4,minmax(0,1fr)) 24px;gap:10px;font-size:11.5px;color:var(--muted);font-weight:700;border-bottom:1px solid var(--hair)">
+        <span>العقد</span><span>القيمة / الأجرة السنوية</span><span class="hm">الاستحقاق القادم</span><span class="hm">الحالة المالية</span><span class="hm">الأثر المستهدف</span><span></span></div>
+      <div id="contracts"></div>
+    </div>
+    <div class="card">
+      <h3>قرارات ومتابعات مالية <small>مرتبة حسب الأولوية</small></h3>
+      <ul class="acts" id="actions"></ul>
+      <h3 style="border-top:1px solid var(--hair)">الأثر المالي المستهدف <small id="impTot"></small></h3>
+      <div class="pad" id="impacts"></div>
+    </div>
+  </div>
+
+  <div class="foot">
+    مصدر الأرقام: شروط الدفع في العقود المعتمدة، عرض مجلس الإدارة (10 نوفمبر 2026)، وخطاب التوضيحات بشأن الاستحقاقات وخطة السداد.<br>
+    تواريخ الاستحقاق محسوبة من تاريخ الاستلام ونظام كل عقد (هجري / ميلادي)، والمبالغ غير شاملة ضريبة القيمة المضافة ما لم يُختر خلاف ذلك.<br>
+    حالة السداد الفعلية تُعتمد من <b>كشف القسم المالي</b> — الدفعات السابقة غير المؤكَّدة تظهر بحالة «بانتظار تأكيد السداد».<br>
+    إعداد: <b>مكتب المها للاستشارات</b>
+  </div>
+</div>
+<div class="tip" id="tip"></div>
+<button id="toTop" aria-label="العودة لأعلى">▲</button>
+
+<script>
+/* =====================================================================
+   البيانات — العقود وشروط الدفع (المبالغ غير شاملة الضريبة)
+   ===================================================================== */
+const TODAY = new Date(2026, 10, 14);
+const VAT = 0.15;
+const RG = {jeddah:'جدة', eastern:'المنطقة الشرقية', makkah:'مكة المكرمة', riyadh:'الرياض', ahsa:'الأحساء'};
+/* status: sched (مجدول) | resch (إعادة جدولة) | defer (مرحّل) | susp (معلّق) | settle (قيد التسوية) | dispute (محل خلاف) | prop (سيناريو مقترح) | nodata (بانتظار البيانات) */
+const ST = {
+  sched:  ['مجدول', '#4fd18b'],
+  resch:  ['قيد إعادة الجدولة', '#5aa9ff'],
+  defer:  ['مرحّل', '#b38cff'],
+  susp:   ['سداد معلّق', '#94a3c4'],
+  settle: ['قيد التسوية', '#f0bf5a'],
+  dispute:['محل خلاف', '#ff6b5e'],
+  prop:   ['سيناريو مقترح', '#3fc1c9'],
+  nodata: ['بانتظار البيانات', '#64748b']
+};
+const PAY_ST = {
+  paid:    ['مسدَّد', '#4fd18b'],
+  due:     ['مستحق قادم', '#5aa9ff'],
+  pend:    ['بانتظار تأكيد السداد', '#f0bf5a'],
+  late:    ['متأخر', '#ff6b5e'],
+  hold:    ['معلّق / مرحّل', '#94a3c4'],
+  cond:    ['مشروط', '#3fc1c9']
+};
+const C = [{"id": "440491", "region": "riyadh", "short": "الرياض — العقد الأول", "no": "440491", "party": "شركة ريمات الرياض للتنمية", "status": "settle", "color": "#5aa9ff", "value": null, "annual": 101000001, "inst": [{"date": "2023-11-23", "v": 50500001, "label": "أجرة السنة الإيجارية 1 (50%)", "note": ""}, {"date": "2024-11-11", "v": 101000001, "label": "أجرة السنة الإيجارية 2 (100%)", "note": ""}, {"date": "2025-10-31", "v": 101000001, "label": "أجرة السنة الإيجارية 3 (100%)", "note": ""}, {"date": "2026-10-20", "v": 101000001, "label": "أجرة السنة الإيجارية 4 (100%)", "note": ""}, {"date": "2027-10-09", "v": 101000001, "label": "أجرة السنة الإيجارية 5 (100%)", "note": ""}, {"date": "2028-09-28", "v": 111100001, "label": "أجرة السنة الإيجارية 6 (110%)", "note": ""}, {"date": "2029-09-18", "v": 111100001, "label": "أجرة السنة الإيجارية 7 (110%)", "note": ""}, {"date": "2030-09-07", "v": 111100001, "label": "أجرة السنة الإيجارية 8 (110%)", "note": ""}, {"date": "2031-08-28", "v": 111100001, "label": "أجرة السنة الإيجارية 9 (110%)", "note": ""}, {"date": "2032-08-16", "v": 111100001, "label": "أجرة السنة الإيجارية 10 (110%)", "note": ""}], "terms": "تُسدَّد الأجرة مقدماً في بداية كل سنة إيجارية (هجرية) خلال 10 أيام؛ السنة الأولى 50%، والسنوات 2–5 بنسبة 100%، والسنوات 6–10 بنسبة 110%. المبالغ غير شاملة ضريبة القيمة المضافة 15%.", "notes": ["كُلّفت جهة أخرى بالمتابعة وفق حل ودي، وأُوقفت إجراءات التقاضي.", "يُرجع إلى م. وليد لتأكيد موقف الأجرة والغرامة.", "شاشتان تعملان بالنخيل مول بإذن تشغيل ODA-04-0067."], "impact": null}, {"id": "447205", "region": "riyadh", "short": "الرياض — العقد الثاني", "no": "447205", "party": "شركة ريمات الرياض للتنمية", "status": "resch", "color": "#3fc1c9", "value": null, "annual": 90000000, "inst": [{"date": "2023-11-23", "v": 45000000, "label": "أجرة السنة الإيجارية 1 (50%)", "note": ""}, {"date": "2024-11-11", "v": 90000000, "label": "أجرة السنة الإيجارية 2 (100%)", "note": ""}, {"date": "2025-10-31", "v": 90000000, "label": "أجرة السنة الإيجارية 3 (100%)", "note": ""}, {"date": "2026-10-20", "v": 90000000, "label": "أجرة السنة الإيجارية 4 (100%)", "note": ""}, {"date": "2027-10-09", "v": 90000000, "label": "أجرة السنة الإيجارية 5 (100%)", "note": "مقترح ترحيلها إلى العام القادم"}, {"date": "2028-09-28", "v": 99000000, "label": "أجرة السنة الإيجارية 6 (110%)", "note": "مقترح ترحيلها إلى العام القادم"}, {"date": "2029-09-18", "v": 99000000, "label": "أجرة السنة الإيجارية 7 (110%)", "note": ""}, {"date": "2030-09-07", "v": 99000000, "label": "أجرة السنة الإيجارية 8 (110%)", "note": ""}, {"date": "2031-08-28", "v": 99000000, "label": "أجرة السنة الإيجارية 9 (110%)", "note": ""}, {"date": "2032-08-16", "v": 99000000, "label": "أجرة السنة الإيجارية 10 (110%)", "note": ""}], "terms": "تُسدَّد الأجرة مقدماً في بداية كل سنة إيجارية (هجرية) خلال 10 أيام؛ السنة الأولى 50%، والسنوات 2–5 بنسبة 100%، والسنوات 6–10 بنسبة 110%. المبالغ غير شاملة ضريبة القيمة المضافة 15%.", "notes": ["جدولة السداد إلى العام القادم بالتنسيق مع شركة ريمات، وتحديد الجدول المقترح في الاجتماع القادم.", "لا توجد مواقع أو أذونات تشغيل ضمن الملفات حتى تاريخه."], "impact": null}, {"id": "866304", "region": "riyadh", "short": "الرياض — العقد الثالث", "no": "866304", "party": "شركة ريمات الرياض للتنمية", "status": "sched", "color": "#b38cff", "value": null, "annual": 16500000, "inst": [{"date": "2026-06-17", "v": 16500000, "label": "أجرة السنة الإيجارية 1 (50%)", "note": "مستهدف ترحيلها 3 أشهر (أثر 8.25 م.ر)"}, {"date": "2027-06-17", "v": 16500000, "label": "أجرة السنة الإيجارية 2 (50%)", "note": ""}, {"date": "2028-06-17", "v": 33000000, "label": "أجرة السنة الإيجارية 3 (100%)", "note": ""}, {"date": "2029-06-17", "v": 33000000, "label": "أجرة السنة الإيجارية 4 (100%)", "note": ""}, {"date": "2030-06-17", "v": 33000000, "label": "أجرة السنة الإيجارية 5 (100%)", "note": ""}, {"date": "2031-06-17", "v": 36300000, "label": "أجرة السنة الإيجارية 6 (110%)", "note": ""}, {"date": "2032-06-17", "v": 36300000, "label": "أجرة السنة الإيجارية 7 (110%)", "note": ""}, {"date": "2033-06-17", "v": 36300000, "label": "أجرة السنة الإيجارية 8 (110%)", "note": ""}, {"date": "2034-06-17", "v": 36300000, "label": "أجرة السنة الإيجارية 9 (110%)", "note": ""}, {"date": "2035-06-17", "v": 36300000, "label": "أجرة السنة الإيجارية 10 (110%)", "note": ""}], "terms": "الأجرة السنوية 33,000,000 ريال (11,000,000 للوحة) تُسدَّد مقدماً في بداية كل سنة إيجارية؛ السنتان 1–2 بنسبة 50%، والسنوات 3–5 بنسبة 100%، والسنوات 6–10 بنسبة 110%. ضمان بنكي لا يقل عن 25% من الأجرة السنوية.", "notes": ["تاريخ الاستلام 17/06/2026، وفترة التجهيز 12 شهراً.", "الأثر المالي المستهدف لترحيل العقد 8,250,000 ريال."], "impact": ["ترحيل عقد الرياض الثالث", 8250000]}, {"id": "PROJ-30326", "region": "makkah", "short": "مكة — الأراضي البيضاء", "no": "PROJ-30326", "party": "شركة البلد الأمين للتنمية والتطوير العمراني", "status": "sched", "color": "#f0bf5a", "value": 15225000, "annual": 3045000, "inst": [{"date": "2026-08-18", "v": 3045000, "label": "الدفعة الأولى — عند توقيع العقد", "note": "عدم سدادها يترتب عليه مصادرة الضمان البنكي"}, {"date": "2027-08-18", "v": 1522500, "label": "أجرة السنة التعاقدية 2", "note": "50% من الأجرة (1,522,500) عند الالتزام بمتطلبات فترة التجهيز — وإلا 3,045,000", "cond": true}, {"date": "2028-08-18", "v": 3045000, "label": "أجرة السنة التعاقدية 3", "note": ""}, {"date": "2029-08-18", "v": 3045000, "label": "أجرة السنة التعاقدية 4", "note": ""}, {"date": "2030-08-18", "v": 3045000, "label": "أجرة السنة التعاقدية 5", "note": ""}], "terms": "15,225,000 ريال على 5 دفعات سنوية (3,045,000 ريال) تُدفع مقدماً في بداية كل سنة تعاقدية خلال 10 أيام. فترة التجهيز 6 أشهر تُحتسب في السنة الثانية (خصم 50%). ضمان حسن التنفيذ 5% من قيمة العقد. الرسوم الإعلانية 400 ريال/م² سنوياً من بداية السريان.", "notes": ["عُدّل محضر الاستلام إلى 18/08/2026 لتبدأ الالتزامات المالية منه.", "الأثر المالي لترحيل بداية العقد 3 أشهر = ربع الأجرة السنوية (761,250 ريال)."], "impact": ["ترحيل عقد الأراضي البيضاء", 761250]}, {"id": "ABAM-30011", "region": "makkah", "short": "مكة — الحزمة الأولى", "no": "ABAM-30011", "party": "شركة البلد الأمين", "status": "susp", "color": "#ff9f6b", "value": 70000000, "annual": null, "inst": [], "noSched": "سداد المبلغ المتبقي معلّق إلى حين إشعار آخر — لا تدخل استحقاقاته في السيولة المطلوبة حتى صدور التوجيه بالسداد.", "terms": "قيمة العقد 70,000,000 ريال · تاريخ الاستلام 28/04/2025.", "notes": ["يُعلَّق سداد المبلغ المتبقي إلى حين إشعار آخر، وفي حال تطلب الأمر السداد يُوافى بالتوجيه اللازم."], "impact": ["ترحيل عقود مكة المكرمة", 29000000]}, {"id": "CN46-41", "region": "eastern", "short": "الشرقية — العقد الموحد", "no": "CN46-41", "party": "شركة إشراق", "status": "defer", "color": "#4fd18b", "value": 252757000, "annual": null, "inst": [], "noSched": "الفاتورة القادمة تُسوّى على أساس المواقع المنفذة ويُرحَّل سدادها إلى عام 2028 وفق خطة المشروع المعتمدة.", "terms": "قيمة العقد 252,757,000 ريال · تاريخ الاستلام 18/09/2025.", "notes": ["تسوية الفاتورة القادمة على أساس المواقع المنفذة وترحيل سدادها إلى 2028، واستكمال التسوية بعد اكتمال 100% من المواقع."], "impact": ["ترحيل عقود الدمام", 85000000]}, {"id": "CN-135274", "region": "jeddah", "short": "جدة — اليونيبول", "no": "CN-135274", "party": "أمانة محافظة جدة", "status": "settle", "color": "#ff6bb3", "value": 103000000, "annual": 10300000, "inst": [], "noSched": "لم يُعتمد جدول دفعات زمني بعد — الدفعة المستحقة لعام 2026 تُحتسب على أساس 50% من أجرة السنة الثانية لعدد 60 موقعاً.", "terms": "قيمة العقد 103,000,000 ريال لمدة 10 سنوات (متوسط 10.3 م.ر سنوياً) · تاريخ الاستلام 24/11/2024.", "notes": ["الدفعة المستحقة لعام 2026 على أساس 50% من أجرة السنة الإيجارية الثانية لعدد 60 موقعاً، مع توزيع مهلة التجهيز على السنتين الثانية والثالثة.", "يمكن بحث ترحيل بداية العقد من مارس 2025 ثلاثة أشهر إضافية إذا خفّض التكاليف المسجلة في ميزانية 2026."], "impact": ["التعويض المستهدف لعقد يونيبول جدة", 25750000]}, {"id": "3084-1443", "region": "jeddah", "short": "جدة — الجسور والأنفاق", "no": "3084/أ/1443", "party": "أمانة محافظة جدة", "status": "prop", "color": "#2dd4bf", "value": null, "annual": null, "inst": [], "noSched": "سيناريو مالي مقترح غير معتمد: 8 دفعات نصف سنوية — السنة 1: 33.92 + 33.92 · السنة 2: 19.95 + 19.95 · السنة 3: 19.95 + 19.95 · السنة 4: 26.60 + 26.60 (مليون ريال) — صافي 200.83 م.ر بعد خصم التجهيز 49.21 م.ر.", "terms": "القيمة الإيجارية السنوية في العقد الأصلي 106.4 مليون ريال؛ السيناريو المعدّل بعد إلغاء المواقع غير المجدية (17 ثم 10 مواقع، 5.32 م.ر للموقع) مع خصم فترة التجهيز.", "notes": ["إجمالي الأجرة قبل الخصم 250.04 م.ر، وخصم التجهيز 49.21 م.ر، والصافي 200.83 م.ر على 4 سنوات.", "بانتظار اعتماد الأمانة للسيناريو المقترح."], "impact": null}, {"id": "jeddah-ped", "region": "jeddah", "short": "جدة — جسور المشاة", "no": "4 اتفاقيات", "party": "أمانة محافظة جدة", "status": "dispute", "color": "#e879f9", "value": 25000000, "annual": null, "inst": [], "noSched": "القيمة الإيجارية الإجمالية المعدلة 25 مليون ريال (غير شاملة الضريبة) — بداية المدة محل خلاف ولا يوجد جدول سداد معتمد.", "terms": "4 اتفاقيات (أ، ب، ج، د) · مدة كل اتفاقية 15 سنة · 17 جسراً.", "notes": ["المطالبة بالإيجار قبل حسم التسويات من التحديات القائمة.", "خطاب الشركة للأمانة رقم 030801102026 بتاريخ 08/11/2026 لمعالجة التحديات التعاقدية والمالية."], "impact": null}, {"id": "CN-37100", "region": "eastern", "short": "الشرقية — شاشات العقد الأول", "no": "CN-37100", "party": "أمانة المنطقة الشرقية", "status": "nodata", "color": "#94a3c4", "value": 33000000, "annual": null, "inst": [], "terms": "قيمة العقد 33,000,000 ريال · تاريخ الاستلام 18/10/2023.", "notes": [], "impact": null}, {"id": "CN-48868", "region": "eastern", "short": "الشرقية — شاشات العقد الثاني", "no": "CN-48868", "party": "أمانة المنطقة الشرقية", "status": "nodata", "color": "#64748b", "value": 25500000, "annual": null, "inst": [], "terms": "قيمة العقد 25,500,000 ريال · تاريخ الاستلام 25/01/2024.", "notes": [], "impact": null}];
+/* تأكيدات السداد من القسم المالي: { 'رقم العقد#رقم الدفعة': {date:'YYYY-MM-DD', ref:'رقم الإيصال', amount:المبلغ} } */
+const PAID = {};
+const ACTIONS = [{"p": 1, "t": "الرياض — العقد الثاني: اعتماد جدول السداد المعدّل", "d": "جدولة السداد إلى العام القادم بالتنسيق مع ريمات وتحديد الجدول المقترح في الاجتماع القادم.", "v": 90000000}, {"p": 1, "t": "الرياض — العقد الأول: تأكيد موقف الأجرة والغرامة", "d": "الحل الودي قائم والتقاضي موقوف؛ مطلوب تأكيد المبالغ المعتمدة من م. وليد.", "v": 101000001}, {"p": 1, "t": "تأكيد الدفعات السابقة من كشف القسم المالي", "d": "الدفعات التي حلّ موعدها تظهر «بانتظار تأكيد السداد» حتى إدخال تاريخ السداد ورقم الإيصال.", "v": null}, {"p": 2, "t": "الرياض — العقد الثالث: اعتماد ترحيل البداية 3 أشهر", "d": "أثر مالي مستهدف 8.25 م.ر؛ الدفعة القادمة 16.5 م.ر في 17/06/2027.", "v": 8250000}, {"p": 2, "t": "الشرقية: تسوية الفاتورة القادمة على المواقع المنفذة", "d": "ترحيل السداد إلى 2028 واستكمال التسوية بعد اكتمال 100% من المواقع.", "v": 85000000}, {"p": 2, "t": "جدة — اليونيبول: اعتماد أساس دفعة 2026", "d": "50% من أجرة السنة الثانية لـ 60 موقعاً، ودراسة ترحيل البداية 3 أشهر.", "v": 25750000}, {"p": 3, "t": "مكة — الأراضي البيضاء: شرط خصم السنة الثانية", "d": "الالتزام بمتطلبات التجهيز يخفّض دفعة 18/08/2027 إلى 1.52 م.ر.", "v": 1522500}, {"p": 3, "t": "جدة — الجسور والأنفاق: اعتماد السيناريو المالي", "d": "صافي 200.83 م.ر على 4 سنوات بـ 8 دفعات نصف سنوية — بانتظار الأمانة.", "v": 200830000}, {"p": 3, "t": "مكة — الحزمة الأولى: سداد معلّق", "d": "لا سداد للمبلغ المتبقي حتى صدور توجيه.", "v": null}];
+
+/* ===================================================================== */
+const $ = s => document.querySelector(s);
+let vat = 0, hz = 12;
+const amt = v => v * (vat ? 1 + VAT : 1);
+const fmt = n => Math.round(n).toLocaleString('en-US');
+const fM = n => (n / 1e6).toLocaleString('en-US', { maximumFractionDigits: n >= 1e8 ? 1 : 2 });
+const pd = s => { const [y, m, d] = s.split('-').map(Number); return new Date(y, m - 1, d); };
+const fd = d => String(d.getDate()).padStart(2, '0') + '/' + String(d.getMonth() + 1).padStart(2, '0') + '/' + d.getFullYear();
+const days = d => Math.round((d - TODAY) / 864e5);
+const MN = ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
+const mkey = d => d.getFullYear() * 12 + d.getMonth();
+const tip = $('#tip');
+function showTip(e, h) { tip.innerHTML = h; tip.style.display = 'block'; const x = Math.min(e.clientX + 14, innerWidth - tip.offsetWidth - 8); tip.style.left = x + 'px'; tip.style.top = (e.clientY + 14) + 'px'; }
+function hideTip() { tip.style.display = 'none'; }
+
+/* بناء الدفعات مع حالتها */
+const INST = [];
+C.forEach(c => (c.inst || []).forEach((p, i) => {
+  const d = pd(p.date), key = c.id + '#' + (i + 1), conf = PAID[key];
+  let st;
+  if (conf) st = 'paid';
+  else if (c.status === 'susp' || c.status === 'defer') st = 'hold';
+  else if (p.cond) st = 'cond';
+  else if (d < TODAY) st = 'pend';
+  else st = 'due';
+  INST.push({ c, n: i + 1, d, v: p.v, label: p.label, note: p.note || '', st, key, conf });
+}));
+const FUT = () => INST.filter(x => x.d >= TODAY && x.st !== 'hold');
+const inHz = (x, m) => { const lim = new Date(TODAY); lim.setMonth(lim.getMonth() + m); return x.d >= TODAY && x.d < lim && x.st !== 'hold'; };
+const CCOL = {};
+C.forEach(c => CCOL[c.id] = c.color);
+
+function kpis() {
+  const val = C.reduce((a, c) => a + (c.value || 0), 0), nVal = C.filter(c => c.value).length;
+  const inH = INST.filter(x => inHz(x, hz)), sumH = inH.reduce((a, x) => a + x.v, 0);
+  const nxt = FUT().sort((a, b) => a.d - b.d)[0];
+  const pend = INST.filter(x => x.st === 'pend'), sumP = pend.reduce((a, x) => a + x.v, 0);
+  const paid = INST.filter(x => x.st === 'paid').reduce((a, x) => a + (x.conf.amount || x.v), 0);
+  const imp = C.reduce((a, c) => a + (c.impact ? c.impact[1] : 0), 0);
+  const K = [
+    ['#d4a853', 'إجمالي قيم العقود المسجّلة', fM(amt(val)), 'م.ر', `${nVal} عقود ذات قيمة مسجّلة من ${C.length}`],
+    ['#5aa9ff', 'استحقاقات 2026 حسب الكشوفات', fM(amt(446150001)), 'م.ر', 'وفق خطاب التوضيحات بشأن الاستحقاقات'],
+    ['#f0bf5a', `السيولة المطلوبة — ${hz} شهراً`, fM(amt(sumH)), 'م.ر', `${inH.length} دفعات مجدولة خلال الفترة`],
+    ['#3fc1c9', 'الاستحقاق القادم', nxt ? fM(amt(nxt.v)) : '—', nxt ? 'م.ر' : '', nxt ? `<b>${nxt.c.short}</b> · ${fd(nxt.d)} · بعد ${days(nxt.d)} يوماً` : ''],
+    ['#ff6b5e', 'دفعات سابقة بانتظار تأكيد السداد', fM(amt(sumP)), 'م.ر', `${pend.length} دفعات · تُؤكَّد من كشف المالية${paid ? ' · المسدَّد المؤكَّد ' + fM(amt(paid)) + ' م.ر' : ''}`],
+    ['#4fd18b', 'الأثر المالي المستهدف', fM(imp), 'م.ر', 'ترحيلات وتعويضات قيد الاعتماد']
+  ];
+  $('#kpis').innerHTML = K.map(k => `<div class="kpi" style="--c:${k[0]}"><div class="lab">${k[1]}</div><div class="val">${k[2]}<small>${k[3]}</small></div><div class="note">${k[4]}</div></div>`).join('');
+}
+
+function months(n) { const a = []; const d = new Date(TODAY.getFullYear(), TODAY.getMonth(), 1); for (let i = 0; i < n; i++) { a.push(new Date(d)); d.setMonth(d.getMonth() + 1); } return a; }
+const hidden = new Set();
+function liquidity() {
+  const M = months(hz), svg = $('#liq'), W = svg.clientWidth || 900, H = 300, pl = 54, pr = 14, pt = 16, pb = 34;
+  const ids = C.filter(c => (c.inst || []).length).map(c => c.id);
+  const data = M.map(m => { const o = { m, t: 0, parts: [] }; INST.filter(x => mkey(x.d) === mkey(m) && x.st !== 'hold' && x.d >= new Date(TODAY.getFullYear(), TODAY.getMonth(), 1) && !hidden.has(x.c.id)).forEach(x => { o.parts.push(x); o.t += x.v; }); return o; });
+  let cum = 0; data.forEach(o => { cum += o.t; o.cum = cum; });
+  const maxB = Math.max(1, ...data.map(o => o.t)), maxC = Math.max(1, cum);
+  const bw = (W - pl - pr) / M.length, x = i => W - pr - (i + 1) * bw;
+  const yB = v => H - pb - (v / maxB) * (H - pt - pb), yC = v => H - pb - (v / maxC) * (H - pt - pb);
+  let g = '';
+  for (let i = 0; i <= 4; i++) { const v = maxB * i / 4, y = yB(v); g += `<line x1="${pl}" x2="${W - pr}" y1="${y}" y2="${y}" stroke="rgba(255,255,255,.06)"/><text x="${pl - 6}" y="${y + 4}" fill="#94a3c4" font-size="10.5" text-anchor="end">${fM(amt(v))}</text>`; }
+  data.forEach((o, i) => {
+    let y0 = H - pb;
+    o.parts.sort((a, b) => a.c.id.localeCompare(b.c.id)).forEach(p => { const h = (p.v / maxB) * (H - pt - pb); y0 -= h; g += `<rect class="bp" data-i="${INST.indexOf(p)}" x="${x(i) + bw * .18}" y="${y0}" width="${bw * .64}" height="${Math.max(h, 1.5)}" rx="3" fill="${p.c.color}" opacity="${p.st === 'cond' ? .55 : .92}"/>`; });
+    if (o.t) g += `<text x="${x(i) + bw / 2}" y="${yB(o.t) - 5}" fill="#fff" font-size="10.5" font-weight="700" text-anchor="middle">${fM(amt(o.t))}</text>`;
+    const lbl = MN[o.m.getMonth()].slice(0, hz > 12 ? 3 : 10) + (o.m.getMonth() === 0 || i === 0 ? ' ' + String(o.m.getFullYear()).slice(2) : '');
+    g += `<text x="${x(i) + bw / 2}" y="${H - pb + 16}" fill="${i === 0 ? '#f0d48e' : '#94a3c4'}" font-size="10.5" text-anchor="middle">${lbl}</text>`;
+  });
+  const pts = data.map((o, i) => `${x(i) + bw / 2},${yC(o.cum)}`).join(' ');
+  g += `<polyline points="${pts}" fill="none" stroke="#f0d48e" stroke-width="2.2" stroke-dasharray="5 4"/>`;
+  data.forEach((o, i) => g += `<circle cx="${x(i) + bw / 2}" cy="${yC(o.cum)}" r="3.2" fill="#f0d48e"/>`);
+  
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`); svg.innerHTML = g;
+  svg.querySelectorAll('.bp').forEach(r => { const p = INST[+r.dataset.i]; r.onmousemove = e => showTip(e, `<b>${p.c.short}</b> · ${p.c.no}<br>${p.label}<br>${fd(p.d)} — <b>${fmt(amt(p.v))}</b> ريال<br><span style="color:${PAY_ST[p.st][1]}">${PAY_ST[p.st][0]}</span>${p.note ? '<br>' + p.note : ''}`); r.onmouseleave = hideTip; });
+  $('#liqSub').innerHTML = `من ${MN[M[0].getMonth()]} ${M[0].getFullYear()} إلى ${MN[M[M.length - 1].getMonth()]} ${M[M.length - 1].getFullYear()} · السيولة التراكمية <b style="color:#f0d48e">${fM(amt(cum))} م.ر</b>`;
+  $('#liqLeg').innerHTML = ids.map(id => { const c = C.find(z => z.id === id); return `<span data-id="${id}" class="${hidden.has(id) ? 'off' : ''}"><i style="background:${c.color}"></i>${c.short}</span>`; }).join('') + '<span style="cursor:default"><i style="background:none;border-top:2px dashed #f0d48e;height:0;width:16px;border-radius:0"></i>التراكمي</span>';
+  $('#liqLeg').querySelectorAll('span[data-id]').forEach(s => s.onclick = () => { hidden.has(s.dataset.id) ? hidden.delete(s.dataset.id) : hidden.add(s.dataset.id); liquidity(); });
+}
+
+function buckets() {
+  const B = [[1, 'خلال 30 يوماً'], [3, 'خلال 3 أشهر'], [6, 'خلال 6 أشهر'], [12, 'خلال 12 شهراً'], [24, 'خلال 24 شهراً']];
+  const vals = B.map(b => INST.filter(x => inHz(x, b[0])).reduce((a, x) => a + x.v, 0)), mx = Math.max(1, ...vals);
+  const pend = INST.filter(x => x.st === 'pend').reduce((a, x) => a + x.v, 0);
+  $('#buckets').innerHTML = B.map((b, i) => `<div class="bar-row"><span class="t">${b[1]}</span><span class="b"><span style="width:${vals[i] / mx * 100}%;background:linear-gradient(90deg,#9f7430,#f0d48e)"></span></span><span class="n">${fM(amt(vals[i]))} م.ر</span></div>`).join('') + (pend ? `<div class="bar-row" style="margin-top:12px;padding-top:10px;border-top:1px dashed rgba(255,255,255,.1)"><span class="t" style="color:#f0bf5a">+ دفعات سابقة غير مؤكَّدة</span><span class="b"><span style="width:100%;background:repeating-linear-gradient(45deg,#f0bf5a55 0 6px,transparent 6px 12px)"></span></span><span class="n" style="color:#f0bf5a">${fM(amt(pend))} م.ر</span></div><div style="font-size:11.5px;color:var(--muted);margin-top:4px">تُضاف إلى السيولة المطلوبة ما لم يُؤكِّد كشف المالية سدادها.</div>` : '');
+  const nx = FUT().sort((a, b) => a.d - b.d).slice(0, 5);
+  $('#nextList').innerHTML = nx.map(x => `<li><span class="pr" style="background:${x.c.color}22;color:${x.c.color}">${days(x.d)}<small style="font-size:8px;display:block;margin-top:-6px">يوم</small></span><div><b>${x.c.short}</b><p>${x.label} · ${fd(x.d)}${x.note ? ' · ' + x.note : ''}</p></div><span class="amt">${fmt(amt(x.v))}</span></li>`).join('') || '<li><div class="empty">لا توجد استحقاقات مجدولة</div></li>';
+}
+
+function matrix() {
+  const start = new Date(TODAY.getFullYear(), TODAY.getMonth() - 5, 1), M = [];
+  for (let i = 0; i < 24; i++) { const d = new Date(start); d.setMonth(start.getMonth() + i); M.push(d); }
+  const rows = C.filter(c => (c.inst || []).length);
+  let h = '<tr class="yr"><th></th>' + M.map((m, i) => (i === 0 || m.getMonth() === 0) ? `<th colspan="${Math.min(12 - m.getMonth(), 24 - i)}" style="text-align:right">${m.getFullYear()}</th>` : '').join('') + '</tr>';
+  h += '<tr><th class="rh">العقد</th>' + M.map(m => `<th>${MN[m.getMonth()].slice(0, 3)}</th>`).join('') + '<th>المجموع</th></tr>';
+  rows.forEach(c => {
+    let tot = 0;
+    h += `<tr><th class="rh"><span class="risk" style="background:${c.color}"></span>${c.short}</th>` + M.map(m => {
+      const it = INST.filter(x => x.c === c && mkey(x.d) === mkey(m));
+      const cls = mkey(m) === mkey(TODAY) ? 'now' : '';
+      if (!it.length) return `<td class="${cls}"></td>`;
+      const v = it.reduce((a, x) => a + x.v, 0); tot += v; const s = it[0].st, col = PAY_ST[s][1];
+      return `<td class="${cls} mc" data-k="${it.map(x => INST.indexOf(x)).join(',')}" style="background:${col}26;box-shadow:inset 0 0 0 1px ${col}88;color:${col}">${fM(amt(v))}</td>`;
+    }).join('') + `<td style="background:none;color:var(--gl)">${tot ? fM(amt(tot)) : ''}</td></tr>`;
+  });
+  $('#mx').innerHTML = h;
+  $('#mx').querySelectorAll('td.mc').forEach(td => { const its = td.dataset.k.split(',').map(i => INST[+i]); td.onmousemove = e => showTip(e, its.map(p => `<b>${p.c.short}</b> — ${p.label}<br>${fd(p.d)} · <b>${fmt(amt(p.v))}</b> ريال<br><span style="color:${PAY_ST[p.st][1]}">${PAY_ST[p.st][0]}</span>${p.note ? '<br>' + p.note : ''}`).join('<hr style="border:0;border-top:1px solid rgba(255,255,255,.1)">')); td.onmouseleave = hideTip; });
+  $('#mxLeg').innerHTML = Object.entries(PAY_ST).map(([k, v]) => `<span style="cursor:default"><i style="background:${v[1]}55;box-shadow:inset 0 0 0 1px ${v[1]}"></i>${v[0]}</span>`).join('');
+}
+
+function life() {
+  const svg = $('#life'), W = svg.clientWidth || 600, H = 260, pl = 58, pr = 10, pt = 14, pb = 30;
+  const ys = []; for (let y = 2023; y <= 2036; y++) ys.push(y);
+  const rows = C.filter(c => (c.inst || []).length);
+  const data = ys.map(y => { const o = { y, t: 0, parts: [] }; rows.forEach(c => { const v = INST.filter(x => x.c === c && x.d.getFullYear() === y).reduce((a, x) => a + x.v, 0); if (v) { o.parts.push([c, v]); o.t += v; } }); return o; });
+  const mx = Math.max(1, ...data.map(o => o.t)), bw = (W - pl - pr) / ys.length, x = i => W - pr - (i + 1) * bw, y = v => H - pb - v / mx * (H - pt - pb);
+  let g = '';
+  for (let i = 0; i <= 4; i++) { const v = mx * i / 4; g += `<line x1="${pl}" x2="${W - pr}" y1="${y(v)}" y2="${y(v)}" stroke="rgba(255,255,255,.06)"/><text x="${pl - 6}" y="${y(v) + 4}" fill="#94a3c4" font-size="10.5" text-anchor="end">${fM(amt(v))}</text>`; }
+  data.forEach((o, i) => {
+    let y0 = H - pb;
+    o.parts.forEach(([c, v]) => { const h = v / mx * (H - pt - pb); y0 -= h; g += `<rect class="lp" data-t="${c.short}|${o.y}|${v}" x="${x(i) + bw * .16}" y="${y0}" width="${bw * .68}" height="${h}" rx="2" fill="${c.color}" opacity="${o.y === TODAY.getFullYear() ? 1 : .8}"/>`; });
+    g += `<text x="${x(i) + bw / 2}" y="${H - pb + 16}" fill="${o.y === TODAY.getFullYear() ? '#f0d48e' : '#94a3c4'}" font-size="10.5" text-anchor="middle">${o.y}</text>`;
+    if (o.t) g += `<text x="${x(i) + bw / 2}" y="${y(o.t) - 4}" fill="#c3cce0" font-size="9.5" text-anchor="middle">${fM(amt(o.t))}</text>`;
+  });
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`); svg.innerHTML = g;
+  svg.querySelectorAll('.lp').forEach(r => { const [n, yy, v] = r.dataset.t.split('|'); r.onmousemove = e => showTip(e, `<b>${n}</b> · ${yy}<br>${fmt(amt(+v))} ريال`); r.onmouseleave = hideTip; });
+}
+
+function donut() {
+  const items = C.filter(c => c.annual).map(c => [c, c.annual]).sort((a, b) => b[1] - a[1]);
+  const tot = items.reduce((a, x) => a + x[1], 0);
+  let a0 = -Math.PI / 2, g = '';
+  items.forEach(([c, v]) => { const a1 = a0 + v / tot * Math.PI * 2, L = a1 - a0 > Math.PI ? 1 : 0, r = 88, ri = 58;
+    const p = (r, a) => `${100 + r * Math.cos(a)},${100 + r * Math.sin(a)}`;
+    g += `<path class="dp" data-t="${c.short}|${v}" d="M${p(r, a0)} A${r},${r} 0 ${L} 1 ${p(r, a1)} L${p(ri, a1)} A${ri},${ri} 0 ${L} 0 ${p(ri, a0)} Z" fill="${c.color}" stroke="#061129" stroke-width="2"/>`; a0 = a1; });
+  g += `<text x="100" y="96" fill="#fff" font-size="22" font-weight="900" text-anchor="middle">${fM(amt(tot))}</text><text x="100" y="116" fill="#94a3c4" font-size="11" text-anchor="middle">م.ر سنوياً</text>`;
+  $('#donut').innerHTML = g;
+  $('#donut').querySelectorAll('.dp').forEach(r => { const [n, v] = r.dataset.t.split('|'); r.onmousemove = e => showTip(e, `<b>${n}</b><br>${fmt(amt(+v))} ريال سنوياً · ${Math.round(v / tot * 100)}%`); r.onmouseleave = hideTip; });
+  const byR = {}; items.forEach(([c, v]) => byR[c.region] = (byR[c.region] || 0) + v);
+  $('#conc').innerHTML = items.map(([c, v]) => `<div class="bar-row" style="grid-template-columns:130px 1fr 70px"><span class="t">${c.short}</span><span class="b"><span style="width:${v / items[0][1] * 100}%;background:${c.color}"></span></span><span class="n">${Math.round(v / tot * 100)}%</span></div>`).join('') +
+    `<div style="margin-top:10px;font-size:12px;color:var(--muted)">حسب المنطقة: ${Object.entries(byR).sort((a, b) => b[1] - a[1]).map(([r, v]) => `<b style="color:var(--ink2)">${RG[r]}</b> ${Math.round(v / tot * 100)}%`).join(' · ')}</div>`;
+}
+
+function contracts() {
+  $('#contracts').innerHTML = C.map(c => {
+    const its = INST.filter(x => x.c === c), nx = its.filter(x => x.d >= TODAY && x.st !== 'hold').sort((a, b) => a.d - b.d)[0];
+    const s = ST[c.status];
+    const rows = its.length ? `<div class="tw"><table class="tbl"><thead><tr><th>#</th><th>الدفعة</th><th>تاريخ الاستحقاق</th><th>المبلغ (ريال)</th><th>الحالة</th><th>ملاحظات</th></tr></thead><tbody>` +
+      its.map(x => `<tr><td class="num">${x.n}</td><td>${x.label}</td><td class="num">${fd(x.d)}</td><td class="num">${fmt(amt(x.v))}</td><td><span class="chip" style="color:${PAY_ST[x.st][1]}">${PAY_ST[x.st][0]}</span></td><td style="color:var(--ink2);font-size:12px">${x.conf ? 'سُدّد ' + x.conf.date + (x.conf.ref ? ' · ' + x.conf.ref : '') : x.note}</td></tr>`).join('') +
+      `</tbody><tfoot><tr><td></td><td style="color:var(--gl);font-weight:800">الإجمالي</td><td></td><td class="num" style="color:var(--gl);font-weight:800">${fmt(amt(its.reduce((a, x) => a + x.v, 0)))}</td><td colspan="2"></td></tr></tfoot></table></div>`
+      : `<div class="empty">${c.noSched || 'لا يوجد جدول دفعات زمني معتمد لهذا العقد بعد.'}</div>`;
+    return `<details class="cd"><summary>
+      <span class="cname"><b><span class="risk" style="background:${c.color}"></span>${c.short}</b><small>${RG[c.region]} · <span class="mono">${c.no}</span> · ${c.party}</small></span>
+      <span class="sm"><div class="v">${c.value ? fM(amt(c.value)) + ' م.ر' : (c.annual ? fM(amt(c.annual)) + ' م.ر/سنة' : '—')}</div><div class="k">${c.value ? 'قيمة العقد' : (c.annual ? 'الأجرة السنوية' : '')}${c.value && c.annual ? ' · ' + fM(amt(c.annual)) + ' سنوياً' : ''}</div></span>
+      <span class="sm hm">${nx ? `<div class="v">${fM(amt(nx.v))} م.ر</div><div class="k">${fd(nx.d)} · ${days(nx.d)} يوماً</div>` : '<div class="k">—</div>'}</span>
+      <span class="sm hm"><span class="chip" style="color:${s[1]}">${s[0]}</span></span>
+      <span class="sm hm">${c.impact ? `<div class="v" style="color:#7ee5aa">${fM(c.impact[1])} م.ر</div><div class="k">${c.impact[0]}</div>` : '<div class="k">—</div>'}</span>
+      <span class="ar">▾</span></summary>
+      <div class="cdb"><div class="box"><h4>جدول الدفعات</h4>${rows}</div>
+        <div class="box"><h4>شروط الدفع والموقف</h4><div class="terms">${c.terms || '—'}</div>${(c.notes || []).length ? `<ul>${c.notes.map(n => `<li>${n}</li>`).join('')}</ul>` : ''}</div></div></details>`;
+  }).join('');
+}
+
+function actions() {
+  const PR = { 1: ['عاجل', '#ff6b5e'], 2: ['مهم', '#f0bf5a'], 3: ['متابعة', '#5aa9ff'] };
+  $('#actions').innerHTML = ACTIONS.map(a => `<li><span class="pr" style="background:${PR[a.p][1]}22;color:${PR[a.p][1]};font-size:10.5px">${PR[a.p][0]}</span><div><b>${a.t}</b><p>${a.d}</p></div><span class="amt">${a.v ? fM(amt(a.v)) + ' م.ر' : ''}</span></li>`).join('');
+  const im = C.filter(c => c.impact).sort((a, b) => b.impact[1] - a.impact[1]), tot = im.reduce((a, c) => a + c.impact[1], 0);
+  $('#impTot').textContent = 'الإجمالي ' + fmt(tot) + ' ريال';
+  $('#impacts').innerHTML = im.map(c => `<div class="bar-row" style="grid-template-columns:140px 1fr 90px"><span class="t">${c.short}</span><span class="b"><span style="width:${c.impact[1] / im[0].impact[1] * 100}%;background:linear-gradient(90deg,#2b9e63,#7ee5aa)"></span></span><span class="n">${fM(c.impact[1])} م.ر</span></div>`).join('');
+}
+
+function render() { kpis(); liquidity(); buckets(); matrix(); life(); donut(); contracts(); actions(); }
+$('#asOf').textContent = fd(TODAY);
+$('#vatSeg').querySelectorAll('button').forEach(b => b.onclick = () => { vat = +b.dataset.v; $('#vatSeg').querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b)); render(); });
+$('#hzSeg').querySelectorAll('button').forEach(b => b.onclick = () => { hz = +b.dataset.h; $('#hzSeg').querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b)); kpis(); liquidity(); });
+window.addEventListener('resize', () => { clearTimeout(window.__rz); window.__rz = setTimeout(() => { liquidity(); life(); }, 150); });
+const tt = $('#toTop'); addEventListener('scroll', () => tt.classList.toggle('show', scrollY > 400)); tt.onclick = () => scrollTo({ top: 0, behavior: 'smooth' });
+render();
+</script>
+</body>
+</html>
