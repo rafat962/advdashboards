@@ -867,6 +867,322 @@ html_template = '''<!DOCTYPE html>
     .pop-footer a:hover {
       text-decoration: underline;
     }
+    .btn-site-detail-pop {
+      margin-top: 8px;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.22), rgba(56, 189, 248, 0.22));
+      border: 1px solid rgba(56, 189, 248, 0.5);
+      color: #f8fafc;
+      border-radius: 6px;
+      padding: 7px 10px;
+      font-family: var(--font);
+      font-size: 11.5px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-site-detail-pop:hover {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.38), rgba(56, 189, 248, 0.38));
+      border-color: var(--blue);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(56, 189, 248, 0.25);
+    }
+    .btn-site-detail-tbl {
+      background: rgba(56, 189, 248, 0.14);
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      color: #38bdf8;
+      border-radius: 6px;
+      padding: 4px 9px;
+      font-family: var(--font);
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.18s;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      white-space: nowrap;
+    }
+    .btn-site-detail-tbl:hover {
+      background: var(--blue);
+      color: #060b14;
+    }
+
+    /* ===================================================================
+       DEDICATED SITE DETAILS PAGE VIEW
+       =================================================================== */
+    .sd-wrap {
+      display: none;
+      flex-direction: column;
+      gap: 12px;
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      padding-bottom: 8px;
+    }
+    .sd-header {
+      background: var(--bg-panel);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+    .sd-header-right {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+    .btn-sd-back {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      color: #f8fafc;
+      padding: 7px 14px;
+      border-radius: 8px;
+      font-family: var(--font);
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      transition: all 0.2s;
+    }
+    .btn-sd-back:hover {
+      background: rgba(56, 189, 248, 0.18);
+      border-color: var(--blue);
+      color: var(--blue);
+    }
+    .sd-title-group {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .sd-title-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .sd-code {
+      font-family: var(--mono);
+      font-size: 20px;
+      font-weight: 900;
+      color: var(--blue);
+      letter-spacing: 0.5px;
+    }
+    .sd-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .sd-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .btn-gmaps-big {
+      background: linear-gradient(135deg, #059669, #10b981);
+      color: #ffffff;
+      text-decoration: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 12.5px;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      border: 1px solid rgba(16, 185, 129, 0.5);
+      box-shadow: 0 4px 14px rgba(16, 185, 129, 0.25);
+      transition: all 0.2s;
+    }
+    .btn-gmaps-big:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(16, 185, 129, 0.4);
+      filter: brightness(1.08);
+    }
+    .btn-sd-copy {
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      color: var(--blue);
+      padding: 7px 13px;
+      border-radius: 8px;
+      font-family: var(--font);
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-sd-copy:hover {
+      background: rgba(56, 189, 248, 0.25);
+    }
+    .sd-grid {
+      display: grid;
+      grid-template-columns: 1.25fr 1fr;
+      gap: 12px;
+      flex: 1;
+      min-height: 440px;
+    }
+    @media (max-width: 1100px) {
+      .sd-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .sd-map-card {
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      min-height: 400px;
+    }
+    .sd-map-head {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+      background: rgba(15, 25, 42, 0.65);
+    }
+    .sd-map-head-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #f8fafc;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+    #siteDetailMap {
+      flex: 1;
+      width: 100%;
+      min-height: 360px;
+      background: #060b14;
+      z-index: 1;
+    }
+    .sd-map-foot {
+      padding: 8px 14px;
+      border-top: 1px solid var(--border);
+      background: rgba(10, 17, 30, 0.85);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      font-size: 11.5px;
+    }
+    .sd-info-col {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      overflow-y: auto;
+      padding-left: 2px;
+    }
+    .sd-card {
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .sd-card-title {
+      font-size: 13px;
+      font-weight: 800;
+      color: #f8fafc;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    }
+    .sd-kv-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+    .sd-kv-item {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 8px;
+      padding: 9px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .sd-kv-label {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+    .sd-kv-val {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #f8fafc;
+    }
+    .sd-note-box {
+      background: rgba(245, 158, 11, 0.08);
+      border-right: 3px solid var(--amber);
+      border-radius: 6px;
+      padding: 10px 12px;
+      font-size: 12.5px;
+      color: #fde68a;
+      line-height: 1.65;
+    }
+    .sd-atts-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .sd-att-card {
+      background: rgba(56, 189, 248, 0.07);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      border-radius: 8px;
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      transition: all 0.2s;
+    }
+    .sd-att-card:hover {
+      background: rgba(56, 189, 248, 0.14);
+      border-color: var(--blue);
+    }
+    .sd-att-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+    .sd-att-icon {
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+    .sd-att-name {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: #f8fafc;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .sd-att-type {
+      font-size: 10.5px;
+      color: var(--text-muted);
+    }
 
     /* Modal PDF / Image Viewer (Canvas Secure) */
     .att-modal-overlay {
@@ -1306,10 +1622,95 @@ html_template = '''<!DOCTYPE html>
             <th>الملاحظات</th>
             <th>المرفقات (R2)</th>
             <th>الإحداثيات</th>
+            <th>التفاصيل</th>
           </tr>
         </thead>
         <tbody id="tableBody"></tbody>
       </table>
+    </div>
+  </section>
+
+  <!-- 5. Dedicated Single-Site Detail Page View -->
+  <section class="sd-wrap" id="siteDetailView">
+    <div class="sd-header">
+      <div class="sd-header-right">
+        <button class="btn-sd-back" onclick="closeSiteDetailPage()">
+          <span>→</span>
+          <span>العودة للوحة المعلومات</span>
+        </button>
+        <div class="sd-title-group">
+          <div class="sd-title-row">
+            <span class="sd-code" id="sdCode">DM-UN-001</span>
+            <span class="tag-status" id="sdTypeBadge" style="background:rgba(56,189,248,0.15);color:#38bdf8;border:1px solid rgba(56,189,248,0.35);">يونيبول</span>
+            <span class="tag-status" id="sdStatusBadge">تم التشغيل</span>
+          </div>
+          <div class="sd-sub" id="sdLocationSub">بلدية وسط الدمام · الحي: —</div>
+        </div>
+      </div>
+
+      <div class="sd-actions">
+        <button class="btn-sd-copy" id="btnCopyCoords" onclick="copySiteCoords()">📋 نسخ الإحداثيات</button>
+        <a class="btn-gmaps-big" id="sdGoogleMapsBtn" href="#" target="_blank" rel="noopener">
+          <span>📍</span>
+          <span>فتح الموقع في Google Maps ↗</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="sd-grid">
+      <!-- Dedicated Single-Site Map -->
+      <div class="sd-map-card">
+        <div class="sd-map-head">
+          <div class="sd-map-head-title">
+            <span>🗺️</span>
+            <span>الخريطة التفصيلية للموقع الفردي</span>
+            <span id="sdMapCodeLabel" style="color:var(--blue);font-family:var(--mono);font-size:12px;"></span>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <select class="select-ctrl" id="sdBasemapSelect" onchange="switchSiteDetailBasemap(this.value)">
+              <option value="satellite" selected>🛰️ صور فضائية (Esri)</option>
+              <option value="streets">🗺️ خريطة شوارع</option>
+              <option value="dark">🌑 نمط داكن</option>
+            </select>
+            <button class="pill-btn" onclick="recenterSiteDetailMap()" title="إعادة توسيط الموقع">🎯 توسيط الموقع</button>
+          </div>
+        </div>
+        <div id="siteDetailMap"></div>
+        <div class="sd-map-foot">
+          <span style="color:var(--text-muted);">الإحداثيات الجغرافية (WGS84): <strong id="sdCoordsText" style="color:var(--blue);font-family:var(--mono);">26.42000, 50.10000</strong></span>
+          <a id="sdGoogleMapsFooterLink" href="#" target="_blank" rel="noopener" style="color:#34d399;text-decoration:none;font-weight:700;">التوجيه المباشر عبر خرائط جوجل ↗</a>
+        </div>
+      </div>
+
+      <!-- Site Details & Attachments Column -->
+      <div class="sd-info-col">
+        <!-- Basic Metadata Card -->
+        <div class="sd-card">
+          <div class="sd-card-title">
+            <span>📌 البيانات الأساسية والفنية للموقع</span>
+            <span style="font-size:11px;color:var(--text-muted);font-weight:400;">محدث من طبقة ArcGIS الحية</span>
+          </div>
+          <div class="sd-kv-grid" id="sdKvGrid"></div>
+        </div>
+
+        <!-- Notes & Obstacles Card -->
+        <div class="sd-card">
+          <div class="sd-card-title">
+            <span>📝 الملاحظات الميدانية وتفاصيل العوائق</span>
+            <span id="sdObstBadge" style="font-size:11px;font-weight:700;"></span>
+          </div>
+          <div id="sdNoteBox" class="sd-note-box">لا توجد ملاحظات مسجلة.</div>
+        </div>
+
+        <!-- Attachments Card -->
+        <div class="sd-card">
+          <div class="sd-card-title">
+            <span>📎 المرفقات والوثائق المعتمدة (Cloudflare R2)</span>
+            <span id="sdAttCountBadge" style="font-size:11px;color:var(--blue);font-weight:700;">0 مرفق</span>
+          </div>
+          <div class="sd-atts-list" id="sdAttsList"></div>
+        </div>
+      </div>
     </div>
   </section>
 </div>
@@ -2039,6 +2440,10 @@ function updateMapMarkers(filtered) {
           </div>
         ` : ''}
         ${attHtml}
+        <button class="btn-site-detail-pop" onclick="openSiteDetailPage('${s.code}')">
+          <span>📋 صفحة تفاصيل الموقع الكاملة</span>
+          <span>←</span>
+        </button>
         <div class="pop-footer">
           <span style="color:#64748b;font-family:monospace;">${(s.lat||0).toFixed(5)}, ${(s.lon||0).toFixed(5)}</span>
           <a href="https://www.google.com/maps?q=${s.lat},${s.lon}" target="_blank" rel="noopener">فتح في Google Maps ↗</a>
@@ -2050,6 +2455,256 @@ function updateMapMarkers(filtered) {
     markerLayer.addLayer(m);
   });
 }
+
+/* ===================================================================
+   DEDICATED SINGLE-SITE DETAIL PAGE LOGIC
+   =================================================================== */
+let sdMap = null;
+let sdMarkerLayer = null;
+let sdBasemapLayers = {};
+let currentDetailSite = null;
+let previousDashboardView = 'exec';
+
+function initSiteDetailMap() {
+  if (sdMap) return;
+  sdMap = L.map('siteDetailMap', {
+    center: [26.42, 50.12],
+    zoom: 17,
+    zoomControl: false
+  });
+  L.control.zoom({ position: 'bottomright' }).addTo(sdMap);
+
+  sdBasemapLayers.satellite = L.layerGroup([
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+      maxZoom: 19,
+      attribution: 'Esri Satellite'
+    }),
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', {
+      maxZoom: 19
+    })
+  ]).addTo(sdMap);
+
+  sdBasemapLayers.streets = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: 'OpenStreetMap'
+  });
+
+  sdBasemapLayers.dark = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    maxZoom: 19,
+    attribution: 'CartoDB Dark'
+  });
+
+  sdMarkerLayer = L.layerGroup().addTo(sdMap);
+}
+
+function switchSiteDetailBasemap(type) {
+  if (!sdMap) return;
+  Object.values(sdBasemapLayers).forEach(l => sdMap.removeLayer(l));
+  if (sdBasemapLayers[type]) sdBasemapLayers[type].addTo(sdMap);
+}
+
+function recenterSiteDetailMap() {
+  if (!sdMap || !currentDetailSite) return;
+  sdMap.setView([currentDetailSite.lat, currentDetailSite.lon], 18);
+}
+
+function copySiteCoords() {
+  if (!currentDetailSite) return;
+  const txt = `${currentDetailSite.lat.toFixed(6)}, ${currentDetailSite.lon.toFixed(6)}`;
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(txt).catch(() => {});
+  }
+  const btn = document.getElementById('btnCopyCoords');
+  if (btn) {
+    const orig = btn.textContent;
+    btn.textContent = '✓ تم نسخ الإحداثيات';
+    setTimeout(() => { btn.textContent = orig; }, 1800);
+  }
+}
+
+function openSiteDetailPage(code, pushHistory = true) {
+  const s = D.find(item => item.code === code || String(item.siteNo) === String(code));
+  if (!s) return;
+  currentDetailSite = s;
+
+  const execView = document.getElementById('executiveView');
+  const tableView = document.getElementById('tableView');
+  const sdView = document.getElementById('siteDetailView');
+  const topBar = document.querySelector('.top-bar');
+  const kpiGrid = document.querySelector('.kpi-grid');
+  const afBar = document.getElementById('activeFilterBar');
+
+  if (sdView.style.display !== 'flex') {
+    previousDashboardView = (tableView && tableView.style.display === 'flex') ? 'table' : 'exec';
+  }
+
+  if (topBar) topBar.style.display = 'none';
+  if (kpiGrid) kpiGrid.style.display = 'none';
+  if (afBar) afBar.style.display = 'none';
+  if (execView) execView.style.display = 'none';
+  if (tableView) tableView.style.display = 'none';
+  sdView.style.display = 'flex';
+
+  const typeCol = TYPE_COLORS[s.type] || '#38bdf8';
+  const statCol = STATUS_COLORS[s.dec] || '#94a3b8';
+  const gmapsUrl = `https://www.google.com/maps?q=${s.lat},${s.lon}`;
+
+  document.getElementById('sdCode').textContent = s.code;
+  document.getElementById('sdCode').style.color = typeCol;
+
+  const typeBadge = document.getElementById('sdTypeBadge');
+  typeBadge.textContent = s.type || 'يونيبول';
+  typeBadge.style.borderColor = typeCol;
+  typeBadge.style.color = typeCol;
+
+  const statBadge = document.getElementById('sdStatusBadge');
+  statBadge.textContent = s.dec || 'غير منفذ';
+  statBadge.style.borderColor = statCol;
+  statBadge.style.color = statCol;
+
+  document.getElementById('sdLocationSub').textContent = `${s.bal || 'حاضرة الدمام'} · الحي: ${s.hay || '—'}`;
+  document.getElementById('sdGoogleMapsBtn').href = gmapsUrl;
+  document.getElementById('sdGoogleMapsFooterLink').href = gmapsUrl;
+  document.getElementById('sdMapCodeLabel').textContent = `(${s.code})`;
+  document.getElementById('sdCoordsText').textContent = `${(s.lat || 0).toFixed(6)}, ${(s.lon || 0).toFixed(6)}`;
+
+  const obSource = getSiteObstacleSource(s);
+  const isOb = s.dec === 'عوائق' || s.ob;
+
+  // Populate Key-Value Grid
+  const kvItems = [
+    { label: 'رمز الموقع', val: s.code, color: typeCol, mono: true },
+    { label: 'رقم الموقع بالكراسة', val: String(s.siteNo || s.n || '—'), mono: true },
+    { label: 'نوع اللوحة الإعلانية', val: s.type || '—', color: typeCol },
+    { label: 'حالة التنفيذ', val: s.dec || 'غير منفذ', color: statCol },
+    { label: 'البلدية', val: s.bal || '—' },
+    { label: 'الحي / النطاق', val: s.hay || '—' },
+    { label: 'قاعدة خرسانية سابقة', val: s.base === 'نعم' ? 'نعم (توجد قاعدة سابقة)' : 'لا يوجد', color: s.base === 'نعم' ? '#2dd4bf' : '#94a3b8' },
+    { label: 'مصدر العائق', val: obSource, color: isOb ? '#f87171' : '#4ade80' }
+  ];
+
+  document.getElementById('sdKvGrid').innerHTML = kvItems.map(item => `
+    <div class="sd-kv-item">
+      <span class="sd-kv-label">${item.label}</span>
+      <span class="sd-kv-val" style="${item.color ? 'color:' + item.color + ';' : ''}${item.mono ? 'font-family:var(--mono);' : ''}">${item.val}</span>
+    </div>
+  `).join('');
+
+  // Populate Notes
+  const obstBadge = document.getElementById('sdObstBadge');
+  obstBadge.textContent = isOb ? `⚠️ عائق مسجل (${obSource})` : '✅ لا توجد عوائق نشطة';
+  obstBadge.style.color = isOb ? '#f87171' : '#4ade80';
+
+  const noteBox = document.getElementById('sdNoteBox');
+  if (s.note && s.note.trim()) {
+    noteBox.innerHTML = s.note.split(/\\s*\\|\\|\\s*|\\s*\\|\\s*/).map(part => `<div>• ${part}</div>`).join('');
+    noteBox.style.borderColor = isOb ? 'rgba(239, 68, 68, 0.35)' : 'rgba(245, 158, 11, 0.3)';
+  } else {
+    noteBox.textContent = 'لا توجد ملاحظات ميدانية أو عوائق مسجلة لهذا الموقع.';
+    noteBox.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+  }
+
+  // Populate Attachments
+  const atts = s.atts || [];
+  document.getElementById('sdAttCountBadge').textContent = `${atts.length} مرفق`;
+  const attsListEl = document.getElementById('sdAttsList');
+  if (atts.length) {
+    attsListEl.innerHTML = atts.map(a => {
+      const cleanKey = (a.key || '').replace(/'/g, "\\\\'");
+      const cleanTitle = (a.title || 'مرفق').replace(/'/g, "\\\\'");
+      const isPdf = a.type === 'pdf' || (a.key && a.key.toLowerCase().endsWith('.pdf'));
+      return `
+        <div class="sd-att-card">
+          <div class="sd-att-info">
+            <span class="sd-att-icon">${isPdf ? '📕' : '🖼️'}</span>
+            <div style="min-width:0;">
+              <div class="sd-att-name" title="${a.title}">${a.title}</div>
+              <div class="sd-att-type">${isPdf ? 'مستند PDF رسمي محمي' : 'صورة ميدانية معتمدة'}</div>
+            </div>
+          </div>
+          <button class="btn-site-detail-tbl" onclick="openAttachment('${cleanKey}', '${cleanTitle}', '${isPdf ? 'pdf' : 'image'}')" style="padding:5px 12px;font-size:11.5px;">
+            👁️ معاينة المرفق
+          </button>
+        </div>
+      `;
+    }).join('');
+  } else {
+    attsListEl.innerHTML = '<div style="color:var(--text-muted);font-size:12px;padding:8px 0;">لا توجد مرفقات مسجلة لهذا الموقع حالياً.</div>';
+  }
+
+  // Initialize & Render Single-Site Map
+  initSiteDetailMap();
+  setTimeout(() => {
+    sdMap.invalidateSize();
+    sdMarkerLayer.clearLayers();
+    if (s.lat && s.lon) {
+      sdMap.setView([s.lat, s.lon], 18);
+      // Outer pulse ring + inner marker
+      L.circleMarker([s.lat, s.lon], {
+        radius: 18,
+        fillColor: typeCol,
+        fillOpacity: 0.22,
+        color: typeCol,
+        weight: 2
+      }).addTo(sdMarkerLayer);
+
+      const marker = L.circleMarker([s.lat, s.lon], {
+        radius: 8,
+        fillColor: typeCol,
+        fillOpacity: 1,
+        color: '#ffffff',
+        weight: 2.5
+      }).addTo(sdMarkerLayer);
+
+      marker.bindTooltip(`<b>${s.code}</b> — ${s.type} (${s.dec || 'غير منفذ'})`, {
+        permanent: true,
+        direction: 'top',
+        offset: [0, -10]
+      });
+    }
+  }, 80);
+
+  if (pushHistory) {
+    history.pushState({ siteDetail: s.code }, '', `#site=${encodeURIComponent(s.code)}`);
+  }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function closeSiteDetailPage(fromPopState = false) {
+  const sdView = document.getElementById('siteDetailView');
+  if (!sdView || sdView.style.display === 'none') return;
+
+  sdView.style.display = 'none';
+  const topBar = document.querySelector('.top-bar');
+  const kpiGrid = document.querySelector('.kpi-grid');
+  const execView = document.getElementById('executiveView');
+  const tableView = document.getElementById('tableView');
+
+  if (topBar) topBar.style.display = 'flex';
+  if (kpiGrid) kpiGrid.style.display = 'grid';
+  updateFilterChips();
+
+  if (previousDashboardView === 'table') {
+    if (tableView) tableView.style.display = 'flex';
+    if (execView) execView.style.display = 'none';
+  } else {
+    if (execView) execView.style.display = 'grid';
+    if (tableView) tableView.style.display = 'none';
+    setTimeout(() => map.invalidateSize(), 100);
+  }
+
+  if (!fromPopState && location.hash.startsWith('#site=')) {
+    history.pushState(null, '', location.pathname + location.search);
+  }
+}
+
+window.addEventListener('popstate', e => {
+  if (e.state && e.state.siteDetail) {
+    openSiteDetailPage(e.state.siteDetail, false);
+  } else {
+    closeSiteDetailPage(true);
+  }
+});
 
 /* ===================================================================
    TABLE IMPLEMENTATION
@@ -2072,7 +2727,7 @@ function updateTable(filtered) {
 
     return `
       <tr>
-        <td style="font-family:var(--mono);font-weight:700;color:var(--blue);">${s.code}</td>
+        <td style="font-family:var(--mono);font-weight:700;color:var(--blue);cursor:pointer;text-decoration:underline;" onclick="openSiteDetailPage('${s.code}')" title="فتح صفحة تفاصيل الموقع">${s.code}</td>
         <td>${s.type}</td>
         <td>${s.bal}</td>
         <td>${s.hay || '—'}</td>
@@ -2082,6 +2737,7 @@ function updateTable(filtered) {
         <td style="font-size:11px;color:#94a3b8;max-width:220px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" title="${s.note||''}">${s.note || '—'}</td>
         <td>${attBtn}</td>
         <td style="font-family:var(--mono);font-size:11px;"><a href="https://www.google.com/maps?q=${s.lat},${s.lon}" target="_blank" style="color:var(--blue);">📍 عرض</a></td>
+        <td><button class="btn-site-detail-tbl" onclick="openSiteDetailPage('${s.code}')">📋 تفاصيل الموقع</button></td>
       </tr>
     `;
   }).join('');
@@ -2750,6 +3406,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Fallback if live layer didn't render
   if (!markerLayer.getLayers().length) {
     applyFilters();
+  }
+
+  // Open site detail page if URL hash specifies #site=...
+  if (location.hash.startsWith('#site=')) {
+    const hashCode = decodeURIComponent(location.hash.replace('#site=', '').trim());
+    if (hashCode) openSiteDetailPage(hashCode, false);
   }
 
   // Search input
