@@ -1487,6 +1487,7 @@ async function renderPDF(blob) {
     cMapUrl: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@4.0.379/cmaps/',
     cMapPacked: true,
     standardFontDataUrl: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@4.0.379/standard_fonts/',
+    disableFontFace: true,
     enableXfa: true
   });
   currentPDFDoc = await loadingTask.promise;

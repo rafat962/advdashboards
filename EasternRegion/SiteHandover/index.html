@@ -1291,6 +1291,7 @@ async function renderPDF(buffer, canvas, ctx, userIdentity) {
     cMapUrl: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@4.0.379/cmaps/',
     cMapPacked: true,
     standardFontDataUrl: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@4.0.379/standard_fonts/',
+    disableFontFace: true,
     enableXfa: true
   });
   const pdf = await loadingTask.promise;
