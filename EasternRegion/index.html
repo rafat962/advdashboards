@@ -669,6 +669,185 @@ svg.leaflet-image-layer.leaflet-interactive path {
 		}
 	}
 </style>
+<style>
+:root{
+  --n0:#030915;--n1:#061129;--n2:#0a1a3f;--n3:#10285c;
+  --gold:#d4a853;--gl:#f0d48e;--gd:#9f7430;
+  --ink:#eef2fa;--ink2:#c3cce0;--muted:#94a3c4;
+  --line:rgba(212,168,83,.28);--hair:rgba(255,255,255,.08);
+  --teal:#3fc1c9;--green:#4fd18b;--amber:#f0bf5a;--red:#ff6b5e;--violet:#b38cff;--blue:#5aa9ff;
+  --r:16px;--glass:linear-gradient(160deg,rgba(16,40,92,.55),rgba(6,17,41,.8));
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font-family:'Cairo',system-ui,sans-serif;color:var(--ink);font-size:14px;line-height:1.65;min-height:100vh;
+  background:radial-gradient(1000px 600px at 80% -10%,rgba(36,84,196,.2),transparent 65%),linear-gradient(180deg,var(--n1),var(--n0) 60%);background-color:var(--n0)}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;background-image:linear-gradient(rgba(90,169,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(90,169,255,.035) 1px,transparent 1px);background-size:56px 56px;-webkit-mask:radial-gradient(ellipse at 50% 20%,#000 30%,transparent 80%);mask:radial-gradient(ellipse at 50% 20%,#000 30%,transparent 80%)}
+.wrap{max-width:1500px;margin:0 auto;padding:0 24px 40px;position:relative;z-index:1}
+.gold-text{background:linear-gradient(180deg,#fff0c4,var(--gold) 60%,var(--gd));-webkit-background-clip:text;background-clip:text;color:transparent}
+.mono{font-family:'JetBrains Mono',monospace;direction:ltr;unicode-bidi:isolate}
+header{position:relative;padding:22px 0 64px;border-bottom:1px solid var(--hair);background:linear-gradient(180deg,rgba(3,9,21,.6),transparent)}
+header::after{content:"";position:absolute;inset:auto 0 -1px 0;height:1px;background:linear-gradient(90deg,transparent 5%,rgba(240,212,142,.6) 50%,transparent 95%)}
+.hw{max-width:1500px;margin:0 auto;padding:0 24px;position:relative;z-index:1}
+.htop{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.brandrow{display:flex;align-items:center;gap:12px}
+.brandrow img{height:30px}
+.brandrow .sep{width:1px;height:28px;background:linear-gradient(180deg,transparent,var(--gold),transparent)}
+.htitle{flex:1;min-width:280px}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;color:var(--gl);padding:4px 12px;border:1px solid var(--line);border-radius:20px;background:rgba(212,168,83,.07);margin-bottom:8px}
+.eyebrow i{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green)}
+h1{margin:0;font-size:30px;font-weight:900;line-height:1.3}
+.sub{margin:6px 0 0;color:var(--ink2);font-size:14.5px}
+.badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.badge{background:rgba(3,9,21,.55);border:1px solid var(--hair);padding:5px 13px;border-radius:10px;font-size:12.5px;font-weight:600;color:var(--ink2)}
+.badge b{color:var(--gl);font-weight:700}
+
+.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-top:-40px;position:relative;z-index:2}
+.kpi{position:relative;overflow:hidden;background:var(--glass);border:1px solid var(--hair);border-radius:var(--r);padding:16px 18px 14px;backdrop-filter:blur(8px);box-shadow:0 16px 36px rgba(0,0,0,.35)}
+.kpi::before{content:"";position:absolute;top:0;right:0;width:100%;height:3px;background:var(--c,var(--gold))}
+.kpi::after{content:"";position:absolute;left:-30px;bottom:-40px;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,color-mix(in srgb,var(--c,var(--gold)) 22%,transparent),transparent 70%)}
+.kpi{cursor:pointer;transition:transform .15s,border-color .15s,box-shadow .15s}
+.kpi:hover{transform:translateY(-2px);border-color:color-mix(in srgb,var(--c) 55%,transparent)}
+.kpi.act{border-color:var(--c);box-shadow:0 0 0 1px var(--c),0 18px 40px rgba(0,0,0,.45),0 0 28px color-mix(in srgb,var(--c) 30%,transparent)}
+.kpi.act::before{height:5px}
+.kpi.dimk{opacity:.55}
+.kpi .hint{position:absolute;left:12px;top:10px;font-size:10.5px;font-weight:700;color:var(--c);opacity:0;transition:.15s}
+.kpi:hover .hint,.kpi.act .hint{opacity:1}
+.kpi.act .hint{font-size:0}.kpi.act .hint::after{content:'✓ معروض على الخريطة';font-size:10.5px}
+.nowbar{display:none;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 18px;border-bottom:1px solid var(--hair);background:linear-gradient(90deg,color-mix(in srgb,var(--nc,var(--gold)) 16%,transparent),rgba(3,9,21,.4));font-size:13.5px}
+.nowbar.on{display:flex}
+.nowbar .big{font-size:20px;font-weight:900;color:#fff;font-feature-settings:"tnum"}
+.nowbar .ft{display:inline-flex;align-items:center;gap:6px;background:rgba(3,9,21,.6);border:1px solid var(--nc,var(--gold));color:#fff;border-radius:999px;padding:3px 6px 3px 12px;font-weight:700;font-size:12.5px}
+.nowbar .ft button{background:rgba(255,255,255,.1);border:0;color:#fff;border-radius:50%;width:20px;height:20px;cursor:pointer;font-size:12px;line-height:1}
+.kpi .lab{font-size:13px;color:var(--muted);font-weight:600}
+.kpi .val{font-size:34px;font-weight:900;line-height:1.15;margin-top:4px;font-feature-settings:"tnum";color:#fff}
+.kpi .note{font-size:12px;color:var(--muted);margin-top:2px}
+
+/* filter bar */
+.fbar{position:sticky;top:0;z-index:1000;margin-top:14px;background:rgba(6,17,41,.92);backdrop-filter:blur(10px);border:1px solid var(--hair);border-radius:var(--r);padding:10px 14px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;box-shadow:0 12px 28px rgba(0,0,0,.35)}
+.fbar .ttl{white-space:nowrap;font-weight:800;color:var(--gl);font-size:13.5px;margin-left:4px;display:flex;align-items:center;gap:6px}
+select,input[type=search]{font-family:'Cairo';font-size:13px;padding:7px 11px;border:1px solid var(--hair);border-radius:10px;background:rgba(3,9,21,.65);color:var(--ink);outline:none;max-width:128px;padding-inline:9px}
+select option{background:#0b1a40}
+select.on{border-color:var(--gold);color:var(--gl)}
+select:focus,input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(212,168,83,.12)}
+input[type=search]{min-width:120px;flex:1;max-width:220px}
+input::placeholder{color:var(--muted)}
+.reset{white-space:nowrap;font:700 12.5px 'Cairo';background:rgba(212,168,83,.12);color:var(--gl);border:1px solid var(--line);border-radius:10px;padding:7px 14px;cursor:pointer;margin-inline-start:auto}
+.reset:hover{background:rgba(212,168,83,.22)}
+
+.card{background:var(--glass);border:1px solid var(--hair);border-radius:var(--r);backdrop-filter:blur(8px);box-shadow:0 16px 36px rgba(0,0,0,.3);overflow:hidden}
+.card h3{margin:0;padding:13px 18px;font-size:15px;font-weight:800;border-bottom:1px solid var(--hair);display:flex;justify-content:space-between;align-items:center;gap:10px;position:relative}
+.card h3::after{content:"";position:absolute;bottom:-1px;right:18px;width:46px;height:2px;background:linear-gradient(270deg,var(--gold),transparent)}
+.card h3 small{font-weight:600;color:var(--muted);font-size:12px}
+
+#map{height:calc(100vh - 250px);min-height:560px;width:100%;background:#0b1430}
+.maptools{display:flex;gap:8px;flex-wrap:wrap;padding:11px 18px;border-bottom:1px solid var(--hair);background:rgba(3,9,21,.35);align-items:center}
+.maptools .lbl{font-size:12.5px;color:var(--muted);font-weight:700}
+.seg{display:inline-flex;border:1px solid var(--hair);border-radius:999px;overflow:hidden;margin-left:8px}
+.seg button{font:700 12.5px 'Cairo';background:rgba(3,9,21,.55);color:var(--ink2);border:0;padding:6px 14px;cursor:pointer}
+.seg button.on{background:linear-gradient(180deg,var(--gl),var(--gold));color:#1a1405}
+.chip{border:1px solid var(--hair);background:rgba(3,9,21,.55);border-radius:12px;padding:6px 14px;font:700 13.5px 'Cairo';cursor:pointer;color:var(--ink);display:flex;align-items:center;gap:7px;transition:.15s}
+.chip i{width:10px;height:10px;border-radius:50%;display:inline-block;box-shadow:0 0 6px currentColor}
+.chip b{color:#fff;font-size:16px;font-weight:900;font-feature-settings:"tnum"}
+.chip s{text-decoration:none;color:var(--muted);font-size:12px;font-weight:600}
+.chip .cb{display:block;width:54px;height:5px;border-radius:3px;background:rgba(255,255,255,.1);overflow:hidden}
+.chip .cb span{display:block;height:100%}
+.chip.off{opacity:.38}
+.chip:hover{border-color:var(--gold)}
+.leaflet-container{font-family:'Cairo'}
+.leaflet-popup-content-wrapper,.leaflet-popup-tip{background:#0b1a40;color:var(--ink);border:1px solid var(--line);box-shadow:0 14px 30px rgba(0,0,0,.5)}
+.leaflet-popup-content{font-family:'Cairo';direction:rtl;font-size:13px;margin:12px 14px;min-width:240px}
+.leaflet-container a.leaflet-popup-close-button{color:var(--gl)}
+.leaflet-control-zoom a{background:#0b1a40!important;color:var(--gl)!important;border-color:var(--hair)!important}
+.leaflet-control-attribution{background:rgba(3,9,21,.7)!important;color:var(--muted)!important}
+.leaflet-control-attribution a{color:var(--gl)!important}
+.pop b{display:block;font-size:15px;margin-bottom:6px;color:var(--gl)}
+.pop div{display:flex;justify-content:space-between;gap:12px;padding:3px 0;border-bottom:1px dashed rgba(255,255,255,.08)}
+.pop div:last-child{border:0}
+.pop span.k{color:var(--muted)}
+.pop .warn{display:block;margin-top:8px;background:rgba(240,191,90,.12);color:#ffd88a;border-radius:8px;padding:7px 9px;font-size:12px;border:1px solid rgba(240,191,90,.35)}
+.pop a{color:var(--gl)}
+.leaflet-div-icon.pin{background:none;border:0}
+.pin svg{transition:transform .15s;transform-origin:50% 100%}
+.pin:hover svg{transform:scale(1.25)}
+.leaflet-tooltip.cnt{background:#0b1a40;color:var(--gl);border:1px solid var(--line);font:700 12px 'Cairo'}
+
+.anl{margin-top:14px;background:var(--glass);border:1px solid var(--hair);border-radius:var(--r);overflow:hidden}
+.anl>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:12px;padding:13px 18px;font-weight:800;font-size:15px;user-select:none}
+.anl>summary::-webkit-details-marker{display:none}
+.anl>summary:hover{background:rgba(212,168,83,.06)}
+.anl>summary .sm{font-weight:600;font-size:12.5px;color:var(--muted)}
+.anl>summary .tg{margin-inline-start:auto;display:inline-flex;align-items:center;gap:8px;font:700 12.5px 'Cairo';color:var(--gl);border:1px solid var(--line);background:rgba(212,168,83,.1);border-radius:999px;padding:5px 14px}
+.anl>summary .tg i{display:inline-block;transition:transform .2s;font-style:normal}
+.anl[open]>summary .tg i{transform:rotate(180deg)}
+.anl[open]>summary{border-bottom:1px solid var(--hair)}
+.anl .inner{padding:0 14px 14px}
+.charts{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:14px}
+.chart{padding:12px 16px 14px}
+.brow{display:grid;grid-template-columns:118px 1fr 40px;align-items:center;gap:9px;margin-bottom:8px;font-size:12.5px;cursor:pointer;border-radius:8px;padding:2px 4px;transition:.12s}
+.brow:hover{background:rgba(212,168,83,.07)}
+.brow.sel{background:rgba(212,168,83,.14);outline:1px solid var(--line)}
+.brow .bt{color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.btrack{background:rgba(255,255,255,.06);border-radius:6px;height:13px;overflow:hidden;display:flex}
+.btrack span{height:100%}
+.bnum{text-align:left;font-weight:800;font-feature-settings:"tnum";color:#fff}
+.ckey{display:flex;gap:12px;font-size:11.5px;color:var(--muted);margin-bottom:10px}
+.ckey i{width:9px;height:9px;border-radius:2px;display:inline-block;margin-left:5px}
+.tl{display:flex;align-items:flex-end;gap:5px;height:150px;padding-top:8px}
+.tl .col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;cursor:pointer}
+.tl .col .v{font-size:11px;font-weight:800;color:#fff;font-feature-settings:"tnum"}
+.tl .col .b{width:100%;border-radius:5px 5px 0 0;display:flex;flex-direction:column-reverse;overflow:hidden;min-height:2px}
+.tl .col .d{font-size:10.5px;color:var(--muted);margin-top:4px;direction:ltr}
+.tl .col.sel .d{color:var(--gl);font-weight:800}
+.tl .col:hover .b{filter:brightness(1.25)}
+
+.tblwrap{max-height:540px;overflow:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{position:sticky;top:0;background:#0d1d47;color:var(--gl);font-weight:800;text-align:right;padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap;z-index:2;cursor:pointer;user-select:none}
+th:hover{background:#13285e}
+td{padding:8px 12px;border-bottom:1px solid var(--hair);white-space:nowrap;color:var(--ink2)}
+td b{color:#fff}
+tbody tr{cursor:pointer;transition:.12s}
+tbody tr:hover{background:rgba(212,168,83,.07)}
+.tag{display:inline-block;padding:2px 10px;border-radius:999px;font-size:11.5px;font-weight:700;border:1px solid transparent}
+.t-ok{background:rgba(79,209,139,.12);color:#7ee5aa;border-color:rgba(79,209,139,.35)}
+.t-warn{background:rgba(240,191,90,.12);color:#ffd88a;border-color:rgba(240,191,90,.35)}
+.t-bad{background:rgba(255,107,94,.12);color:#ffb3ab;border-color:rgba(255,107,94,.35)}
+.t-no{background:rgba(255,255,255,.05);color:var(--muted);border-color:var(--hair)}
+.num{font-feature-settings:"tnum"}
+.xls{font:700 12px 'Cairo';background:rgba(79,209,139,.12);color:#7ee5aa;border:1px solid rgba(79,209,139,.35);border-radius:9px;padding:5px 12px;cursor:pointer}
+footer{margin-top:22px;padding:16px;color:var(--muted);font-size:12.5px;text-align:center;border-top:1px solid var(--hair)}
+footer b{color:var(--gl)}
+::-webkit-scrollbar{width:10px;height:10px}::-webkit-scrollbar-thumb{background:rgba(212,168,83,.3);border-radius:10px}::-webkit-scrollbar-track{background:transparent}
+@media(max-width:1280px){.kpis{grid-template-columns:repeat(3,1fr)}.charts{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:700px){.kpis,.charts{grid-template-columns:1fr 1fr}h1{font-size:23px}#map{height:440px}.brandrow{display:none}}
+
+/* ===== Attachment Viewer ===== */
+.att-btn{background:var(--glass);border:1px solid var(--hair);color:var(--gl);font-family:Cairo,sans-serif;font-size:12px;padding:4px 10px;border-radius:6px;cursor:pointer;margin-top:8px;display:inline-flex;align-items:center;gap:5px;transition:background .2s}
+.att-btn:hover{background:rgba(212,168,83,.18)}
+.att-btn:disabled{opacity:.6;cursor:wait}
+.att-link{display:inline-flex;align-items:center;gap:4px;background:rgba(79,209,139,.12);border:1px solid rgba(79,209,139,.3);color:#4fd18b;font-family:Cairo,sans-serif;font-size:11px;padding:3px 9px;border-radius:5px;cursor:pointer;margin:3px 2px 0;transition:background .2s}
+.att-link:hover{background:rgba(79,209,139,.22)}
+.att-err{font-size:11px;color:var(--muted);font-family:Cairo,sans-serif;margin-top:4px}
+.att-loading{font-size:11px;color:var(--gold);font-family:Cairo,sans-serif;margin-top:6px}
+
+/* Attachment Modal */
+#att-modal{display:none;position:fixed;inset:0;z-index:9999;background:rgba(3,9,21,.93);flex-direction:column;align-items:center;justify-content:center}
+#att-modal-inner{background:var(--card,rgba(16,24,39,.95));border:1px solid var(--hair,rgba(255,255,255,.08));border-radius:14px;padding:18px;max-width:94vw;max-height:94vh;overflow:auto;position:relative;display:flex;flex-direction:column}
+#att-modal-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:16px}
+#att-modal-title{font-weight:800;font-family:Cairo,sans-serif;color:var(--gl,#e8e4d4);font-size:14px}
+#att-modal-close{background:none;border:none;color:var(--muted,#8a8a8a);font-size:22px;cursor:pointer;line-height:1;padding:0 4px}
+#att-modal-close:hover{color:#fff}
+#att-canvas-wrap{overflow:auto;max-height:80vh}
+#att-canvas{display:block;max-width:100%}
+.att-canvas{pointer-events:none;user-select:none;-webkit-user-select:none}
+#att-modal-footer{font-size:11px;color:var(--muted,#8a8a8a);margin-top:10px;text-align:center;font-family:Cairo,sans-serif}
+#att-modal-spinner{font-family:Cairo,sans-serif;color:var(--gold,#d4a853);font-size:13px;padding:40px;text-align:center}
+#att-modal-err{font-family:Cairo,sans-serif;color:#ff6b5e;font-size:13px;padding:40px;text-align:center;display:none}
+
+/* Print protection */
+@media print{body{display:none!important}}
+</style>
 
 <!-- PDF.js for secure canvas rendering of PDF attachments -->
 <script>
@@ -710,7 +889,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     <div class="kpi" data-k="ok" style="--c:var(--green)"><span class="hint">اضغط للعرض</span><div class="lab">مواقع مستلمة / منفذة</div><div class="val" id="kOk">0</div><div class="note" id="kOkN">—</div></div>
     <div class="kpi" data-k="ob" style="--c:var(--red)"><span class="hint">اضغط للعرض</span><div class="lab">مواقع عليها عوائق</div><div class="val" id="kOb">0</div><div class="note" id="kObN">—</div></div>
     <div class="kpi" data-k="base" style="--c:var(--teal)"><span class="hint">اضغط للعرض</span><div class="lab">يوجد قاعدة سابقة</div><div class="val" id="kBase">0</div><div class="note">قواعد قائمة يمكن الاستفادة منها</div></div>
-    <div class="kpi" data-k="att" style="--c:var(--purple)"><span class="hint">اضغط للعرض</span><div class="lab">مرفقات معتمدة رسمياً</div><div class="val" id="kAtt">0</div><div class="note">مواقع مربوطة بملفات R2</div></div>
+    <div class="kpi" data-k="att" style="--c:var(--violet)"><span class="hint">اضغط للعرض</span><div class="lab">مرفقات معتمدة رسمياً</div><div class="val" id="kAtt">0</div><div class="note">مواقع مربوطة بملفات R2</div></div>
   </div>
 
   <div class="fbar">
@@ -732,16 +911,16 @@ svg.leaflet-image-layer.leaflet-interactive path {
   <div class="card" style="margin-top:14px">
     <h3>
       <span>خريطة مواقع اللوحات الإعلانية — الدمام والخبر والظهران</span>
-      <small id="mapCnt">—</small>
+      <small id="mapCount">—</small>
     </h3>
     <div class="maptools">
-      <span class="lbl">تلوين النقاط بحسب:</span>
+      <span class="lbl">تلوين النقاط:</span>
       <div class="seg" id="segMode">
-        <button data-m="type" class="on">نوع اللوحة</button>
+        <button class="on" data-m="type">نوع اللوحة</button>
         <button data-m="dec">قرار التنفيذ</button>
         <button data-m="cat">نوع العائق</button>
       </div>
-      <div style="margin-right:auto;display:flex;gap:8px;flex-wrap:wrap" id="typeChips"></div>
+      <span id="chips" style="display:contents"></span>
     </div>
     <div id="map"></div>
   </div>
@@ -752,16 +931,16 @@ svg.leaflet-image-layer.leaflet-interactive path {
       <span class="lt" style="color:var(--gl);font-size:12.5px;margin-right:auto">إخفاء</span>
     </summary>
     <div class="charts">
-      <div class="cbox"><h4>توزيع المواقع بحسب نوع اللوحة</h4><div id="cType"></div></div>
-      <div class="cbox"><h4>توزيع المواقع بحسب البلدية / المدينة</h4><div id="cBal"></div></div>
-      <div class="cbox"><h4>تصنيف الملاحظات والعوائق</h4><div id="cCat"></div></div>
-      <div class="cbox"><h4>أعلى الأحياء كثافة</h4><div id="cHay"></div></div>
+      <div class="card"><h3>حسب نوع اللوحة <small>اضغط للتصفية</small></h3><div class="chart"><div class="ckey"><span><i style="background:var(--green)"></i>منفذ / مستلم</span><span><i style="background:var(--red)"></i>عوائق</span></div><div id="cType"></div></div></div>
+      <div class="card"><h3>حسب البلدية <small>اضغط للتصفية</small></h3><div class="chart"><div class="ckey"><span><i style="background:var(--green)"></i>منفذ / مستلم</span><span><i style="background:var(--red)"></i>عوائق</span></div><div id="cBal"></div></div></div>
+      <div class="card"><h3>تصنيف الملاحظات والمعوقات <small>اضغط للتصفية</small></h3><div class="chart" id="cCat"></div></div>
+      <div class="card"><h3>أعلى الأحياء <small>اضغط للتصفية</small></h3><div class="chart" id="cHay"></div></div>
     </div>
   </details>
 
   <div class="card" style="margin-top:14px">
     <h3>
-      <span>جدول المواقع التفصيلي والمرفقات</span>
+      <span>جدول المواقع التفصيلي والمرفقات الرسمية</span>
       <div style="display:flex;gap:10px;align-items:center">
         <button class="xls" id="btnExport" title="تصدير البيانات إلى ملف Excel / CSV">📥 تصدير CSV</button>
         <small id="tblCnt">—</small>
@@ -1004,13 +1183,17 @@ $('#fQ').oninput=e=>{F.q=e.target.value.trim(); update();};
 $('#reset').onclick=()=>{
   for(const k in F) F[k]='';
   $('#fQ').value='';
+  hidden.clear();
   fillHay(); sync(); update();
 };
 
 /* ---------- Map ---------- */
 let map=null, mode='type';
 const markers={};
+const hidden = new Set();
 const _pins={};
+
+const legendKey = s => mode === 'type' ? s.type : mode === 'dec' ? s.dec : s.cat;
 
 function pinIcon(c,r){
   const k=c+r;
@@ -1087,69 +1270,68 @@ document.querySelectorAll('#segMode button').forEach(b => b.onclick = () => {
   document.querySelectorAll('#segMode button').forEach(x => x.classList.remove('on'));
   b.classList.add('on');
   mode = b.dataset.m;
+  hidden.clear();
   D.forEach(s => {
     if(markers[s.code]) markers[s.code].setIcon(pinIcon(colorOf(s), TYPE_R[s.type]||5));
   });
+  update();
 });
 
 function drawMap(V){
+  const pal = mode === 'type' ? TYPE_C : mode === 'dec' ? DEC_C : CAT_C;
+  const cnt = {};
+  V.forEach(s => cnt[legendKey(s)] = (cnt[legendKey(s)] || 0) + 1);
+
+  $('#chips').innerHTML = Object.keys(pal).filter(k => D.some(s => legendKey(s) === k)).map(k => {
+    const tot = D.filter(s => legendKey(s) === k).length, c = cnt[k] || 0, filt = V.length !== D.length;
+    return `<button class="chip${hidden.has(k)?' off':''}" data-k="${k}" title="${k}: ${c} من ${tot}"><i style="background:${pal[k]};color:${pal[k]}"></i>${k} <b>${c}</b>${filt?`<s>من ${tot}</s><span class="cb"><span style="width:${tot?c*100/tot:0}%;background:${pal[k]}"></span></span>`:''}</button>`;
+  }).join('');
+
+  document.querySelectorAll('#chips .chip').forEach(c => c.onclick = () => {
+    const k = c.dataset.k;
+    hidden.has(k) ? hidden.delete(k) : hidden.add(k);
+    update();
+  });
+
+  if(!map) return;
+  let shown = 0;
   const visible = new Set(V.map(s => s.code));
+
   for(const c in markers){
     const m = markers[c];
-    if(visible.has(c)){
+    const s = D.find(x => x.code === c);
+    const on = visible.has(c) && (!s || !hidden.has(legendKey(s)));
+    if(on){
+      shown++;
       if(!map.hasLayer(m)) map.addLayer(m);
     } else {
       if(map.hasLayer(m)) map.removeLayer(m);
     }
   }
-  $('#mapCnt').textContent = V.length === D.length ? `${V.length} موقعًا معروضة` : `${V.length} من أصل ${D.length} معروضة`;
+  $('#mapCount').textContent = shown === D.length ? `${shown} موقعًا معروضًا` : `${shown} من أصل ${D.length} معروضًا`;
 }
 
 /* ---------- Charts ---------- */
-function group(arr, k){
+function group(V, key){
   const m = {};
-  arr.forEach(s => { const v = s[k] || 'غير محدد'; m[v] = (m[v]||0)+1; });
-  return Object.entries(m).sort((a,b)=>b[1]-a[1]);
-}
-
-function stacked(sel, k, rows){
-  const el = $(sel);
-  if(!rows.length){ el.innerHTML='<div class="empty">لا توجد بيانات</div>'; return; }
-  const max = rows[0][1];
-  el.innerHTML = rows.map(([name, count]) => {
-    const isSel = F[k] === name;
-    return `<div class="crow ${isSel?'sel':''}" onclick="setF('${k}', '${name}')">
-      <div class="clab"><span title="${esc(name)}">${esc(name)}</span><span class="cnum">${count}</span></div>
-      <div class="cbar"><span style="width:${Math.round(count*100/max)}%;background:${TYPE_C[name]||'var(--gold)'}"></span></div>
-    </div>`;
-  }).join('');
-}
-
-function simple(sel, k, rows, colorMap){
-  const el = $(sel);
-  if(!rows.length){ el.innerHTML='<div class="empty">لا توجد بيانات</div>'; return; }
-  const max = rows[0][1];
-  el.innerHTML = rows.map(([name, count]) => {
-    const isSel = F[k] === name;
-    const c = colorMap ? colorMap[name]||'var(--teal)' : 'var(--teal)';
-    return `<div class="crow ${isSel?'sel':''}" onclick="setF('${k}', '${name}')">
-      <div class="clab"><span title="${esc(name)}">${esc(name)}</span><span class="cnum">${count}</span></div>
-      <div class="cbar"><span style="width:${Math.round(count*100/max)}%;background:${c}"></span></div>
-    </div>`;
-  }).join('');
-}
-
-/* ---------- Type Chips ---------- */
-function drawTypeChips(){
-  const counts = group(D, 'type');
-  const total = D.length;
-  let html = `<div class="chip ${!F.type?'':'off'}" onclick="setF('type','')"><i></i><b>${total}</b><s>الكل</s></div>`;
-  counts.forEach(([t, c]) => {
-    const isSel = F.type === t;
-    const col = TYPE_C[t] || '#d4a853';
-    html += `<div class="chip ${isSel?'':'off'}" style="color:${col}" onclick="setF('type','${t}')"><i style="background:${col}"></i><b>${c}</b><s>${t}</s></div>`;
+  V.forEach(s => {
+    const r = m[s[key]] || (m[s[key]] = { k: s[key], t: 0, ok: 0, ob: 0 });
+    r.t++;
+    (s.dec==='منفذ'||s.dec==='استلام الموقع'||s.dec==='تم تسليم الموقع'||s.dec==='تم التشغيل') ? r.ok++ : r.ob++;
   });
-  $('#typeChips').innerHTML = html;
+  return Object.values(m).sort((a,b) => b.t - a.t);
+}
+
+function stacked(el, key, list){
+  const max = Math.max(1, ...list.map(r => r.t));
+  $(el).innerHTML = list.map(r => `<div class="brow${F[key]===r.k?' sel':''}" data-v="${r.k}" title="${r.k}: ${r.ok} منفذ · ${r.ob} عوائق / غير منفذ"><span class="bt">${r.k}</span><span class="btrack" style="width:${Math.max(2,r.t*100/max)}%"><span style="width:${r.t?r.ok*100/r.t:0}%;background:var(--green)"></span><span style="width:${r.t?r.ob*100/r.t:0}%;background:var(--red)"></span></span><span class="bnum">${r.t}</span></div>`).join('') || '<div style="color:var(--muted)">لا توجد بيانات</div>';
+  $(el).querySelectorAll('.brow').forEach(b => b.onclick = () => setF(key, b.dataset.v));
+}
+
+function simple(el, key, list, colors){
+  const max = Math.max(1, ...list.map(r => r.t));
+  $(el).innerHTML = list.map(r => `<div class="brow${F[key]===r.k?' sel':''}" data-v="${r.k}" title="${r.k}"><span class="bt">${r.k}</span><span class="btrack"><span style="width:${r.t*100/max}%;background:${(colors&&colors[r.k])||'var(--gold)'}"></span></span><span class="bnum">${r.t}</span></div>`).join('') || '<div style="color:var(--muted)">لا توجد بيانات</div>';
+  $(el).querySelectorAll('.brow').forEach(b => b.onclick = () => setF(key, b.dataset.v));
 }
 
 /* ---------- Table ---------- */
@@ -1557,7 +1739,6 @@ async function loadFeatureLayerData() {
     $('#headAtts').textContent = `${D.filter(s=>s.atts.length>0).length} موقع`;
 
     populateFilters();
-    drawTypeChips();
 
     // Rebuild Leaflet markers
     if (map) {
@@ -1627,7 +1808,7 @@ const KC = {
   ok: 'var(--green)',
   ob: 'var(--red)',
   base: 'var(--teal)',
-  att: 'var(--purple)'
+  att: 'var(--violet)'
 };
 
 function kActive(k){
@@ -1641,6 +1822,7 @@ document.querySelectorAll('.kpi').forEach(el => el.onclick = () => {
   if(k === 'all'){
     for(const x in F) F[x]='';
     $('#fQ').value='';
+    hidden.clear();
     fillHay();
   } else {
     const on = kActive(k);
@@ -1688,7 +1870,6 @@ function drawNow(V){
 
 // Initial boot
 initMap();
-drawTypeChips();
 sync();
 update();
 
