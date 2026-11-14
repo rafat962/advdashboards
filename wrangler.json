@@ -9,7 +9,13 @@
     "previews": {
         "vars": {
             "AUTH_USERS": "{\"MahaViewer\":\"Almaha@2030\",\"Heba\":\"1234\"}"
-        }
+        },
+        "r2_buckets": [
+            {
+                "binding": "MY_BUCKET",
+                "bucket_name": "gis-contracts-bucket"
+            }
+        ]
     },
     "r2_buckets": [
         {
