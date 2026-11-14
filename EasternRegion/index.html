@@ -537,6 +537,160 @@
       color: #fff;
     }
 
+    /* Leaflet Popup Dark Executive Theme */
+    .leaflet-popup.dark-popup .leaflet-popup-content-wrapper,
+    .leaflet-popup-content-wrapper,
+    .leaflet-popup.dark-popup .leaflet-popup-tip,
+    .leaflet-popup-tip {
+      background: rgba(11, 20, 38, 0.98) !important;
+      color: #f1f5f9 !important;
+      border: 1px solid rgba(56, 189, 248, 0.4) !important;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.85), 0 0 20px rgba(56, 189, 248, 0.15) !important;
+      backdrop-filter: blur(14px) !important;
+      border-radius: 12px !important;
+    }
+    .leaflet-popup.dark-popup .leaflet-popup-content,
+    .leaflet-popup-content {
+      font-family: 'Cairo', -apple-system, BlinkMacSystemFont, sans-serif !important;
+      direction: rtl !important;
+      margin: 12px 14px !important;
+      min-width: 250px !important;
+      max-width: 320px !important;
+      line-height: 1.5 !important;
+    }
+    .leaflet-container a.leaflet-popup-close-button {
+      color: #94a3b8 !important;
+      padding: 6px 8px !important;
+      font-size: 18px !important;
+      font-weight: 700 !important;
+      transition: color 0.15s !important;
+    }
+    .leaflet-container a.leaflet-popup-close-button:hover {
+      color: #ef4444 !important;
+    }
+    .leaflet-popup-tip-container {
+      overflow: visible !important;
+    }
+
+    /* Popup internal elements */
+    .pop-card {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      direction: rtl;
+    }
+    .pop-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(56, 189, 248, 0.25);
+      padding-bottom: 6px;
+    }
+    .pop-code {
+      font-size: 14px;
+      font-weight: 800;
+      color: #fff;
+    }
+    .pop-badge {
+      font-size: 10.5px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 6px;
+      background: rgba(56, 189, 248, 0.15);
+      color: #38bdf8;
+      border: 1px solid rgba(56, 189, 248, 0.35);
+    }
+    .pop-rows {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 11.5px;
+    }
+    .pop-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 3px 0;
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.07);
+    }
+    .pop-row:last-child {
+      border-bottom: none;
+    }
+    .pop-label {
+      color: #94a3b8;
+    }
+    .pop-val {
+      color: #f1f5f9;
+      font-weight: 600;
+    }
+    .pop-note {
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 6px;
+      padding: 6px 8px;
+      font-size: 11px;
+      color: #cbd5e1;
+      line-height: 1.4;
+      margin-top: 3px;
+    }
+    .pop-atts {
+      margin-top: 6px;
+      padding-top: 6px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .pop-atts-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: #38bdf8;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-bottom: 2px;
+    }
+    .btn-att-pop {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      width: 100%;
+      padding: 5px 8px;
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      border-radius: 6px;
+      color: #f1f5f9;
+      font-family: 'Cairo', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-align: right;
+    }
+    .btn-att-pop:hover {
+      background: rgba(56, 189, 248, 0.28);
+      border-color: #38bdf8;
+      color: #fff;
+      transform: translateY(-1px);
+    }
+    .pop-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 6px;
+      padding-top: 6px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 10.5px;
+    }
+    .pop-footer a {
+      color: #38bdf8;
+      text-decoration: none;
+      font-weight: 700;
+    }
+    .pop-footer a:hover {
+      text-decoration: underline;
+    }
+
     /* Modal PDF / Image Viewer (Canvas Secure) */
     .att-modal-overlay {
       position: fixed;
@@ -1447,33 +1601,57 @@ function updateMapMarkers(filtered) {
     let attHtml = '';
     if (s.atts && s.atts.length) {
       attHtml = `
-        <div style="margin-top:8px;padding-top:6px;border-top:1px solid rgba(255,255,255,0.1);">
-          <div style="font-size:11px;color:#94a3b8;margin-bottom:4px;font-weight:700;">المرفقات الرسمية (R2):</div>
-          <div style="display:flex;flex-wrap:wrap;gap:4px;">
-            ${s.atts.map(a => `
-              <button class="btn-att" onclick="openAttachment('${a.key}', '${a.title}', '${a.type}')">
-                ${a.type==='pdf'?'📕':'🖼️'} ${a.title.length>20 ? a.title.substring(0,18)+'...':a.title}
+        <div class="pop-atts">
+          <div class="pop-atts-title">📎 المرفقات المعتمدة (R2):</div>
+          ${s.atts.map(a => {
+            const cleanKey = (a.key || '').replace(/'/g, "\'");
+            const cleanTitle = (a.title || 'مرفق').replace(/'/g, "\'");
+            const isPdf = a.type === 'pdf' || (a.key && a.key.toLowerCase().endsWith('.pdf'));
+            return `
+              <button class="btn-att-pop" onclick="openAttachment('${cleanKey}', '${cleanTitle}', '${isPdf ? 'pdf' : 'image'}')">
+                <span>${isPdf ? '📕' : '🖼️'}</span>
+                <span style="flex:1;text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${a.title}</span>
+                <span style="font-size:10px;opacity:0.75;padding:1px 5px;border-radius:3px;background:rgba(255,255,255,0.08);">معاينة 👁️</span>
               </button>
-            `).join('')}
-          </div>
+            `;
+          }).join('')}
         </div>
       `;
     }
 
     const popupHtml = `
-      <div style="font-family:'Cairo',sans-serif;direction:rtl;min-width:210px;color:#fff;">
-        <div style="font-size:13px;font-weight:800;color:${col};margin-bottom:4px;">
-          ${s.code} · ${s.type}
+      <div class="pop-card">
+        <div class="pop-head">
+          <span class="pop-code" style="color:${col};">${s.code}</span>
+          <span class="pop-badge">${s.type}</span>
         </div>
-        <div style="font-size:11.5px;color:#cbd5e1;line-height:1.6;">
-          <div><b>البلدية:</b> ${s.bal || '—'} · <b>الحي:</b> ${s.hay || '—'}</div>
-          <div><b>حالة الموقع:</b> <span style="color:${STATUS_COLORS[s.dec]||'#fff'}">${s.dec || 'غير منفذ'}</span></div>
-          <div><b>قاعدة سابقة:</b> ${s.base==='نعم'?'يوجد قاعدة':'لا يوجد'}</div>
-          ${s.note ? `<div style="margin-top:4px;font-size:11px;color:#94a3b8;background:rgba(0,0,0,0.3);padding:4px;border-radius:4px;">${s.note}</div>`:''}
+        <div class="pop-rows">
+          <div class="pop-row">
+            <span class="pop-label">البلدية:</span>
+            <span class="pop-val">${s.bal || '—'}</span>
+          </div>
+          <div class="pop-row">
+            <span class="pop-label">الحي:</span>
+            <span class="pop-val">${s.hay || '—'}</span>
+          </div>
+          <div class="pop-row">
+            <span class="pop-label">حالة الموقع:</span>
+            <span class="pop-val" style="color:${STATUS_COLORS[s.dec] || '#38bdf8'};font-weight:700;">${s.dec || 'غير منفذ'}</span>
+          </div>
+          <div class="pop-row">
+            <span class="pop-label">قاعدة سابقة:</span>
+            <span class="pop-val" style="color:${s.base === 'نعم' ? '#2dd4bf' : '#94a3b8'};">${s.base === 'نعم' ? 'يوجد قاعدة' : 'لا يوجد'}</span>
+          </div>
         </div>
+        ${s.note ? `
+          <div class="pop-note">
+            <span style="color:#f59e0b;font-weight:700;">📝 ملاحظة:</span> ${s.note}
+          </div>
+        ` : ''}
         ${attHtml}
-        <div style="margin-top:6px;text-align:left;">
-          <a href="https://www.google.com/maps?q=${s.lat},${s.lon}" target="_blank" style="color:#38bdf8;font-size:11px;text-decoration:none;">فتح في Google Maps ↗</a>
+        <div class="pop-footer">
+          <span style="color:#64748b;font-family:monospace;">${(s.lat||0).toFixed(5)}, ${(s.lon||0).toFixed(5)}</span>
+          <a href="https://www.google.com/maps?q=${s.lat},${s.lon}" target="_blank" rel="noopener">فتح في Google Maps ↗</a>
         </div>
       </div>
     `;
@@ -1581,10 +1759,26 @@ async function openAttachment(fileKey, title, type) {
   ctx.fillText('جاري تحميل المرفق بأمان من السحابة...', canvas.width / 2, canvas.height / 2);
 
   try {
-    const apiBase = location.protocol === 'file:' ? 'https://ads-dashboard.almahagroup.org' : '';
+    let apiBase = '';
+    if (location.protocol === 'file:') {
+      try {
+        await fetch('http://localhost:3000/api/attachment?key=ping', { method: 'OPTIONS' });
+        apiBase = 'http://localhost:3000';
+      } catch (e) {
+        apiBase = 'https://ads-dashboard.almahagroup.org';
+      }
+    }
     const cleanKey = fileKey.replace(/^\/+/, '');
-    const res = await fetch(`${apiBase}/api/attachment?key=${encodeURIComponent(cleanKey)}`);
-    if (!res.ok) throw new Error(`تعذر تحميل الملف (كود ${res.status})`);
+    const res = await fetch(`${apiBase}/api/attachment?key=${encodeURIComponent(cleanKey)}`, {
+      headers: {
+        'X-Viewer-Mode': 'canvas-render'
+      }
+    });
+    if (!res.ok) {
+      if (res.status === 403) throw new Error('غير مصرح باستعراض هذا المرفق مباشرة (رمز 403)');
+      if (res.status === 404) throw new Error('الملف غير متوفر في مخزن السحابة R2 (رمز 404)');
+      throw new Error(`تعذر تحميل الملف (كود ${res.status})`);
+    }
 
     const blob = await res.blob();
     const isPDF = type === 'pdf' || cleanKey.toLowerCase().endsWith('.pdf') || blob.type === 'application/pdf';
