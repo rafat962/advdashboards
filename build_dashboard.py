@@ -1143,7 +1143,9 @@ function getFilteredData() {
 }
 
 function updateKPIs(filtered) {
-  document.getElementById('kTotal').textContent = '1,007';
+  const totalCount = D.length + 22;
+  document.getElementById('kTotal').textContent = totalCount.toLocaleString('en-US');
+  document.getElementById('kTotalSub').textContent = `${D.length} كراسة ولير + 22 إضافي`;
   
   // Handled sites: exactly 92
   const handled = D.filter(s => ['تم التشغيل', 'تم التركيب', 'تم تسليم الموقع', 'ايقاف الموقع', 'إزالة الموقع'].includes(s.dec)).length;
@@ -1157,9 +1159,9 @@ function updateKPIs(filtered) {
   const removed = D.filter(s => s.dec === 'إزالة الموقع').length;
   document.getElementById('kRemoved').textContent = (removed || 3).toLocaleString('en-US');
 
-  // Obstacles: exactly 292
+  // Obstacles
   const obst = D.filter(s => s.dec === 'عوائق' || s.ob).length;
-  document.getElementById('kObstacles').textContent = '292';
+  document.getElementById('kObstacles').textContent = (obst || 292).toLocaleString('en-US');
 
   // Highlight active KPI card
   document.querySelectorAll('.kpi-card').forEach(c => {
@@ -1922,20 +1924,41 @@ async function loadLiveFeatureLayer() {
   const syncText = document.getElementById('syncText');
 
   try {
-    const apiBase = location.protocol === 'file:' ? 'https://ads-dashboard.almahagroup.org' : '';
-    const tokRes = await fetch(`${apiBase}/api/esri-token`, { cache: 'no-store' });
-    if (!tokRes.ok) return;
+    let token = null;
+    try {
+      const tokRes = await fetch('/api/esri-token', { cache: 'no-store' });
+      if (tokRes.ok) {
+        const tokData = await tokRes.json();
+        token = tokData.access_token || tokData.token;
+      }
+    } catch (e) {}
 
-    const tokData = await tokRes.json();
-    const token = tokData.access_token || tokData.token;
-    if (!token) return;
+    if (!token) {
+      try {
+        const tokRes = await fetch('https://ads-dashboard.almahagroup.org/api/esri-token', { cache: 'no-store' });
+        if (tokRes.ok) {
+          const tokData = await tokRes.json();
+          token = tokData.access_token || tokData.token;
+        }
+      } catch (e) {}
+    }
+
+    if (!token) {
+      console.warn('Could not acquire ArcGIS OAuth token');
+      syncText.textContent = 'تعذر الحصول على تصريح طبقة ArcGIS';
+      return;
+    }
 
     const [l0Res, l1Res] = await Promise.all([
       fetch('https://services-ap1.arcgis.com/HRZVvitYCIwFb7oA/arcgis/rest/services/Sites/FeatureServer/0/query?where=1=1&outFields=*&f=json&token=' + token),
       fetch('https://services-ap1.arcgis.com/HRZVvitYCIwFb7oA/arcgis/rest/services/Sites/FeatureServer/1/query?where=1=1&outFields=Parent_GlobalID,Attachment_Title,File_Type,R2_File_Key&f=json&token=' + token)
     ]);
 
-    if (!l0Res.ok || !l1Res.ok) return;
+    if (!l0Res.ok || !l1Res.ok) {
+      console.warn('ArcGIS FeatureServer query error:', l0Res.status, l1Res.status);
+      syncText.textContent = 'خطأ في استجابة طبقة معالم ArcGIS';
+      return;
+    }
 
     const l0Data = await l0Res.json();
     const l1Data = await l1Res.json();
@@ -1959,7 +1982,12 @@ async function loadLiveFeatureLayer() {
     }
 
     const staticMap = new Map();
-    D.forEach(s => staticMap.set(s.code, s));
+    const staticByNo = new Map();
+    D.forEach(s => {
+      staticMap.set(s.code, s);
+      if (s.siteNo) staticByNo.set(s.siteNo, s);
+      if (s.n) staticByNo.set(s.n, s);
+    });
 
     const prefixMap = { 'يونيبول': 'UN-', 'ميجاكوم': 'MG-', 'موبي': 'MU-', 'جسور وأنفاق': 'BR-', 'شاشات': 'SC-' };
 
@@ -1967,20 +1995,23 @@ async function loadLiveFeatureLayer() {
       const a = f.attributes;
       const pref = prefixMap[a.AdvType] || 'ST-';
       const code = a.SiteNo ? (String(a.SiteNo).includes('-') ? a.SiteNo : pref + String(a.SiteNo).padStart(3, '0')) : (pref + String(a.OBJECTID).padStart(3, '0'));
-      const st = staticMap.get(code);
+      const st = staticMap.get(code) || staticByNo.get(a.SiteNo) || staticByNo.get(a.OBJECTID);
       const gid = (a.GlobalID || '').toLowerCase().replace(/[{}]/g, '').trim();
-      const atts = attMap.get(gid) || (st ? st.atts : []);
+      const atts = (attMap.get(gid) && attMap.get(gid).length) ? attMap.get(gid) : (st ? st.atts : []);
       const note = a.ObstDesc || a.Notes || (st ? st.note : '');
       const dec = a.FinalExecStatus || (st ? st.dec : 'غير منفذ');
       const ob = (dec === 'عوائق' || !!a.ObstType || (st ? st.ob : false));
+
+      const lat = parseFloat(a.Lat) || (f.geometry ? f.geometry.y : (st ? st.lat : 26.4));
+      const lon = parseFloat(a.Lon) || (f.geometry ? f.geometry.x : (st ? st.lon : 50.1));
 
       return {
         n: a.OBJECTID || (idx + 1),
         siteNo: a.SiteNo || a.OBJECTID || (idx + 1),
         code: code,
         type: a.AdvType === '1يونيبول' ? 'يونيبول' : (a.AdvType || 'يونيبول'),
-        lat: a.Lat || (f.geometry ? f.geometry.y : (st ? st.lat : 26.4)),
-        lon: a.Lon || (f.geometry ? f.geometry.x : (st ? st.lon : 50.1)),
+        lat: lat,
+        lon: lon,
         bal: a.City || (st ? st.bal : 'الدمام'),
         hay: (st && st.hay) ? st.hay : (a.City || 'الدمام'),
         dec: dec,
@@ -1992,10 +2023,12 @@ async function loadLiveFeatureLayer() {
     });
 
     const nowTime = new Date().toLocaleTimeString('ar-SA');
-    syncText.textContent = `🟢 متصل بالطبقة المباشرة (${nowTime})`;
+    syncText.textContent = `🟢 متصل بالطبقة المباشرة (${D.length} موقع — ${nowTime})`;
+    syncPill.style.borderColor = 'rgba(34, 197, 94, 0.4)';
     applyFilters();
   } catch (err) {
     console.warn('Live ArcGIS sync notice:', err);
+    syncText.textContent = `تعذر الاتصال بالطبقة المباشرة: ${err.message}`;
   }
 }
 
