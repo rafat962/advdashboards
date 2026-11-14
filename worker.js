@@ -228,7 +228,7 @@ export default {
             const corsHeaders = {
                 "Access-Control-Allow-Origin": "*",
                 "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-                "Access-Control-Allow-Headers": "Content-Type",
+                "Access-Control-Allow-Headers": "*",
             };
 
             if (request.method === "OPTIONS") {
@@ -281,7 +281,7 @@ export default {
             const corsHeaders = {
                 "Access-Control-Allow-Origin": "*",
                 "Access-Control-Allow-Methods": "GET, OPTIONS",
-                "Access-Control-Allow-Headers": "X-Viewer-Mode, Content-Type",
+                "Access-Control-Allow-Headers": "*",
                 "Access-Control-Expose-Headers": "X-User-Identity",
             };
 
@@ -307,7 +307,7 @@ export default {
                 });
             }
 
-            const key = url.searchParams.get("key");
+            const key = url.searchParams.get("key") || url.searchParams.get("name");
             if (!key || key.includes("..") || key.startsWith("/")) {
                 return new Response("400 Bad Request — Invalid key", {
                     status: 400,
