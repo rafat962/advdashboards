@@ -318,7 +318,7 @@
     /* Main Dashboard Layout: Map on LEFT, Charts on RIGHT */
     .main-grid {
       display: grid;
-      grid-template-columns: 1fr 540px;
+      grid-template-columns: minmax(0,1fr) clamp(430px,34vw,540px);
       direction: ltr; /* Map Left, Charts Right */
       gap: 10px;
       flex: 1;
@@ -822,7 +822,7 @@
   @media (min-width:1100px) and (min-height:640px){
     .dash-wrap{height:100vh;min-height:0 !important;padding-bottom:10px;overflow:hidden}
     .kpi-card{padding-top:8px !important;padding-bottom:8px !important}
-    .main-grid{min-height:0 !important;grid-template-columns:1fr 640px;grid-template-rows:minmax(0,1fr)}
+    .main-grid{min-height:0 !important;grid-template-columns:minmax(0,1fr) clamp(430px,34vw,540px);grid-template-rows:minmax(0,1fr)}
     .map-pane{min-height:0}
     #map{min-height:0 !important}
     .charts-pane{grid-template-rows:repeat(3,minmax(0,1fr));min-height:0 !important;height:100%}
@@ -2291,6 +2291,18 @@ async function resolveItemUrl(itemId, token) {
   }
   return null;
 }
+const AR_FIELDS = { submunicipalityname: 'البلدية الفرعية', districtname: 'الحي', submunicipality: 'رمز البلدية الفرعية', district: 'رمز الحي',
+  municipality: 'البلدية', municipalityname: 'البلدية', cityname: 'المدينة', city: 'المدينة', streetname: 'الشارع', street: 'الشارع',
+  latitude: 'إحداثيات العرض', longitude: 'إحداثيات الطول', lat: 'إحداثيات العرض', lon: 'إحداثيات الطول', long: 'إحداثيات الطول', x: 'إحداثي X', y: 'إحداثي Y',
+  type: 'النوع', status: 'الحالة', name: 'الاسم', description: 'الوصف', notes: 'ملاحظات', note: 'ملاحظات', area: 'المساحة', code: 'الرمز', siteno: 'رقم الموقع', id: 'المعرف' };
+function arLabel(k, al) {
+  const key = String(k).toLowerCase().replace(/[^a-z0-9]/g, '');
+  if (AR_FIELDS[key]) return AR_FIELDS[key];
+  const a = String(al || k);
+  if (/[\u0600-\u06FF]/.test(a)) return a;
+  const ak = a.toLowerCase().replace(/[^a-z0-9]/g, '');
+  return AR_FIELDS[ak] || a;
+}
 async function loadContractSitesLayer() {
   const btn = document.getElementById('btnContractLayer');
   try {
@@ -2322,7 +2334,8 @@ async function loadContractSitesLayer() {
     feats.forEach(f => {
       const a = f.attributes || {}, g = f.geometry || {};
       const rows = Object.keys(a).filter(k => !skip.test(k) && a[k] !== null && String(a[k]).trim() !== '').slice(0, 10)
-        .map(k => `<div style="display:flex;justify-content:space-between;gap:10px"><span style="color:#9fb0cf">${alias[k]}</span><b>${dom[k] && dom[k][a[k]] !== undefined ? dom[k][a[k]] : a[k]}</b></div>`).join('');
+        .map(k => { let v = dom[k] && dom[k][a[k]] !== undefined ? dom[k][a[k]] : a[k]; if (/^https?:\/\//i.test(String(v))) v = `<a href="${v}" target="_blank" rel="noopener" style="color:#7cc4ff">فتح في خرائط Google ↗</a>`;
+          return `<div style="display:flex;justify-content:space-between;gap:10px"><span style="color:#9fb0cf">${arLabel(k, alias[k])}</span><b style="text-align:left">${v}</b></div>`; }).join('');
       const pop = `<div style="direction:rtl;font-family:Cairo,sans-serif;min-width:190px"><div style="color:#f0d48e;font-weight:800;margin-bottom:4px">📍 موقع ضمن العقد</div>${rows || '—'}</div>`;
       let lyr = null;
       if (typeof g.x === 'number' && typeof g.y === 'number') {
@@ -2559,6 +2572,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 .ccx .ccx-h::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,rgba(240,212,142,.5),transparent)}
 .ccx .ccx-h small{font-size:12px;color:var(--muted);font-weight:700}
 .ccx table{width:100%}
+
+.charts-pane .chart-head{gap:6px}
+.charts-pane .chart-head h3{font-size:12px !important;line-height:1.35;min-width:0}
+.charts-pane .chart-actions{flex-shrink:0;gap:3px}
+.charts-pane .btn-chart-mode{padding:2px 6px !important;font-size:10px !important;white-space:nowrap;display:inline-flex;align-items:center;gap:3px}
 </style>
 <section class="ccx" id="contractInfo"><div class="ccx-in">
 <h2 class="ccx-h">بيانات العقد والإجراءات <small>عقد رقم <span class="mono">ABAM-30011</span></small></h2>

@@ -560,6 +560,31 @@
       gap: 8px;
       direction: rtl;
     }
+.main-grid.qty-float{grid-template-columns:1fr !important;min-height:0 !important;flex:none !important}
+    /* --- redesigned map (Dammam) --- */
+    .main-grid.qty-float .map-pane{border:1px solid rgba(212,168,83,.38);border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.35);height:var(--mapH,620px);min-height:420px}
+    .main-grid.qty-float #map{min-height:0 !important;height:100%;border-radius:14px}
+    .main-grid.qty-float .map-toolbar{position:absolute;top:10px;left:10px;right:10px;z-index:650;background:none;border:0;padding:0;pointer-events:none;align-items:flex-start}
+    .main-grid.qty-float .map-toolbar>div{pointer-events:auto;background:rgba(8,14,30,.82);border:1px solid rgba(212,168,83,.35);border-radius:999px;padding:4px 6px 4px 10px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);box-shadow:0 4px 14px rgba(0,0,0,.4)}
+    .main-grid.qty-float .map-toolbar .pill-btn{border-radius:999px;padding:3px 10px;font-size:11px}
+    .main-grid.qty-float .map-toolbar .pill-btn.active{border-color:#d4a853;background:rgba(212,168,83,.22);color:#ffe2a3}
+    .main-grid.qty-float #mapCounterBadge{color:#f0d48e !important}
+    .main-grid.qty-float .map-pane .qtybox{top:52px !important;right:10px !important}
+    .main-grid.qty-float .map-toolbar>div{border-radius:0 !important}
+    .main-grid.qty-float .map-pane .qtybox{border-radius:0 !important}
+    .main-grid.qty-float .map-legend{bottom:14px !important;left:14px !important;max-height:calc(100% - 80px);overflow:auto}
+    .main-grid.qty-float .leaflet-bottom.leaflet-right{margin-bottom:6px;margin-right:4px}
+    .main-grid.qty-float .leaflet-control-zoom{border:1px solid rgba(212,168,83,.4) !important;border-radius:10px !important;overflow:hidden}
+    .main-grid.qty-float .leaflet-control-zoom a{background:rgba(8,14,30,.88) !important;color:#f0d48e !important;border-color:rgba(212,168,83,.25) !important}
+    .main-grid.qty-float .charts-pane{display:none !important}
+    .map-pane .qtybox{position:absolute;top:46px;right:12px;z-index:600;width:min(330px,calc(100% - 24px));height:178px;padding:7px 10px 6px !important;background:rgba(8,14,30,.86) !important;border:1px solid rgba(212,168,83,.45) !important;border-radius:12px !important;box-shadow:0 10px 28px rgba(0,0,0,.5);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);transition:height .2s}
+    .map-pane .qtybox .chart-head h3{font-size:12px !important;color:#f0d48e}
+    .map-pane .qtybox .chart-canvas-wrap{flex:1;min-height:0;position:relative}
+    .map-pane .qtybox.min{height:34px;overflow:hidden}
+    .map-pane .qtybox.min .chart-canvas-wrap{display:none}
+    .qtymin{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:#cbd5e1;border-radius:5px;width:20px;height:20px;font-size:10px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;margin-inline-start:6px}
+    .map-pane .qtybox.min .qtymin{transform:rotate(180deg)}
+    .qtybox .chart-canvas-wrap{min-height:0}
     .chart-box {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
@@ -1357,6 +1382,16 @@
     }
   .site-pin{background:none;border:0}
 .legend-dot{border-radius:50% 50% 50% 0 !important;transform:rotate(-45deg);border:1.5px solid #fff}
+.map-legend{min-width:0 !important;max-width:none !important;width:max-content;padding:7px 9px 8px !important;border-color:rgba(212,168,83,.45) !important;border-radius:12px !important}
+.map-legend-hdr{gap:14px !important;padding-bottom:6px !important;margin-bottom:6px !important;border-bottom-color:rgba(212,168,83,.25) !important}
+.map-legend-title{font-size:11.5px !important;color:#f0d48e !important;gap:6px !important}
+.map-legend-sub{font-size:10px !important;color:#94a3c4 !important;font-weight:600 !important}
+.map-legend-toggle{width:18px !important;height:18px !important;border-radius:5px !important}
+.map-legend-items{display:grid !important;grid-template-columns:repeat(2,max-content);column-gap:6px;row-gap:2px !important}
+.legend-row{justify-content:flex-start !important;gap:0 !important;padding:3px 7px !important;font-size:11px !important}
+.legend-row-label{gap:7px !important}
+.legend-dot{width:9px !important;height:9px !important}
+.map-legend.collapsed .map-legend-items{display:none !important}
 
   /* single scrollbar: let the page (viewport) scroll, not <body> */
   html{overflow:visible !important}
@@ -1537,11 +1572,6 @@
           <span id="mapCounterBadge" style="font-size:11px;color:var(--blue);font-weight:700;margin-right:8px;">985 موقع معروض</span>
         </div>
         <div style="display:flex;gap:6px;align-items:center;">
-          <select id="selBasemap" class="map-select-tool" onchange="switchBasemap(this.value)">
-            <option value="satellite">🛰️ صور فضائية</option>
-            <option value="streets">🗺️ خريطة شوارع</option>
-            <option value="dark">🌑 نمط داكن</option>
-          </select>
           <button class="pill-btn" onclick="recenterMap()" title="إعادة ضبط الموقع">🎯 المنطقة</button>
         </div>
       </div>
@@ -1561,8 +1591,20 @@
 
     <!-- Charts Pane (Right side, ~42% width - 2x2 Grid) -->
     <div class="charts-pane">
+      <!-- الأعداد الواجب تنفيذها طبقاً للعقد (يحل محل مخططي البلديات وتوزيع اللوحات) -->
+      <div class="chart-box qtybox min" style="grid-column:1 / -1">
+        <div class="chart-head">
+          <h3>الأعداد الواجب تنفيذها طبقاً للعقد</h3>
+          <div class="chart-actions"><span style="font-size:11px;color:#e2e8f0;font-weight:700">الإجمالي 1,007 لوحة</span><button type="button" class="qtymin" title="تصغير / إظهار" onclick="this.closest('.qtybox').classList.toggle('min')">▾</button></div>
+        </div>
+        <div class="chart-canvas-wrap">
+          <canvas id="chartContractQty"></canvas>
+        </div>
+      </div>
+
+<script>(function(){var b=document.querySelector('.qtybox'),m=document.querySelector('.map-pane'),g=document.querySelector('.main-grid');if(b&&m&&g){b.style.gridColumn='';m.appendChild(b);g.classList.add('qty-float');}})();</script>
       <!-- Chart 1 (Top Left in charts section): أعداد المواقع بالبلدية (Vertical Bar) -->
-      <div class="chart-box">
+      <div class="chart-box" style="display:none" aria-hidden="true">
         <div class="chart-head">
           <h3>أعداد المواقع بالبلدية</h3>
           <div class="chart-actions">
@@ -1576,7 +1618,7 @@
       </div>
 
       <!-- Chart 2 (Top Right in charts section): توزيع اللوحات بالعقد (Doughnut / Pie Chart by Default!) -->
-      <div class="chart-box">
+      <div class="chart-box" style="display:none" aria-hidden="true">
         <div class="chart-head">
           <h3>توزيع اللوحات بالعقد</h3>
           <div class="chart-actions">
@@ -1590,9 +1632,9 @@
       </div>
 
       <!-- Chart 3 (Bottom Left in charts section): مصدر العوائق بالعقد (Horizontal Bar) -->
-      <div class="chart-box">
+      <div class="chart-box" style="display:none" aria-hidden="true">
         <div class="chart-head">
-          <h3>مصدر العوائق بالعقد</h3>
+          <h3>مصدر العوائق <small id="obstTotal" style="font-size:10.5px;color:#f0d48e;font-weight:700;margin-inline-start:4px;white-space:nowrap"></small></h3>
           <div class="chart-actions">
             <button class="btn-chart-mode active" id="btnObstBar" onclick="toggleObstChart('bar')">📊 أشرطة</button>
             <button class="btn-chart-mode" id="btnObstPie" onclick="toggleObstChart('doughnut')">🍩 دائري</button>
@@ -1604,7 +1646,7 @@
       </div>
 
       <!-- Chart 4 (Bottom Right in charts section): حالة الموقع (Horizontal Bar) -->
-      <div class="chart-box">
+      <div class="chart-box" style="display:none" aria-hidden="true">
         <div class="chart-head">
           <h3>حالة الموقع</h3>
           <div class="chart-actions">
@@ -1685,11 +1727,6 @@
             <span id="sdMapCodeLabel" style="font-size:11px;color:var(--blue);font-family:var(--mono);font-weight:700;"></span>
           </div>
           <div style="display:flex;align-items:center;gap:6px;">
-            <select id="selSdBasemap" class="map-select-tool" onchange="switchSiteDetailBasemap(this.value)">
-              <option value="satellite">🛰️ صور فضائية</option>
-              <option value="streets">🗺️ خريطة شوارع</option>
-              <option value="dark">🌑 نمط داكن</option>
-            </select>
             <button class="pill-btn" onclick="recenterSiteDetailMap()">🎯 توسيط الموقع</button>
           </div>
         </div>
@@ -1846,7 +1883,7 @@ function getSiteObstacleSource(s) {
   if (hasSpa) return 'اشتراطات مكانية';
   if (hasCons) return 'الاستشاري';
   if (hasCont) return 'المقاول';
-  return 'أخرى';
+  return 'غير محدد المصدر';
 }
 
 /* Filter Application */
@@ -1882,19 +1919,19 @@ function updateKPIs(filtered) {
   
   // Handled sites: exactly 92
   const handled = D.filter(s => ['تم التشغيل', 'تم التركيب', 'تم تسليم الموقع', 'ايقاف الموقع', 'إزالة الموقع'].includes(s.dec)).length;
-  document.getElementById('kHandled').textContent = (handled || 92).toLocaleString('en-US');
+  document.getElementById('kHandled').textContent = handled.toLocaleString('en-US');
 
   // Installed: تم التشغيل (69)
   const installed = D.filter(s => s.dec === 'تم التشغيل' || s.dec === 'تم التركيب').length;
-  document.getElementById('kInstalled').textContent = (installed || 69).toLocaleString('en-US');
+  document.getElementById('kInstalled').textContent = installed.toLocaleString('en-US');
 
   // Removed: إزالة الموقع (3)
   const removed = D.filter(s => s.dec === 'إزالة الموقع').length;
-  document.getElementById('kRemoved').textContent = (removed || 3).toLocaleString('en-US');
+  document.getElementById('kRemoved').textContent = removed.toLocaleString('en-US');
 
   // Obstacles
   const obst = D.filter(s => s.dec === 'عوائق' || s.ob).length;
-  document.getElementById('kObstacles').textContent = (obst || 292).toLocaleString('en-US');
+  document.getElementById('kObstacles').textContent = obst.toLocaleString('en-US');
 
   // Highlight active KPI card
   document.querySelectorAll('.kpi-card').forEach(c => {
@@ -2078,15 +2115,58 @@ function buildTypeChartConfig(mode) {
   }
 }
 
+const HBAR_VALS = {
+  id: 'hbarVals',
+  beforeDatasetsDraw(ch) {
+    const x = ch.ctx, a = ch.chartArea; x.save(); x.fillStyle = 'rgba(255,255,255,0.055)';
+    ch.getDatasetMeta(0).data.forEach(bar => { const h = bar.height, y = bar.y - h / 2; if (x.roundRect) { x.beginPath(); x.roundRect(a.left, y, a.right - a.left, h, h / 2); x.fill(); } else x.fillRect(a.left, y, a.right - a.left, h); });
+    x.restore();
+  },
+  afterDatasetsDraw(ch) {
+    const x = ch.ctx, ds = ch.data.datasets[0], meta = ch.getDatasetMeta(0);
+    const tot = ds.data.reduce((a, b) => a + (+b || 0), 0);
+    x.save(); x.textBaseline = 'middle'; x.direction = 'ltr';
+    meta.data.forEach((bar, i) => {
+      const v = +ds.data[i] || 0;
+      const pct = tot ? Math.round(v * 100 / tot) : 0;
+      const txt = v.toLocaleString('en-US');
+      x.font = "800 11px 'Cairo', sans-serif"; x.fillStyle = v ? '#f1f5f9' : 'rgba(148,163,184,.55)';
+      x.textAlign = 'right'; const bx = ch.chartArea.left - 8;
+      x.fillText(txt, bx, bar.y);
+      if (v) { const w = x.measureText(txt).width; x.font = "600 9.5px 'Cairo', sans-serif"; x.fillStyle = '#94a3b8'; x.fillText(pct + '%', bx - w - 5, bar.y); }
+      const lbl = String(ch.data.labels[i]);
+      x.font = "700 11px 'Cairo', sans-serif"; x.textAlign = 'right'; x.direction = 'rtl';
+      x.fillStyle = v ? '#e2e8f0' : 'rgba(203,213,225,.5)';
+      x.fillText(lbl, ch.chartArea.right, bar.y - bar.height / 2 - 8);
+      x.direction = 'ltr';
+    });
+    x.restore();
+  }
+};
+function hbarTick(lbl) { const t = String(lbl); return t.includes(' + ') ? t.split(' + ').map((p, i) => i ? '+ ' + p : p) : t; }
+function hbarOptions(common, onClick) {
+  return {
+    ...common,
+    indexAxis: 'y',
+    layout: { padding: { left: 58, right: 4, top: 16, bottom: 0 } },
+    datasets: { bar: { barPercentage: 0.95, categoryPercentage: 0.42, borderRadius: 6, borderSkipped: false, maxBarThickness: 12, minBarLength: 3 } },
+    scales: {
+      y: { position: 'right', grid: { display: false }, border: { display: false }, ticks: { display: false } },
+      x: { display: false, reverse: true, beginAtZero: true, grace: '2%' }
+    },
+    onClick: onClick
+  };
+}
+
 function buildObstChartConfig(mode) {
   const common = getCommonChartOptions();
-  const labels = ['اشتراطات مكانية', 'اشتراطات مكانية + المقاول', 'الاستشاري', 'الاستشاري + المقاول', 'المقاول'];
-  const colors = ['#c026d3', '#d946ef', '#a855f7', '#9333ea', '#7e22ce'];
+  const labels = ['اشتراطات مكانية', 'اشتراطات مكانية + المقاول', 'الاستشاري', 'الاستشاري + المقاول', 'المقاول', 'غير محدد المصدر'];
+  const colors = ['#c026d3', '#d946ef', '#a855f7', '#9333ea', '#7e22ce', '#64748b'];
 
   if (mode === 'doughnut' || mode === 'pie') {
     return {
       type: 'doughnut',
-      data: { labels: labels, datasets: [{ data: [75, 4, 150, 18, 45], backgroundColor: colors, borderWidth: 2, borderColor: '#0f172a', hoverOffset: 6 }] },
+      data: { labels: labels, datasets: [{ data: [271, 4, 47, 32, 33, 75], backgroundColor: colors, borderWidth: 2, borderColor: '#0f172a', hoverOffset: 6 }] },
       options: {
         ...common,
         cutout: '55%',
@@ -2103,35 +2183,28 @@ function buildObstChartConfig(mode) {
   } else {
     return {
       type: 'bar',
-      data: { labels: labels, datasets: [{ data: [75, 4, 150, 18, 45], backgroundColor: '#c026d3', borderRadius: 3 }] },
-      options: {
-        ...common,
-        indexAxis: 'y',
-        scales: {
-          y: { grid: { display: false }, ticks: { font: { weight: 'bold', size: 10 } } },
-          x: { grid: { color: 'rgba(255, 255, 255, 0.06)' }, beginAtZero: true, max: 200 }
-        },
-        onClick: (e, elements) => {
+      data: { labels: labels, datasets: [{ data: [271, 4, 47, 32, 33, 75], backgroundColor: colors, hoverBackgroundColor: '#f0abfc' }] },
+      plugins: [HBAR_VALS],
+      options: hbarOptions(common, (e, elements) => {
           if (!elements.length) return;
           const idx = elements[0].index;
           const val = chartObst.data.labels[idx];
           filters.obstacleSource = filters.obstacleSource === val ? null : val;
           applyFilters();
-        }
-      }
+        })
     };
   }
 }
 
 function buildStatChartConfig(mode) {
   const common = getCommonChartOptions();
-  const statOrder = ['إزالة الموقع', 'ايقاف الموقع', 'تم التشغيل', 'جاري العمل', 'عوائق', 'غير منفذ', 'متوقف بطلب المالك', 'يجب إعادة التحقق'];
-  const colors = ['#ef4444', '#f97316', '#fb923c', '#eab308', '#2dd4bf', '#c084fc', '#64748b', '#ec4899'];
+  const statOrder = ['إزالة الموقع', 'ايقاف الموقع', 'تم تسليم الموقع', 'تم التشغيل', 'جاري العمل', 'عوائق', 'غير منفذ', 'متوقف بطلب المالك', 'يجب إعادة التحقق'];
+  const colors = ['#ef4444', '#f97316', '#10b981', '#fb923c', '#eab308', '#2dd4bf', '#c084fc', '#64748b', '#ec4899'];
 
   if (mode === 'doughnut' || mode === 'pie') {
     return {
       type: 'doughnut',
-      data: { labels: statOrder, datasets: [{ data: [3, 10, 69, 5, 269, 615, 5, 4], backgroundColor: colors, borderWidth: 2, borderColor: '#0f172a', hoverOffset: 6 }] },
+      data: { labels: statOrder, datasets: [{ data: [3, 10, 10, 69, 0, 269, 615, 5, 4], backgroundColor: colors, borderWidth: 2, borderColor: '#0f172a', hoverOffset: 6 }] },
       options: {
         ...common,
         cutout: '55%',
@@ -2148,22 +2221,15 @@ function buildStatChartConfig(mode) {
   } else {
     return {
       type: 'bar',
-      data: { labels: statOrder, datasets: [{ data: [3, 10, 69, 5, 269, 615, 5, 4], backgroundColor: colors, borderRadius: 3 }] },
-      options: {
-        ...common,
-        indexAxis: 'y',
-        scales: {
-          y: { grid: { display: false }, ticks: { font: { weight: 'bold', size: 10 } } },
-          x: { grid: { color: 'rgba(255, 255, 255, 0.06)' }, beginAtZero: true }
-        },
-        onClick: (e, elements) => {
+      data: { labels: statOrder, datasets: [{ data: [3, 10, 10, 69, 0, 269, 615, 5, 4], backgroundColor: colors }] },
+      plugins: [HBAR_VALS],
+      options: hbarOptions(common, (e, elements) => {
           if (!elements.length) return;
           const idx = elements[0].index;
           const val = chartStat.data.labels[idx];
           filters.status = filters.status === val ? null : val;
           applyFilters();
-        }
-      }
+        })
     };
   }
 }
@@ -2249,21 +2315,23 @@ function updateChartsData(filtered) {
   chartType.update();
 
   // 3. Obstacle Sources
-  const obstOrder = ['اشتراطات مكانية', 'اشتراطات مكانية + المقاول', 'الاستشاري', 'الاستشاري + المقاول', 'المقاول'];
-  const obstCounts = { 'اشتراطات مكانية': 0, 'اشتراطات مكانية + المقاول': 0, 'الاستشاري': 0, 'الاستشاري + المقاول': 0, 'المقاول': 0 };
+  const obstOrder = ['اشتراطات مكانية', 'اشتراطات مكانية + المقاول', 'الاستشاري', 'الاستشاري + المقاول', 'المقاول', 'غير محدد المصدر'];
+  const obstCounts = { 'اشتراطات مكانية': 0, 'اشتراطات مكانية + المقاول': 0, 'الاستشاري': 0, 'الاستشاري + المقاول': 0, 'المقاول': 0, 'غير محدد المصدر': 0 };
   filtered.forEach(s => {
     const src = getSiteObstacleSource(s);
     if (obstCounts[src] !== undefined) obstCounts[src]++;
   });
+  { const t = obstOrder.reduce((x, o) => x + obstCounts[o], 0); const el = document.getElementById('obstTotal'); if (el) el.textContent = '(' + t.toLocaleString('en-US') + ')'; }
   chartObst.data.labels = obstOrder;
   chartObst.data.datasets[0].data = obstOrder.map(o => obstCounts[o]);
   if (chartObstMode === 'bar') {
-    chartObst.data.datasets[0].backgroundColor = obstOrder.map(o => o === filters.obstacleSource ? '#e879f9' : '#c026d3');
+    const OBC = ['#c026d3', '#d946ef', '#a855f7', '#9333ea', '#7e22ce', '#64748b'];
+    chartObst.data.datasets[0].backgroundColor = obstOrder.map((o, i) => filters.obstacleSource && o !== filters.obstacleSource ? 'rgba(148,163,184,.25)' : OBC[i % OBC.length]);
   }
   chartObst.update();
 
   // 4. Statuses
-  const statOrder = ['إزالة الموقع', 'ايقاف الموقع', 'تم التشغيل', 'جاري العمل', 'عوائق', 'غير منفذ', 'متوقف بطلب المالك', 'يجب إعادة التحقق'];
+  const statOrder = ['إزالة الموقع', 'ايقاف الموقع', 'تم تسليم الموقع', 'تم التشغيل', 'جاري العمل', 'عوائق', 'غير منفذ', 'متوقف بطلب المالك', 'يجب إعادة التحقق'];
   const statCounts = {};
   statOrder.forEach(k => statCounts[k] = 0);
   filtered.forEach(s => {
@@ -2299,15 +2367,7 @@ function initMap() {
     })
   ]).addTo(map);
 
-  basemapLayers.streets = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19,
-    attribution: 'OpenStreetMap'
-  });
 
-  basemapLayers.dark = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-    maxZoom: 19,
-    attribution: 'CartoDB Dark'
-  });
 
   markerLayer = L.layerGroup().addTo(map);
 }
@@ -2384,10 +2444,22 @@ function renderMapLegend(filtered) {
           <span class="legend-dot" style="background:${col};"></span>
           <span>${k}</span>
         </span>
-        <span class="legend-count">${cnt.toLocaleString('en-US')}</span>
       </div>
     `;
   }).join('');
+}
+
+function normDec(v) {
+  if (v == null) return '';
+  const t = String(v).trim().replace(/\s+/g, ' '); if (!t) return '';
+  const k = t.replace(/[أإآ]/g, 'ا').replace(/ة/g, 'ه');
+  if (k.includes('ازال') || k.includes('مزال')) return 'إزالة الموقع';
+  if (k.includes('ايقاف') || k.includes('موقوف')) return 'ايقاف الموقع';
+  if (k.includes('التشغيل') && k.includes('تم')) return 'تم التشغيل';
+  if (k.includes('تسليم')) return 'تم تسليم الموقع';
+  if (k.includes('عوائق') || k === 'عائق') return 'عوائق';
+  if (k.includes('غير منفذ')) return 'غير منفذ';
+  return t;
 }
 
 const _sitePins = {};
@@ -2503,15 +2575,7 @@ function initSiteDetailMap() {
     })
   ]).addTo(sdMap);
 
-  sdBasemapLayers.streets = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19,
-    attribution: 'OpenStreetMap'
-  });
 
-  sdBasemapLayers.dark = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-    maxZoom: 19,
-    attribution: 'CartoDB Dark'
-  });
 
   sdMarkerLayer = L.layerGroup().addTo(sdMap);
 }
@@ -3358,7 +3422,7 @@ async function loadLiveFeatureLayer(isManual = false) {
       const gid = (a.GlobalID || '').toLowerCase().replace(/[{}]/g, '').trim();
       const atts = (attMap.get(gid) && attMap.get(gid).length) ? attMap.get(gid) : (st ? st.atts : []);
       const note = a.ObstDesc || a.Notes || (st ? st.note : '');
-      const dec = a.FinalExecStatus || (st ? st.dec : 'غير منفذ');
+      const dec = normDec(a.FinalExecStatus) || (st ? st.dec : 'غير منفذ');
       const ob = a.FinalExecStatus ? (dec === 'عوائق' || !!a.ObstType) : (st ? st.ob : false);
 
       const lat = parseFloat(a.Lat) || (f.geometry ? f.geometry.y : (st ? st.lat : 26.4));
@@ -3377,6 +3441,7 @@ async function loadLiveFeatureLayer(isManual = false) {
         base: a.PrevBase || (st ? st.base : 'لا'),
         note: note,
         ob: ob,
+        cat: (st && st.cat) ? st.cat : (a.ObstType || ''),
         atts: atts
       };
     });
@@ -3624,23 +3689,54 @@ document.addEventListener('DOMContentLoaded', async () => {
 .ccx .ccx-h::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,rgba(240,212,142,.5),transparent)}
 .ccx .ccx-h small{font-size:12px;color:var(--muted);font-weight:700}
 .ccx table{width:100%}
+
+/* scrollbar — gold, clearly visible */
+html{scrollbar-color:#d4a853 #0a1430;scrollbar-width:auto}
+*{scrollbar-color:#d4a853 rgba(10,20,48,.6)}
+::-webkit-scrollbar{width:11px !important;height:11px !important}
+::-webkit-scrollbar-track{background:#0a1430 !important;border-left:1px solid rgba(212,168,83,.18)}
+::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#f0d48e,#d4a853 55%,#9f7430) !important;border-radius:10px !important;border:2px solid #0a1430}
+::-webkit-scrollbar-thumb:hover{background:linear-gradient(180deg,#fff0c4,#e3b862) !important}
+::-webkit-scrollbar-corner{background:#0a1430}
 </style>
 <section class="ccx" id="contractInfo"><div class="ccx-in">
 <h2 class="ccx-h">بيانات العقد والإجراءات <small>عقد رقم <span class="mono">CN46-41</span></small></h2>
 <div class="card"><h3>معلومات العقد الأساسية</h3><div class="pad"><div class="igrid"><div class="ib"><div class="k">رقم العقد</div><div class="v mono">CN46-41</div></div><div class="ib"><div class="k">الجهة المتعاقدة</div><div class="v">شركة إشراق</div></div><div class="ib"><div class="k">تاريخ العقد</div><div class="v">07/08/2025</div></div><div class="ib"><div class="k">تاريخ الاستلام</div><div class="v">18/09/2025</div><div class="h">26/03/1447هـ</div></div><div class="ib"><div class="k">قيمة العقد</div><div class="v">252,757,000 ريال</div></div><div class="ib"><div class="k">لوحات بالعقد</div><div class="v">1,007 لوحة</div></div><div class="ib"><div class="k">مستهدف التركيب</div><div class="v">528 لوحة</div></div><div class="ib"><div class="k">مستهدف الحفر</div><div class="v">1,474 موقعاً</div></div></div></div></div>
 <div class="card"><h3>الموقف الحالي</h3><ul class="bl"><li>تم تشغيل 68 موقعاً حتى تاريخه (7% من إجمالي العقد و13% من مستهدف التركيب).</li><li>تركيب 460 موقعاً متبقياً خلال 4 أشهر (نوفمبر – فبراير)، مع اكتمال جميع المواقع بنهاية فبراير 2027.</li><li>جارٍ استلام المواقع من الأمانة وفق محاضر لجنة التسليم.</li></ul></div>
 
-<div class="card"><h3>ملخص خطة التركيب والحفر حسب النوع</h3><div style="overflow:auto"><table><thead><tr><th>النوع</th><th>الكراسة</th><th>مستهدف التركيب</th><th>تم التشغيل</th><th>المتبقي</th><th>مستهدف الحفر</th></tr></thead><tbody><tr><td><b style="color:#fff">يونيبول</b></td><td>56</td><td>38</td><td>19</td><td>19</td><td>76</td></tr><tr><td><b style="color:#fff">ميجا</b></td><td>253</td><td>125</td><td>49</td><td>76</td><td>396</td></tr><tr><td><b style="color:#fff">موبي</b></td><td>600</td><td>330</td><td>0</td><td>330</td><td>900</td></tr><tr><td><b style="color:#fff">معالم</b></td><td>29</td><td>17</td><td>0</td><td>17</td><td>43</td></tr><tr><td><b style="color:#fff">أبراج</b></td><td>37</td><td>18</td><td>0</td><td>18</td><td>59</td></tr></tbody><tfoot><tr><td>الإجمالي</td><td>975</td><td>528</td><td>68</td><td>460</td><td>1,474</td></tr></tfoot></table></div><div class="tnote">ملاحظة: الأعداد لا تشمل الجسور والأنفاق، وتُعد خطة تنفيذها بنهاية ديسمبر 2026 وفق المخططات التنفيذية.</div></div>
+<div class="card"><h3>الأعداد الواجب تنفيذها طبقاً للعقد وخطة التركيب<small>إجمالي العقد 1,007 لوحة على 6 أنواع</small></h3><div style="overflow:auto"><table><thead><tr><th>نوع الوسيلة</th><th>الواجب تنفيذه طبقاً للعقد</th><th>مستهدف التركيب</th><th>تم التشغيل</th><th>المتبقي</th><th>مستهدف الحفر</th></tr></thead><tbody><tr><td><b style="color:#fff">لوحات يونيبول</b></td><td><b style="color:#f0d48e;font-size:15px">56</b></td><td>38</td><td>19</td><td>19</td><td>76</td></tr><tr><td><b style="color:#fff">لوحات موبي</b></td><td><b style="color:#f0d48e;font-size:15px">600</b></td><td>330</td><td>0</td><td>330</td><td>900</td></tr><tr><td><b style="color:#fff">لوحات ميجاكوم</b></td><td><b style="color:#f0d48e;font-size:15px">253</b></td><td>125</td><td>49</td><td>76</td><td>396</td></tr><tr><td><b style="color:#fff">لوحات جسور وأنفاق</b><br><small style="color:#f0bf5a">خطة التنفيذ بنهاية ديسمبر 2026</small></td><td><b style="color:#f0d48e;font-size:15px">32</b></td><td>—</td><td>—</td><td>—</td><td>—</td></tr><tr><td><b style="color:#fff">لوحات معلم</b><br><small style="color:#f0bf5a">لم يتم بيان الإحداثيات</small></td><td><b style="color:#f0d48e;font-size:15px">29</b></td><td>17</td><td>0</td><td>17</td><td>43</td></tr><tr><td><b style="color:#fff">لوحات برج</b></td><td><b style="color:#f0d48e;font-size:15px">37</b></td><td>18</td><td>0</td><td>18</td><td>59</td></tr></tbody><tfoot><tr><td>الإجمالي</td><td>1,007</td><td>528</td><td>68</td><td>460</td><td>1,474</td></tr></tfoot></table></div><div class="tnote">ملاحظة: مستهدفات التركيب والحفر لا تشمل لوحات الجسور والأنفاق (32 لوحة)، وتُعد خطة تنفيذها بنهاية ديسمبر 2026 وفق المخططات التنفيذية. لوحات المعالم (29) لم يتم بيان إحداثياتها في العقد.</div></div>
 <div class="card"><h3>خطة التركيب الشهرية — اكتمال جميع المواقع بنهاية فبراير 2027<small>المنفَّذ حتى تاريخه 68</small></h3><div class="months"><div class="mo"><div class="m">نوفمبر 2026</div><div class="c">82 <small>من 528</small></div><div class="a">خلال الشهر: <b>14</b> موقعاً · 16%</div><div class="track"><span style="width:16%;background:var(--gold)"></span></div></div><div class="mo"><div class="m">ديسمبر 2026</div><div class="c">172 <small>من 528</small></div><div class="a">خلال الشهر: <b>90</b> موقعاً · 33%</div><div class="track"><span style="width:33%;background:var(--gold)"></span></div></div><div class="mo"><div class="m">يناير 2027</div><div class="c">391 <small>من 528</small></div><div class="a">خلال الشهر: <b>219</b> موقعاً · 74%</div><div class="track"><span style="width:74%;background:var(--gold)"></span></div></div><div class="mo"><div class="m">فبراير 2027</div><div class="c">528 <small>من 528</small></div><div class="a">خلال الشهر: <b>137</b> موقعاً · 100%</div><div class="track"><span style="width:100%;background:var(--gold)"></span></div></div></div></div>
 <div class="card"><h3>مراحل تنفيذ المواقع الإعلانية<small>تسليم المواقع أولاً ثم ست مراحل متداخلة</small></h3><div class="stg"><div><i>0</i><b>استلام المواقع</b><span>شرط لبدء التنفيذ: استلام المواقع وفق النموذج المعتمد وتسليمها جاهزة دون عوائق.</span></div><div><i>1</i><b>الحفر والجسات</b><span>تحديد المواقع ميدانياً، أخذ الجسات واختبار التربة، وحفر مواقع القواعد.</span></div><div><i>2</i><b>القواعد</b><span>تركيب حديد التسليح ومسامير التثبيت، وصب الخرسانة ومعالجتها.</span></div><div><i>3</i><b>تركيب الهياكل والشاشات</b><span>نصب الأعمدة والهياكل المعدنية وتركيب الأوجه الإعلانية والشاشات.</span></div><div><i>4</i><b>الأعمال الكهربائية</b><span>التمديدات والتأريض واللوحات الكهربائية وتوصيل التيار الدائم.</span></div><div><i>5</i><b>الشكل الجمالي</b><span>التكسيات والدهانات والحواجز وإعادة الأرصفة وتنظيف الموقع.</span></div><div><i>6</i><b>رخصة التشغيل</b><span>الفحص وموافقة الاستشاري المشرف والجهة المالكة وإصدار الرخصة.</span></div></div><div class="warn"><b>تنبيه مهم:</b> لا يمكن تشغيل أي موقع إلا بعد إصدار رخصة التشغيل الخاصة به، ويلزم لإصدارها موافقة الاستشاري المشرف على المشروع والجهة المالكة، ويمثّل ذلك التزاماً مالياً جديداً وفق تعميم وزارة البلديات والإسكان.</div></div>
-<div class="card"><h3>الموقف المالي والاستحقاقات</h3>
-      
-      
-      <ul class="bl"><li>وفق خطة المشروع المعتمدة من مجلس الإدارة: تسوية الفاتورة القادمة على أساس المواقع المنفذة وترحيل سدادها إلى عام 2028، واستكمال التسوية بعد اكتمال 100% من المواقع.</li></ul>
-      
-      <div class="imp"><div class="v">85,000,000</div><div class="k">ريال · الأثر المالي المستهدف لترحيل عقود الدمام</div></div>
-    </div>
+
 </div></section>
 <!-- CONTRACT-INFO:END -->
+<script>
+(function(){
+  var Q=[['يونيبول',56,'#06b6d4'],['موبي',600,'#a3e635'],['ميجاكوم',253,'#3b82f6'],['جسور وأنفاق',32,'#a855f7'],['معالم',29,'#f59e0b'],['أبراج',37,'#f472b6']];
+  function draw(){
+    var c=document.getElementById('chartContractQty'); if(!c||typeof Chart==='undefined') return;
+    var lbl={id:'qtyLbl',afterDatasetsDraw:function(ch){var x=ch.ctx;x.save();x.font='700 11px Cairo, Tajawal, sans-serif';x.fillStyle='#f0d48e';x.textAlign='center';ch.getDatasetMeta(0).data.forEach(function(b,i){x.fillText(Q[i][1].toLocaleString('en-US'),b.x,b.y-6)});x.restore();}};
+    new Chart(c.getContext('2d'),{type:'bar',data:{labels:Q.map(function(q){return q[0]}),datasets:[{label:'الواجب تنفيذه طبقاً للعقد',data:Q.map(function(q){return q[1]}),backgroundColor:Q.map(function(q){return q[2]}),borderRadius:5,maxBarThickness:24}]},
+      options:{responsive:true,maintainAspectRatio:false,layout:{padding:{top:16}},plugins:{legend:{display:false},tooltip:{rtl:true,callbacks:{label:function(t){return ' '+t.parsed.y.toLocaleString('en-US')+' لوحة'+(Q[t.dataIndex][0]==='معالم'?' — لم يتم بيان الإحداثيات':'')}}}},
+        scales:{x:{reverse:true,ticks:{color:'#c3cce0',maxRotation:0,minRotation:0,autoSkip:false,font:{family:'Cairo',size:9.5,weight:'700'}},grid:{display:false}},y:{display:false,beginAtZero:true,max:660}}},plugins:[lbl]});
+  }
+  if(document.readyState==='complete') draw(); else window.addEventListener('load',draw);
+})();
+</script>
+<script>
+(function(){
+  function fitMap(){
+    var g=document.querySelector('.main-grid.qty-float'), mp=g&&g.querySelector('.map-pane'); if(!mp) return;
+    var top=mp.getBoundingClientRect().top+window.scrollY;
+    var h=Math.max(420, Math.round(window.innerHeight-top-10));
+    g.style.setProperty('--mapH', h+'px');
+    var tb=g.querySelector('.map-toolbar>div'), qb=g.querySelector('.qtybox');
+    if(tb&&qb){ tb.style.width=''; var w=Math.max(tb.getBoundingClientRect().width, 330); tb.style.width=w+'px'; tb.style.boxSizing='border-box'; tb.style.justifyContent='space-between'; qb.style.boxSizing='border-box'; qb.style.width=w+'px'; }
+    try{ if(typeof map!=='undefined'&&map&&map.invalidateSize) map.invalidateSize(); }catch(e){}
+  }
+  window.addEventListener('load',function(){fitMap();setTimeout(fitMap,300);});
+  window.addEventListener('resize',fitMap);
+})();
+</script>
 </body>
 </html>

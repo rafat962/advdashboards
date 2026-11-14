@@ -3359,7 +3359,8 @@
 .vload.done{opacity:0;pointer-events:none}
 .vload span{width:38px;height:38px;border-radius:50%;border:3px solid rgba(212,168,83,.2);border-top-color:var(--gold);animation:spin .9s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-body.viewing{overflow:hidden}
+body.viewing{overflow:hidden!important}
+html:has(body.viewing){overflow:hidden!important;scrollbar-gutter:auto}
 @media(max-width:600px){.vclose span{display:none}.vclose{padding:8px 10px}}
 
 /* PDF viewer (renders in page; avoids browser download behaviour) */
@@ -3453,6 +3454,15 @@ header .logout span{display:none!important}header .logout{padding:9px 11px!impor
 .hero-map .mapkey .mk-r .mk-l{flex:none}
 .hero-map .mapkey .mk-note{flex-basis:100%;margin-top:2px;padding-top:3px;font-size:9.5px}
 .hero-map .mapkey .mk-s{flex-basis:12px;transform:scale(.85)}
+
+/* scrollbar — gold, clearly visible */
+html{scrollbar-color:#d4a853 #0a1430;scrollbar-width:auto}
+*{scrollbar-color:#d4a853 rgba(10,20,48,.6)}
+::-webkit-scrollbar{width:11px !important;height:11px !important}
+::-webkit-scrollbar-track{background:#0a1430 !important;border-left:1px solid rgba(212,168,83,.18)}
+::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#f0d48e,#d4a853 55%,#9f7430) !important;border-radius:10px !important;border:2px solid #0a1430}
+::-webkit-scrollbar-thumb:hover{background:linear-gradient(180deg,#fff0c4,#e3b862) !important}
+::-webkit-scrollbar-corner{background:#0a1430}
 </style>
 </head>
     <body class="locked">
@@ -5001,12 +5011,12 @@ function vNav(u){const f=document.getElementById("vFrame");try{f.contentWindow.l
   let open=false;
   const show=(url,title,push)=>{
     V.querySelector(".vbody").classList.remove("pdfmode");document.getElementById("pdfPages").innerHTML="";T.textContent=title||"لوحة المتابعة";X.href=url;LD.classList.remove("done");vNav(url);clearTimeout(window.__vt);window.__vt=setTimeout(()=>LD.classList.add("done"),2500);
-    V.hidden=false;document.body.classList.add("viewing");open=true;
+    V.hidden=false;document.body.classList.add("viewing");document.documentElement.style.overflow="hidden";open=true;
     if(typeof closeDrawer==="function")closeDrawer();
     if(push){ if(location.hash==="#view")history.replaceState({dash:url,title:title},"","#view"); else history.pushState({dash:url,title:title},"","#view"); }
   };
   const hide=(fromPop)=>{
-    if(!open)return;open=false;V.hidden=true;document.body.classList.remove("viewing");vNav("about:blank");
+    if(!open)return;open=false;V.hidden=true;document.body.classList.remove("viewing");document.documentElement.style.overflow="";vNav("about:blank");
     if(!fromPop&&location.hash==="#view")history.replaceState(null,"",location.pathname+location.search);
   };
   F.addEventListener("load",()=>{LD.classList.add("done");});
@@ -5031,7 +5041,7 @@ const PAGES={"site-completion-certificate": 1, "site-completion-form": 2, "site-
   async function showPdf(url,title){
     const fm=document.getElementById("fmodal");if(fm){fm.classList.remove("open");}
     pdfOn=true;T.textContent=title;X.removeAttribute("href");X.style.display="none";P.innerHTML="";B.classList.add("pdfmode");LD.classList.remove("done");
-    V.hidden=false;document.body.classList.add("viewing");if(location.hash==="#view")history.replaceState({pdf:url,title:title},"","#view");else history.pushState({pdf:url,title:title},"","#view");
+    V.hidden=false;document.body.classList.add("viewing");document.documentElement.style.overflow="hidden";if(location.hash==="#view")history.replaceState({pdf:url,title:title},"","#view");else history.pushState({pdf:url,title:title},"","#view");
     try{
       const base=url.replace(/\.pdf$/i,"").split("/").pop(), n=PAGES[base]||0;
       if(!n) throw new Error("no pages");
@@ -5045,7 +5055,7 @@ const PAGES={"site-completion-certificate": 1, "site-completion-form": 2, "site-
   document.addEventListener("click",e=>{const a=e.target.closest("a.pdfv");if(!a)return;e.preventDefault();showPdf(a.getAttribute("href"),a.dataset.title);});
   let pdfOn=false;
   const reset=()=>{B.classList.remove("pdfmode");P.innerHTML="";X.style.display="";};
-  const closePdf=()=>{if(!pdfOn)return;pdfOn=false;reset();vNav("about:blank");V.hidden=true;document.body.classList.remove("viewing");if(location.hash==="#view")history.replaceState(null,"",location.pathname+location.search);};
+  const closePdf=()=>{if(!pdfOn)return;pdfOn=false;reset();vNav("about:blank");V.hidden=true;document.body.classList.remove("viewing");document.documentElement.style.overflow="";if(location.hash==="#view")history.replaceState(null,"",location.pathname+location.search);};
   document.getElementById("vClose").addEventListener("click",closePdf);
   window.addEventListener("popstate",()=>{if(pdfOn&&!(history.state&&history.state.pdf)){pdfOn=false;reset();V.hidden=true;document.body.classList.remove("viewing");}});
   document.addEventListener("keydown",e=>{if(e.key==="Escape")closePdf();});
