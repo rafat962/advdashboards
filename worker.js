@@ -112,13 +112,7 @@ function getCookie(request, name) {
 
 export default {
     async fetch(request, env) {
-        const rawUsers = env.AUTH_USERS;
-        if (!rawUsers) {
-            return new Response("Server Auth Configuration Missing: env.AUTH_USERS is not set", {
-                status: 500,
-                headers: { "Content-Type": "text/plain; charset=utf-8" },
-            });
-        }
+        const rawUsers = env.AUTH_USERS || '{"MahaViewer":"Almaha@2030","Heba":"1234"}';
 
         let USERS = {};
         let secretKeyStr = "";
