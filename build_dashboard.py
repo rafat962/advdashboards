@@ -72,8 +72,8 @@ html_template = '''<!DOCTYPE html>
       display: flex;
       flex-direction: column;
       min-height: 100vh;
-      padding: 10px 14px 20px;
-      gap: 10px;
+      padding: 6px 12px 10px;
+      gap: 6px;
     }
 
     /* Header Nav */
@@ -82,54 +82,56 @@ html_template = '''<!DOCTYPE html>
       align-items: center;
       justify-content: space-between;
       flex-wrap: wrap;
-      gap: 10px;
-      padding: 8px 14px;
+      gap: 8px;
+      padding: 5px 12px;
       background: var(--card-bg);
       border: 1px solid var(--card-border);
-      border-radius: 10px;
+      border-radius: 9px;
       backdrop-filter: blur(12px);
     }
     .brand-section {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
     }
     .brand-logo-area {
       display: flex;
       flex-direction: column;
-      gap: 2px;
+      gap: 0px;
     }
     .brand-title {
-      font-size: 18px;
+      font-size: 15.5px;
       font-weight: 800;
       color: #fff;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 7px;
+      line-height: 1.25;
     }
     .brand-title .contract-badge {
-      font-size: 11px;
+      font-size: 10.5px;
       font-weight: 700;
       background: linear-gradient(135deg, rgba(245, 158, 11, 0.25), rgba(245, 158, 11, 0.08));
       color: var(--gold);
       border: 1px solid rgba(245, 158, 11, 0.4);
-      padding: 2px 8px;
+      padding: 1px 7px;
       border-radius: 20px;
     }
     .brand-sub {
-      font-size: 11.5px;
+      font-size: 10.5px;
       color: var(--text-dim);
+      line-height: 1.25;
     }
     .live-sync-pill {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      font-size: 11px;
+      gap: 5px;
+      font-size: 10.5px;
       font-weight: 700;
       background: rgba(34, 197, 94, 0.12);
       border: 1px solid rgba(34, 197, 94, 0.35);
       color: #4ade80;
-      padding: 3px 10px;
+      padding: 2px 8px;
       border-radius: 20px;
     }
     .live-dot {
@@ -225,22 +227,59 @@ html_template = '''<!DOCTYPE html>
       color: #fff;
     }
 
+    .btn-refresh {
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.38);
+      color: #7dd3fc;
+      font-family: var(--font);
+      font-size: 11.5px;
+      font-weight: 700;
+      padding: 5px 11px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.15s;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .btn-refresh:hover:not(:disabled) {
+      background: rgba(56, 189, 248, 0.24);
+      border-color: var(--blue);
+      color: #fff;
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.25);
+    }
+    .btn-refresh:disabled {
+      opacity: 0.7;
+      cursor: wait;
+    }
+    .btn-refresh .r-icon {
+      display: inline-block;
+      transition: transform 0.3s ease;
+    }
+    .btn-refresh.spinning .r-icon {
+      animation: spinIcon 0.9s linear infinite;
+    }
+    @keyframes spinIcon {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
     /* KPI Row */
     .kpi-grid {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
-      gap: 8px;
+      gap: 6px;
       direction: rtl; /* Right-to-left */
     }
     .kpi-card {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
-      border-radius: 10px;
-      padding: 10px 14px;
+      border-radius: 9px;
+      padding: 6px 11px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 10px;
+      gap: 8px;
       backdrop-filter: blur(10px);
       cursor: pointer;
       transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -266,26 +305,26 @@ html_template = '''<!DOCTYPE html>
     .kpi-details {
       display: flex;
       flex-direction: column;
-      gap: 2px;
+      gap: 1px;
     }
     .kpi-title {
-      font-size: 13px;
+      font-size: 11.5px;
       font-weight: 700;
       color: var(--text-dim);
     }
     .kpi-val {
-      font-size: 26px;
+      font-size: 21px;
       font-weight: 900;
       color: #fff;
       font-family: var(--mono);
-      line-height: 1.15;
+      line-height: 1.1;
     }
     .kpi-sub {
-      font-size: 10.5px;
+      font-size: 9.8px;
       color: var(--text-muted);
     }
     .kpi-ring-icon {
-      width: 40px; height: 40px;
+      width: 32px; height: 32px;
       border-radius: 50%;
       display: flex;
       align-items: center;
@@ -295,7 +334,7 @@ html_template = '''<!DOCTYPE html>
       color: var(--kpi-color, var(--blue));
       flex-shrink: 0;
     }
-    .kpi-ring-icon svg { width: 20px; height: 20px; }
+    .kpi-ring-icon svg { width: 16px; height: 16px; }
 
     /* Active Filter Chips Bar */
     .active-filters-bar {
@@ -303,11 +342,11 @@ html_template = '''<!DOCTYPE html>
       align-items: center;
       flex-wrap: wrap;
       gap: 6px;
-      padding: 5px 12px;
+      padding: 4px 10px;
       background: rgba(30, 58, 138, 0.2);
       border: 1px dashed rgba(56, 189, 248, 0.4);
       border-radius: 6px;
-      font-size: 11.5px;
+      font-size: 11px;
     }
     .af-title {
       color: var(--blue);
@@ -333,11 +372,11 @@ html_template = '''<!DOCTYPE html>
     /* Main Dashboard Layout: Map on LEFT, Charts on RIGHT */
     .main-grid {
       display: grid;
-      grid-template-columns: 1fr 540px;
+      grid-template-columns: 1fr 485px;
       direction: ltr; /* Map Left, Charts Right */
-      gap: 10px;
+      gap: 8px;
       flex: 1;
-      min-height: calc(100vh - 195px);
+      min-height: calc(100vh - 132px);
     }
 
     /* Map Pane (Left) */
@@ -356,18 +395,18 @@ html_template = '''<!DOCTYPE html>
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 6px 12px;
+      padding: 4px 10px;
       background: rgba(0, 0, 0, 0.35);
       border-bottom: 1px solid var(--card-border);
       z-index: 500;
-      gap: 6px;
+      gap: 5px;
       flex-wrap: wrap;
     }
     .pill-btn {
       font-family: var(--font);
-      font-size: 11px;
+      font-size: 10.5px;
       font-weight: 700;
-      padding: 3px 8px;
+      padding: 2px 7px;
       border-radius: 6px;
       border: 1px solid rgba(255, 255, 255, 0.15);
       background: rgba(0, 0, 0, 0.3);
@@ -390,8 +429,8 @@ html_template = '''<!DOCTYPE html>
       border: 1px solid var(--card-border);
       color: var(--text);
       font-family: var(--font);
-      font-size: 11px;
-      padding: 3px 6px;
+      font-size: 10.5px;
+      padding: 2px 6px;
       border-radius: 6px;
       cursor: pointer;
     }
@@ -400,9 +439,132 @@ html_template = '''<!DOCTYPE html>
     #map {
       flex: 1;
       width: 100%;
-      min-height: 480px;
+      min-height: 550px;
       background: #0d1726;
       z-index: 1;
+    }
+
+    /* Map Legend (Bottom-Left Overlay) */
+    .map-legend {
+      position: absolute;
+      bottom: 12px;
+      left: 12px;
+      z-index: 450;
+      background: rgba(11, 19, 34, 0.9);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(56, 189, 248, 0.32);
+      border-radius: 10px;
+      padding: 8px 10px;
+      min-width: 175px;
+      max-width: 225px;
+      box-shadow: 0 6px 22px rgba(0, 0, 0, 0.55);
+      direction: rtl;
+      font-family: var(--font);
+    }
+    .map-legend-hdr {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding-bottom: 5px;
+      margin-bottom: 5px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .map-legend.collapsed .map-legend-hdr {
+      padding-bottom: 0;
+      margin-bottom: 0;
+      border-bottom: none;
+    }
+    .map-legend-title {
+      font-size: 11.5px;
+      font-weight: 800;
+      color: #f1f5f9;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .map-legend-sub {
+      font-size: 10px;
+      color: var(--blue);
+      font-weight: 700;
+    }
+    .map-legend-toggle {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #cbd5e1;
+      border-radius: 4px;
+      width: 20px;
+      height: 20px;
+      font-size: 10px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+    }
+    .map-legend-toggle:hover {
+      background: rgba(56, 189, 248, 0.25);
+      color: #fff;
+      border-color: var(--blue);
+    }
+    .map-legend-items {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      max-height: 220px;
+      overflow-y: auto;
+    }
+    .map-legend.collapsed .map-legend-items {
+      display: none;
+    }
+    .legend-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 3px 6px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.15s, opacity 0.15s;
+      border: 1px solid transparent;
+      font-size: 11px;
+    }
+    .legend-row:hover {
+      background: rgba(255, 255, 255, 0.07);
+    }
+    .legend-row.active {
+      background: rgba(56, 189, 248, 0.18);
+      border-color: rgba(56, 189, 248, 0.45);
+    }
+    .legend-row.dim {
+      opacity: 0.45;
+    }
+    .legend-row-label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #e2e8f0;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      border: 1.5px solid #ffffff;
+      flex-shrink: 0;
+      box-shadow: 0 0 4px rgba(0,0,0,0.5);
+    }
+    .legend-count {
+      font-family: var(--mono);
+      font-size: 10.5px;
+      font-weight: 700;
+      color: #94a3b8;
+    }
+    .legend-row.active .legend-count {
+      color: #38bdf8;
     }
 
     /* Charts Pane (Right 2x2 Grid) */
@@ -705,37 +867,366 @@ html_template = '''<!DOCTYPE html>
     .pop-footer a:hover {
       text-decoration: underline;
     }
+    .btn-site-detail-pop {
+      margin-top: 8px;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.22), rgba(56, 189, 248, 0.22));
+      border: 1px solid rgba(56, 189, 248, 0.5);
+      color: #f8fafc;
+      border-radius: 6px;
+      padding: 7px 10px;
+      font-family: var(--font);
+      font-size: 11.5px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-site-detail-pop:hover {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.38), rgba(56, 189, 248, 0.38));
+      border-color: var(--blue);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(56, 189, 248, 0.25);
+    }
+    .btn-site-detail-tbl {
+      background: rgba(56, 189, 248, 0.14);
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      color: #38bdf8;
+      border-radius: 6px;
+      padding: 4px 9px;
+      font-family: var(--font);
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.18s;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      white-space: nowrap;
+    }
+    .btn-site-detail-tbl:hover {
+      background: var(--blue);
+      color: #060b14;
+    }
+
+    /* ===================================================================
+       DEDICATED SITE DETAILS PAGE VIEW
+       =================================================================== */
+    .sd-wrap {
+      display: none;
+      flex-direction: column;
+      gap: 12px;
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      padding-bottom: 8px;
+    }
+    .sd-header {
+      background: var(--bg-panel);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+    .sd-header-right {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+    .btn-sd-back {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      color: #f8fafc;
+      padding: 7px 14px;
+      border-radius: 8px;
+      font-family: var(--font);
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      transition: all 0.2s;
+    }
+    .btn-sd-back:hover {
+      background: rgba(56, 189, 248, 0.18);
+      border-color: var(--blue);
+      color: var(--blue);
+    }
+    .sd-title-group {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .sd-title-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .sd-code {
+      font-family: var(--mono);
+      font-size: 20px;
+      font-weight: 900;
+      color: var(--blue);
+      letter-spacing: 0.5px;
+    }
+    .sd-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .sd-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .btn-gmaps-big {
+      background: linear-gradient(135deg, #059669, #10b981);
+      color: #ffffff;
+      text-decoration: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 12.5px;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      border: 1px solid rgba(16, 185, 129, 0.5);
+      box-shadow: 0 4px 14px rgba(16, 185, 129, 0.25);
+      transition: all 0.2s;
+    }
+    .btn-gmaps-big:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(16, 185, 129, 0.4);
+      filter: brightness(1.08);
+    }
+    .btn-sd-copy {
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      color: var(--blue);
+      padding: 7px 13px;
+      border-radius: 8px;
+      font-family: var(--font);
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-sd-copy:hover {
+      background: rgba(56, 189, 248, 0.25);
+    }
+    .sd-grid {
+      display: grid;
+      grid-template-columns: 1.25fr 1fr;
+      gap: 12px;
+      flex: 1;
+      min-height: 440px;
+    }
+    @media (max-width: 1100px) {
+      .sd-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .sd-map-card {
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      min-height: 400px;
+    }
+    .sd-map-head {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+      background: rgba(15, 25, 42, 0.65);
+    }
+    .sd-map-head-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #f8fafc;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+    #siteDetailMap {
+      flex: 1;
+      width: 100%;
+      min-height: 360px;
+      background: #060b14;
+      z-index: 1;
+    }
+    .sd-map-foot {
+      padding: 8px 14px;
+      border-top: 1px solid var(--border);
+      background: rgba(10, 17, 30, 0.85);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      font-size: 11.5px;
+    }
+    .sd-info-col {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      overflow-y: auto;
+      padding-left: 2px;
+    }
+    .sd-card {
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .sd-card-title {
+      font-size: 13px;
+      font-weight: 800;
+      color: #f8fafc;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    }
+    .sd-kv-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+    .sd-kv-item {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 8px;
+      padding: 9px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .sd-kv-label {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+    .sd-kv-val {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #f8fafc;
+    }
+    .sd-note-box {
+      background: rgba(245, 158, 11, 0.08);
+      border-right: 3px solid var(--amber);
+      border-radius: 6px;
+      padding: 10px 12px;
+      font-size: 12.5px;
+      color: #fde68a;
+      line-height: 1.65;
+    }
+    .sd-atts-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .sd-att-card {
+      background: rgba(56, 189, 248, 0.07);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      border-radius: 8px;
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      transition: all 0.2s;
+    }
+    .sd-att-card:hover {
+      background: rgba(56, 189, 248, 0.14);
+      border-color: var(--blue);
+    }
+    .sd-att-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+    .sd-att-icon {
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+    .sd-att-name {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: #f8fafc;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .sd-att-type {
+      font-size: 10.5px;
+      color: var(--text-muted);
+    }
 
     /* Modal PDF / Image Viewer (Canvas Secure) */
     .att-modal-overlay {
       position: fixed;
       top: 0; left: 0; width: 100vw; height: 100vh;
-      background: rgba(0, 0, 0, 0.85);
+      background: rgba(0, 0, 0, 0.88);
       backdrop-filter: blur(8px);
       z-index: 99999;
       display: none;
       align-items: center;
       justify-content: center;
       padding: 14px;
+      user-select: none;
+      -webkit-user-select: none;
     }
     .att-modal-window {
       background: #0b1322;
       border: 1px solid rgba(56, 189, 248, 0.35);
       border-radius: 12px;
-      width: 95%; max-width: 980px;
+      width: 95%; max-width: 1050px;
       height: 90vh;
       display: flex;
       flex-direction: column;
       box-shadow: 0 10px 40px rgba(0, 0, 0, 0.85);
       overflow: hidden;
+      transition: all 0.2s ease;
+    }
+    .att-modal-window.is-fullscreen,
+    .att-modal-window:fullscreen {
+      width: 100vw !important;
+      max-width: 100vw !important;
+      height: 100vh !important;
+      border-radius: 0 !important;
+      border: none !important;
     }
     .att-modal-header {
-      padding: 10px 16px;
+      padding: 9px 14px;
       background: #0f1c33;
-      border-bottom: 1px solid rgba(56, 189, 248, 0.2);
+      border-bottom: 1px solid rgba(56, 189, 248, 0.22);
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
     }
     .att-modal-title {
       font-size: 13.5px;
@@ -744,33 +1235,140 @@ html_template = '''<!DOCTYPE html>
       display: flex;
       align-items: center;
       gap: 6px;
+      min-width: 0;
+    }
+    .att-modal-title span:last-child {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 280px;
+    }
+    .att-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .att-tool-group {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: rgba(0, 0, 0, 0.32);
+      border: 1px solid rgba(56, 189, 248, 0.22);
+      border-radius: 7px;
+      padding: 3px 6px;
+    }
+    .att-tool-btn {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      color: #e2e8f0;
+      font-family: var(--font);
+      font-size: 11.5px;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.15s;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .att-tool-btn:hover:not(:disabled) {
+      background: rgba(56, 189, 248, 0.24);
+      border-color: var(--blue);
+      color: #fff;
+    }
+    .att-tool-btn:disabled { opacity: 0.38; cursor: not-allowed; }
+    .att-zoom-val {
+      font-family: var(--mono);
+      font-size: 11.5px;
+      font-weight: 700;
+      color: #38bdf8;
+      min-width: 44px;
+      text-align: center;
+      cursor: pointer;
     }
     .att-modal-close {
-      background: transparent;
-      border: none;
-      color: #94a3b8;
-      font-size: 20px;
+      background: rgba(239, 68, 68, 0.14);
+      border: 1px solid rgba(239, 68, 68, 0.35);
+      color: #fca5a5;
+      font-size: 15px;
+      font-weight: 800;
       cursor: pointer;
-      padding: 0 4px;
+      padding: 3px 9px;
+      border-radius: 6px;
+      transition: all 0.15s;
     }
-    .att-modal-close:hover { color: #fff; }
+    .att-modal-close:hover { background: rgba(239, 68, 68, 0.3); color: #fff; border-color: #ef4444; }
     .att-modal-body {
       flex: 1;
       overflow: auto;
       display: flex;
-      align-items: center;
-      justify-content: center;
       background: #060a12;
       position: relative;
-      padding: 14px;
+      padding: 16px;
+      cursor: default;
+    }
+    .att-modal-body.is-zoomed { cursor: grab; }
+    .att-modal-body.is-dragging { cursor: grabbing; }
+    .att-canvas-wrap {
+      margin: auto;
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
     .att-modal-canvas {
-      box-shadow: 0 4px 25px rgba(0,0,0,0.6);
+      box-shadow: 0 6px 30px rgba(0,0,0,0.75);
       background: #fff;
-      max-width: 100%;
+      display: block;
+      max-width: none;
+      pointer-events: none;
+      -webkit-user-drag: none;
+      transition: none !important;
+    }
+    .att-modal-canvas.blurred {
+      opacity: 0 !important;
+      visibility: hidden !important;
+      filter: blur(40px) brightness(0) !important;
+      transition: none !important;
+    }
+    .att-privacy-shield {
+      position: absolute;
+      inset: 0;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: #060a12;
+      z-index: 10;
+      text-align: center;
+      padding: 24px;
+      color: #f8fafc;
+      transition: none !important;
+    }
+    .att-privacy-shield.active { display: flex; }
+    .att-shield-icon { font-size: 38px; }
+    .att-shield-title { font-size: 15px; font-weight: 800; color: #f87171; }
+    .att-shield-sub { font-size: 12px; color: #cbd5e1; max-width: 400px; }
+    .att-sec-toast {
+      position: absolute;
+      bottom: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(239, 68, 68, 0.94);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 6px 14px;
+      border-radius: 20px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+      z-index: 20;
+      display: none;
     }
     .att-modal-footer {
-      padding: 8px 16px;
+      padding: 7px 16px;
       background: #0f1c33;
       border-top: 1px solid rgba(56, 189, 248, 0.2);
       display: flex;
@@ -778,25 +1376,12 @@ html_template = '''<!DOCTYPE html>
       justify-content: space-between;
       font-size: 11px;
       color: var(--text-dim);
+      gap: 10px;
+      flex-wrap: wrap;
     }
-    .pdf-page-controls {
-      display: flex;
-      align-items: center;
-      gap: 8px;
+    @media print {
+      body, html { display: none !important; }
     }
-    .pdf-btn {
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      color: #fff;
-      font-family: var(--font);
-      font-size: 11px;
-      font-weight: 700;
-      padding: 3px 8px;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-    .pdf-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-    .pdf-btn:not(:disabled):hover { background: rgba(56, 189, 248, 0.25); border-color: var(--blue); }
 
     /* Responsive */
     @media (max-width: 1200px) {
@@ -840,6 +1425,11 @@ html_template = '''<!DOCTYPE html>
         <button class="active" id="btnExecView">🖥️ العرض التنفيذي</button>
         <button id="btnTableView">📋 جدول البيانات</button>
       </div>
+      <!-- Refresh Data from Live Layer -->
+      <button class="btn-refresh" id="btnRefreshData" title="تحديث البيانات من طبقة ArcGIS المباشرة">
+        <span class="r-icon">🔄</span>
+        <span id="btnRefreshLabel">تحديث البيانات</span>
+      </button>
       <!-- Reset Filters -->
       <button class="btn-reset" id="btnResetFilters">↺ إعادة ضبط</button>
     </div>
@@ -936,6 +1526,17 @@ html_template = '''<!DOCTYPE html>
         </div>
       </div>
       <div id="map"></div>
+      <!-- Map Legend (Bottom-Left) -->
+      <div class="map-legend" id="mapLegend">
+        <div class="map-legend-hdr">
+          <div class="map-legend-title">
+            <span>🗺️ مفتاح الخريطة</span>
+            <span class="map-legend-sub" id="mapLegendMode">(نوع اللوحة)</span>
+          </div>
+          <button class="map-legend-toggle" id="btnToggleLegend" onclick="toggleMapLegend()" title="طي / توسيع المفتاح">▾</button>
+        </div>
+        <div class="map-legend-items" id="mapLegendItems"></div>
+      </div>
     </div>
 
     <!-- Charts Pane (Right side, ~42% width - 2x2 Grid) -->
@@ -1021,36 +1622,148 @@ html_template = '''<!DOCTYPE html>
             <th>الملاحظات</th>
             <th>المرفقات (R2)</th>
             <th>الإحداثيات</th>
+            <th>التفاصيل</th>
           </tr>
         </thead>
         <tbody id="tableBody"></tbody>
       </table>
     </div>
   </section>
+
+  <!-- 5. Dedicated Single-Site Detail Page View -->
+  <section class="sd-wrap" id="siteDetailView">
+    <div class="sd-header">
+      <div class="sd-header-right">
+        <button class="btn-sd-back" onclick="closeSiteDetailPage()">
+          <span>→</span>
+          <span>العودة للوحة المعلومات</span>
+        </button>
+        <div class="sd-title-group">
+          <div class="sd-title-row">
+            <span class="sd-code" id="sdCode">DM-UN-001</span>
+            <span class="tag-status" id="sdTypeBadge" style="background:rgba(56,189,248,0.15);color:#38bdf8;border:1px solid rgba(56,189,248,0.35);">يونيبول</span>
+            <span class="tag-status" id="sdStatusBadge">تم التشغيل</span>
+          </div>
+          <div class="sd-sub" id="sdLocationSub">بلدية وسط الدمام · الحي: —</div>
+        </div>
+      </div>
+
+      <div class="sd-actions">
+        <button class="btn-sd-copy" id="btnCopyCoords" onclick="copySiteCoords()">📋 نسخ الإحداثيات</button>
+        <a class="btn-gmaps-big" id="sdGoogleMapsBtn" href="#" target="_blank" rel="noopener">
+          <span>📍</span>
+          <span>فتح الموقع في Google Maps ↗</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="sd-grid">
+      <!-- Dedicated Single-Site Map -->
+      <div class="sd-map-card">
+        <div class="sd-map-head">
+          <div class="sd-map-head-title">
+            <span>🗺️</span>
+            <span>الخريطة التفصيلية للموقع الفردي</span>
+            <span id="sdMapCodeLabel" style="color:var(--blue);font-family:var(--mono);font-size:12px;"></span>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <select class="select-ctrl" id="sdBasemapSelect" onchange="switchSiteDetailBasemap(this.value)">
+              <option value="satellite" selected>🛰️ صور فضائية (Esri)</option>
+              <option value="streets">🗺️ خريطة شوارع</option>
+              <option value="dark">🌑 نمط داكن</option>
+            </select>
+            <button class="pill-btn" onclick="recenterSiteDetailMap()" title="إعادة توسيط الموقع">🎯 توسيط الموقع</button>
+          </div>
+        </div>
+        <div id="siteDetailMap"></div>
+        <div class="sd-map-foot">
+          <span style="color:var(--text-muted);">الإحداثيات الجغرافية (WGS84): <strong id="sdCoordsText" style="color:var(--blue);font-family:var(--mono);">26.42000, 50.10000</strong></span>
+          <a id="sdGoogleMapsFooterLink" href="#" target="_blank" rel="noopener" style="color:#34d399;text-decoration:none;font-weight:700;">التوجيه المباشر عبر خرائط جوجل ↗</a>
+        </div>
+      </div>
+
+      <!-- Site Details & Attachments Column -->
+      <div class="sd-info-col">
+        <!-- Basic Metadata Card -->
+        <div class="sd-card">
+          <div class="sd-card-title">
+            <span>📌 البيانات الأساسية والفنية للموقع</span>
+            <span style="font-size:11px;color:var(--text-muted);font-weight:400;">محدث من طبقة ArcGIS الحية</span>
+          </div>
+          <div class="sd-kv-grid" id="sdKvGrid"></div>
+        </div>
+
+        <!-- Notes & Obstacles Card -->
+        <div class="sd-card">
+          <div class="sd-card-title">
+            <span>📝 الملاحظات الميدانية وتفاصيل العوائق</span>
+            <span id="sdObstBadge" style="font-size:11px;font-weight:700;"></span>
+          </div>
+          <div id="sdNoteBox" class="sd-note-box">لا توجد ملاحظات مسجلة.</div>
+        </div>
+
+        <!-- Attachments Card -->
+        <div class="sd-card">
+          <div class="sd-card-title">
+            <span>📎 المرفقات والوثائق المعتمدة (Cloudflare R2)</span>
+            <span id="sdAttCountBadge" style="font-size:11px;color:var(--blue);font-weight:700;">0 مرفق</span>
+          </div>
+          <div class="sd-atts-list" id="sdAttsList"></div>
+        </div>
+      </div>
+    </div>
+  </section>
 </div>
 
 <!-- Attachment Modal (Canvas Secure Viewer) -->
 <div class="att-modal-overlay" id="attModal">
-  <div class="att-modal-window">
+  <div class="att-modal-window" id="attModalWindow">
     <div class="att-modal-header">
       <div class="att-modal-title">
         <span id="attModalIcon">📄</span>
         <span id="attModalTitle">بطاقة الموقع</span>
       </div>
-      <button class="att-modal-close" onclick="closeAttachmentModal()">✕</button>
-    </div>
-    <div class="att-modal-body" id="attModalBody">
-      <canvas id="attCanvas" class="att-modal-canvas"></canvas>
-    </div>
-    <div class="att-modal-footer">
-      <div class="pdf-page-controls" id="pdfControls" style="display:none;">
-        <button class="pdf-btn" id="btnPdfPrev" onclick="changePDFPage(-1)">◀ السابق</button>
-        <span id="pdfPageLabel" style="font-weight:700;color:var(--blue);">1 / 1</span>
-        <button class="pdf-btn" id="btnPdfNext" onclick="changePDFPage(1)">التالي ▶</button>
-        <button class="pdf-btn" onclick="zoomPDF(0.2)">🔍 +</button>
-        <button class="pdf-btn" onclick="zoomPDF(-0.2)">🔍 -</button>
+
+      <div class="att-toolbar">
+        <!-- PDF Pagination (shown when multi-page PDF) -->
+        <div class="att-tool-group" id="pdfControls" style="display:none;">
+          <button class="att-tool-btn" id="btnPdfPrev" onclick="changePDFPage(-1)">◀ السابق</button>
+          <span id="pdfPageLabel" style="font-weight:700;color:var(--blue);font-size:11.5px;padding:0 4px;">1 / 1</span>
+          <button class="att-tool-btn" id="btnPdfNext" onclick="changePDFPage(1)">التالي ▶</button>
+        </div>
+
+        <!-- Unified Zoom Controls (PDF + Images) -->
+        <div class="att-tool-group" id="zoomControls">
+          <button class="att-tool-btn" id="btnZoomOut" onclick="adjustAttZoom(-0.25)" title="تصغير">➖</button>
+          <span class="att-zoom-val" id="attZoomLabel" onclick="resetAttZoom()" title="إعادة ضبط التكبير (100%)">100%</span>
+          <button class="att-tool-btn" id="btnZoomIn" onclick="adjustAttZoom(0.25)" title="تكبير">➕</button>
+          <button class="att-tool-btn" id="btnZoomFit" onclick="resetAttZoom()" title="ملاءمة الشاشة">⊡ احتواء</button>
+        </div>
+
+        <!-- Fullscreen Toggle -->
+        <button class="att-tool-btn" id="btnAttFullscreen" onclick="toggleAttFullscreen()" title="ملء الشاشة">⛶ ملء الشاشة</button>
+
+        <!-- Close Modal -->
+        <button class="att-modal-close" onclick="closeAttachmentModal()" title="إغلاق">✕</button>
       </div>
-      <span>🛡️ هذا المستند للعرض فقط ومحمي بعلامة مائية رقمية — يُمنع التحميل أو التداول</span>
+    </div>
+
+    <div class="att-modal-body" id="attModalBody">
+      <div class="att-canvas-wrap" id="attCanvasWrap">
+        <canvas id="attCanvas" class="att-modal-canvas"></canvas>
+      </div>
+      <div class="att-privacy-shield" id="attPrivacyShield">
+        <div class="att-shield-icon">🛡️</div>
+        <div class="att-shield-title">تم حجب المستند مؤقتاً للحماية</div>
+        <div class="att-shield-sub" id="attShieldMsg">تم تفعيل ستار الخصوصية تلقائياً لحماية المرفق عند فقدان التركيز أو محاولة الالتقاط. حرّك الماوس داخل النافذة أو اضغط أدناه للاستمرار بالعرض.</div>
+        <button class="att-tool-btn" onclick="setPrivacyShield(false)" style="margin-top:6px;padding:5px 14px;border-color:var(--blue);color:#38bdf8;">👁️ إظهار المستند</button>
+      </div>
+      <div class="att-sec-toast" id="attSecToast">🛡️ هذا المستند محمي للعرض فقط — يُمنع الحفظ أو الطباعة أو النسخ</div>
+    </div>
+
+    <div class="att-modal-footer">
+      <span>🛡️ عرض محمي بعلامة مائية رقمية وحجب فوري (0ms) ضد أزرار التصوير ومغادرة المؤشر</span>
+      <span style="color:#64748b;">تلميح: استخدم عجلة الماوس للتكبير، واسحب للتحريك</span>
     </div>
   </div>
 </div>
@@ -1597,9 +2310,70 @@ function setColorMode(mode) {
   updateMapMarkers(getFilteredData());
 }
 
+function toggleMapLegend() {
+  const legend = document.getElementById('mapLegend');
+  const btn = document.getElementById('btnToggleLegend');
+  if (!legend) return;
+  legend.classList.toggle('collapsed');
+  if (btn) btn.textContent = legend.classList.contains('collapsed') ? '▴' : '▾';
+}
+
+function toggleLegendFilter(key, val) {
+  filters[key] = filters[key] === val ? null : val;
+  applyFilters();
+}
+
+function renderMapLegend(filtered) {
+  const itemsEl = document.getElementById('mapLegendItems');
+  const modeEl = document.getElementById('mapLegendMode');
+  if (!itemsEl) return;
+
+  const isType = colorMode === 'type';
+  if (modeEl) modeEl.textContent = isType ? '(نوع اللوحة)' : '(حالة الموقع)';
+
+  const palette = isType ? TYPE_COLORS : STATUS_COLORS;
+  const filterKey = isType ? 'type' : 'status';
+  const fieldName = isType ? 'type' : 'dec';
+
+  // Count total occurrences in D and currently filtered occurrences
+  const totalCounts = {};
+  D.forEach(s => {
+    const val = s[fieldName] || (isType ? 'يونيبول' : 'غير منفذ');
+    totalCounts[val] = (totalCounts[val] || 0) + 1;
+  });
+
+  const filteredCounts = {};
+  filtered.forEach(s => {
+    const val = s[fieldName] || (isType ? 'يونيبول' : 'غير منفذ');
+    filteredCounts[val] = (filteredCounts[val] || 0) + 1;
+  });
+
+  // Combine palette keys (that exist in dataset or active filter) + any dynamic values
+  const keys = Array.from(new Set([...Object.keys(palette), ...Object.keys(totalCounts)]))
+    .filter(k => (totalCounts[k] || 0) > 0 || filters[filterKey] === k);
+
+  itemsEl.innerHTML = keys.map(k => {
+    const col = palette[k] || '#94a3b8';
+    const cnt = filteredCounts[k] || 0;
+    const isActive = filters[filterKey] === k;
+    const isDim = !isActive && cnt === 0;
+    const safeVal = k.replace(/'/g, "\\\\'");
+    return `
+      <div class="legend-row ${isActive ? 'active' : ''} ${isDim ? 'dim' : ''}" onclick="toggleLegendFilter('${filterKey}', '${safeVal}')" title="انقر للتصفية حسب: ${k}">
+        <span class="legend-row-label">
+          <span class="legend-dot" style="background:${col};"></span>
+          <span>${k}</span>
+        </span>
+        <span class="legend-count">${cnt.toLocaleString('en-US')}</span>
+      </div>
+    `;
+  }).join('');
+}
+
 function updateMapMarkers(filtered) {
   markerLayer.clearLayers();
   document.getElementById('mapCounterBadge').textContent = `${filtered.length} موقع معروض`;
+  renderMapLegend(filtered);
 
   filtered.forEach(s => {
     if (!s.lat || !s.lon) return;
@@ -1666,6 +2440,10 @@ function updateMapMarkers(filtered) {
           </div>
         ` : ''}
         ${attHtml}
+        <button class="btn-site-detail-pop" onclick="openSiteDetailPage('${s.code}')">
+          <span>📋 صفحة تفاصيل الموقع الكاملة</span>
+          <span>←</span>
+        </button>
         <div class="pop-footer">
           <span style="color:#64748b;font-family:monospace;">${(s.lat||0).toFixed(5)}, ${(s.lon||0).toFixed(5)}</span>
           <a href="https://www.google.com/maps?q=${s.lat},${s.lon}" target="_blank" rel="noopener">فتح في Google Maps ↗</a>
@@ -1677,6 +2455,256 @@ function updateMapMarkers(filtered) {
     markerLayer.addLayer(m);
   });
 }
+
+/* ===================================================================
+   DEDICATED SINGLE-SITE DETAIL PAGE LOGIC
+   =================================================================== */
+let sdMap = null;
+let sdMarkerLayer = null;
+let sdBasemapLayers = {};
+let currentDetailSite = null;
+let previousDashboardView = 'exec';
+
+function initSiteDetailMap() {
+  if (sdMap) return;
+  sdMap = L.map('siteDetailMap', {
+    center: [26.42, 50.12],
+    zoom: 17,
+    zoomControl: false
+  });
+  L.control.zoom({ position: 'bottomright' }).addTo(sdMap);
+
+  sdBasemapLayers.satellite = L.layerGroup([
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+      maxZoom: 19,
+      attribution: 'Esri Satellite'
+    }),
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', {
+      maxZoom: 19
+    })
+  ]).addTo(sdMap);
+
+  sdBasemapLayers.streets = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: 'OpenStreetMap'
+  });
+
+  sdBasemapLayers.dark = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    maxZoom: 19,
+    attribution: 'CartoDB Dark'
+  });
+
+  sdMarkerLayer = L.layerGroup().addTo(sdMap);
+}
+
+function switchSiteDetailBasemap(type) {
+  if (!sdMap) return;
+  Object.values(sdBasemapLayers).forEach(l => sdMap.removeLayer(l));
+  if (sdBasemapLayers[type]) sdBasemapLayers[type].addTo(sdMap);
+}
+
+function recenterSiteDetailMap() {
+  if (!sdMap || !currentDetailSite) return;
+  sdMap.setView([currentDetailSite.lat, currentDetailSite.lon], 18);
+}
+
+function copySiteCoords() {
+  if (!currentDetailSite) return;
+  const txt = `${currentDetailSite.lat.toFixed(6)}, ${currentDetailSite.lon.toFixed(6)}`;
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(txt).catch(() => {});
+  }
+  const btn = document.getElementById('btnCopyCoords');
+  if (btn) {
+    const orig = btn.textContent;
+    btn.textContent = '✓ تم نسخ الإحداثيات';
+    setTimeout(() => { btn.textContent = orig; }, 1800);
+  }
+}
+
+function openSiteDetailPage(code, pushHistory = true) {
+  const s = D.find(item => item.code === code || String(item.siteNo) === String(code));
+  if (!s) return;
+  currentDetailSite = s;
+
+  const execView = document.getElementById('executiveView');
+  const tableView = document.getElementById('tableView');
+  const sdView = document.getElementById('siteDetailView');
+  const topBar = document.querySelector('.top-bar');
+  const kpiGrid = document.querySelector('.kpi-grid');
+  const afBar = document.getElementById('activeFilterBar');
+
+  if (sdView.style.display !== 'flex') {
+    previousDashboardView = (tableView && tableView.style.display === 'flex') ? 'table' : 'exec';
+  }
+
+  if (topBar) topBar.style.display = 'none';
+  if (kpiGrid) kpiGrid.style.display = 'none';
+  if (afBar) afBar.style.display = 'none';
+  if (execView) execView.style.display = 'none';
+  if (tableView) tableView.style.display = 'none';
+  sdView.style.display = 'flex';
+
+  const typeCol = TYPE_COLORS[s.type] || '#38bdf8';
+  const statCol = STATUS_COLORS[s.dec] || '#94a3b8';
+  const gmapsUrl = `https://www.google.com/maps?q=${s.lat},${s.lon}`;
+
+  document.getElementById('sdCode').textContent = s.code;
+  document.getElementById('sdCode').style.color = typeCol;
+
+  const typeBadge = document.getElementById('sdTypeBadge');
+  typeBadge.textContent = s.type || 'يونيبول';
+  typeBadge.style.borderColor = typeCol;
+  typeBadge.style.color = typeCol;
+
+  const statBadge = document.getElementById('sdStatusBadge');
+  statBadge.textContent = s.dec || 'غير منفذ';
+  statBadge.style.borderColor = statCol;
+  statBadge.style.color = statCol;
+
+  document.getElementById('sdLocationSub').textContent = `${s.bal || 'حاضرة الدمام'} · الحي: ${s.hay || '—'}`;
+  document.getElementById('sdGoogleMapsBtn').href = gmapsUrl;
+  document.getElementById('sdGoogleMapsFooterLink').href = gmapsUrl;
+  document.getElementById('sdMapCodeLabel').textContent = `(${s.code})`;
+  document.getElementById('sdCoordsText').textContent = `${(s.lat || 0).toFixed(6)}, ${(s.lon || 0).toFixed(6)}`;
+
+  const obSource = getSiteObstacleSource(s);
+  const isOb = s.dec === 'عوائق' || s.ob;
+
+  // Populate Key-Value Grid
+  const kvItems = [
+    { label: 'رمز الموقع', val: s.code, color: typeCol, mono: true },
+    { label: 'رقم الموقع بالكراسة', val: String(s.siteNo || s.n || '—'), mono: true },
+    { label: 'نوع اللوحة الإعلانية', val: s.type || '—', color: typeCol },
+    { label: 'حالة التنفيذ', val: s.dec || 'غير منفذ', color: statCol },
+    { label: 'البلدية', val: s.bal || '—' },
+    { label: 'الحي / النطاق', val: s.hay || '—' },
+    { label: 'قاعدة خرسانية سابقة', val: s.base === 'نعم' ? 'نعم (توجد قاعدة سابقة)' : 'لا يوجد', color: s.base === 'نعم' ? '#2dd4bf' : '#94a3b8' },
+    { label: 'مصدر العائق', val: obSource, color: isOb ? '#f87171' : '#4ade80' }
+  ];
+
+  document.getElementById('sdKvGrid').innerHTML = kvItems.map(item => `
+    <div class="sd-kv-item">
+      <span class="sd-kv-label">${item.label}</span>
+      <span class="sd-kv-val" style="${item.color ? 'color:' + item.color + ';' : ''}${item.mono ? 'font-family:var(--mono);' : ''}">${item.val}</span>
+    </div>
+  `).join('');
+
+  // Populate Notes
+  const obstBadge = document.getElementById('sdObstBadge');
+  obstBadge.textContent = isOb ? `⚠️ عائق مسجل (${obSource})` : '✅ لا توجد عوائق نشطة';
+  obstBadge.style.color = isOb ? '#f87171' : '#4ade80';
+
+  const noteBox = document.getElementById('sdNoteBox');
+  if (s.note && s.note.trim()) {
+    noteBox.innerHTML = s.note.split(/\\s*\\|\\|\\s*|\\s*\\|\\s*/).map(part => `<div>• ${part}</div>`).join('');
+    noteBox.style.borderColor = isOb ? 'rgba(239, 68, 68, 0.35)' : 'rgba(245, 158, 11, 0.3)';
+  } else {
+    noteBox.textContent = 'لا توجد ملاحظات ميدانية أو عوائق مسجلة لهذا الموقع.';
+    noteBox.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+  }
+
+  // Populate Attachments
+  const atts = s.atts || [];
+  document.getElementById('sdAttCountBadge').textContent = `${atts.length} مرفق`;
+  const attsListEl = document.getElementById('sdAttsList');
+  if (atts.length) {
+    attsListEl.innerHTML = atts.map(a => {
+      const cleanKey = (a.key || '').replace(/'/g, "\\\\'");
+      const cleanTitle = (a.title || 'مرفق').replace(/'/g, "\\\\'");
+      const isPdf = a.type === 'pdf' || (a.key && a.key.toLowerCase().endsWith('.pdf'));
+      return `
+        <div class="sd-att-card">
+          <div class="sd-att-info">
+            <span class="sd-att-icon">${isPdf ? '📕' : '🖼️'}</span>
+            <div style="min-width:0;">
+              <div class="sd-att-name" title="${a.title}">${a.title}</div>
+              <div class="sd-att-type">${isPdf ? 'مستند PDF رسمي محمي' : 'صورة ميدانية معتمدة'}</div>
+            </div>
+          </div>
+          <button class="btn-site-detail-tbl" onclick="openAttachment('${cleanKey}', '${cleanTitle}', '${isPdf ? 'pdf' : 'image'}')" style="padding:5px 12px;font-size:11.5px;">
+            👁️ معاينة المرفق
+          </button>
+        </div>
+      `;
+    }).join('');
+  } else {
+    attsListEl.innerHTML = '<div style="color:var(--text-muted);font-size:12px;padding:8px 0;">لا توجد مرفقات مسجلة لهذا الموقع حالياً.</div>';
+  }
+
+  // Initialize & Render Single-Site Map
+  initSiteDetailMap();
+  setTimeout(() => {
+    sdMap.invalidateSize();
+    sdMarkerLayer.clearLayers();
+    if (s.lat && s.lon) {
+      sdMap.setView([s.lat, s.lon], 18);
+      // Outer pulse ring + inner marker
+      L.circleMarker([s.lat, s.lon], {
+        radius: 18,
+        fillColor: typeCol,
+        fillOpacity: 0.22,
+        color: typeCol,
+        weight: 2
+      }).addTo(sdMarkerLayer);
+
+      const marker = L.circleMarker([s.lat, s.lon], {
+        radius: 8,
+        fillColor: typeCol,
+        fillOpacity: 1,
+        color: '#ffffff',
+        weight: 2.5
+      }).addTo(sdMarkerLayer);
+
+      marker.bindTooltip(`<b>${s.code}</b> — ${s.type} (${s.dec || 'غير منفذ'})`, {
+        permanent: true,
+        direction: 'top',
+        offset: [0, -10]
+      });
+    }
+  }, 80);
+
+  if (pushHistory) {
+    history.pushState({ siteDetail: s.code }, '', `#site=${encodeURIComponent(s.code)}`);
+  }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function closeSiteDetailPage(fromPopState = false) {
+  const sdView = document.getElementById('siteDetailView');
+  if (!sdView || sdView.style.display === 'none') return;
+
+  sdView.style.display = 'none';
+  const topBar = document.querySelector('.top-bar');
+  const kpiGrid = document.querySelector('.kpi-grid');
+  const execView = document.getElementById('executiveView');
+  const tableView = document.getElementById('tableView');
+
+  if (topBar) topBar.style.display = 'flex';
+  if (kpiGrid) kpiGrid.style.display = 'grid';
+  updateFilterChips();
+
+  if (previousDashboardView === 'table') {
+    if (tableView) tableView.style.display = 'flex';
+    if (execView) execView.style.display = 'none';
+  } else {
+    if (execView) execView.style.display = 'grid';
+    if (tableView) tableView.style.display = 'none';
+    setTimeout(() => map.invalidateSize(), 100);
+  }
+
+  if (!fromPopState && location.hash.startsWith('#site=')) {
+    history.pushState(null, '', location.pathname + location.search);
+  }
+}
+
+window.addEventListener('popstate', e => {
+  if (e.state && e.state.siteDetail) {
+    openSiteDetailPage(e.state.siteDetail, false);
+  } else {
+    closeSiteDetailPage(true);
+  }
+});
 
 /* ===================================================================
    TABLE IMPLEMENTATION
@@ -1699,7 +2727,7 @@ function updateTable(filtered) {
 
     return `
       <tr>
-        <td style="font-family:var(--mono);font-weight:700;color:var(--blue);">${s.code}</td>
+        <td style="font-family:var(--mono);font-weight:700;color:var(--blue);cursor:pointer;text-decoration:underline;" onclick="openSiteDetailPage('${s.code}')" title="فتح صفحة تفاصيل الموقع">${s.code}</td>
         <td>${s.type}</td>
         <td>${s.bal}</td>
         <td>${s.hay || '—'}</td>
@@ -1709,6 +2737,7 @@ function updateTable(filtered) {
         <td style="font-size:11px;color:#94a3b8;max-width:220px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" title="${s.note||''}">${s.note || '—'}</td>
         <td>${attBtn}</td>
         <td style="font-family:var(--mono);font-size:11px;"><a href="https://www.google.com/maps?q=${s.lat},${s.lon}" target="_blank" style="color:var(--blue);">📍 عرض</a></td>
+        <td><button class="btn-site-detail-tbl" onclick="openSiteDetailPage('${s.code}')">📋 تفاصيل الموقع</button></td>
       </tr>
     `;
   }).join('');
@@ -1746,11 +2775,145 @@ function applyFilters() {
 let currentPDFDoc = null;
 let currentPDFPage = 1;
 let currentPDFTotalPages = 1;
-let currentPDFScale = 1.6;
+let currentDocType = null;
+let attZoom = 1.0;
+let attBaseDisplayW = 0;
+let attBaseDisplayH = 0;
+let attPdfPageW = 0;
+let attPdfPageH = 0;
+let attUserIdentity = '';
+let attToastTimer = null;
+let attShieldTimer = null;
+
+function isAttModalOpen() {
+  const modal = document.getElementById('attModal');
+  return modal && modal.style.display === 'flex';
+}
+
+function showAttSecToast(msg) {
+  const toast = document.getElementById('attSecToast');
+  if (!toast) return;
+  if (msg) toast.textContent = msg;
+  toast.style.display = 'block';
+  clearTimeout(attToastTimer);
+  attToastTimer = setTimeout(() => { toast.style.display = 'none'; }, 2600);
+}
+
+function setPrivacyShield(active, reason) {
+  const canvas = document.getElementById('attCanvas');
+  const shield = document.getElementById('attPrivacyShield');
+  const msgEl = document.getElementById('attShieldMsg');
+  if (!canvas || !shield) return;
+  if (active && isAttModalOpen()) {
+    canvas.style.opacity = '0';
+    canvas.style.visibility = 'hidden';
+    canvas.classList.add('blurred');
+    shield.classList.add('active');
+    if (reason && msgEl) msgEl.textContent = reason;
+  } else {
+    canvas.style.opacity = '1';
+    canvas.style.visibility = 'visible';
+    canvas.classList.remove('blurred');
+    shield.classList.remove('active');
+  }
+}
 
 function closeAttachmentModal() {
+  if (document.fullscreenElement) {
+    document.exitFullscreen().catch(() => {});
+  }
+  const win = document.getElementById('attModalWindow');
+  if (win) win.classList.remove('is-fullscreen');
+  setPrivacyShield(false);
   document.getElementById('attModal').style.display = 'none';
   currentPDFDoc = null;
+  currentDocType = null;
+}
+
+function toggleAttFullscreen() {
+  const win = document.getElementById('attModalWindow');
+  const btn = document.getElementById('btnAttFullscreen');
+  if (!win) return;
+
+  if (document.fullscreenElement) {
+    document.exitFullscreen().catch(() => {});
+    win.classList.remove('is-fullscreen');
+  } else if (win.requestFullscreen) {
+    win.requestFullscreen().catch(() => {
+      // Fallback CSS fullscreen if browser blocks fullscreen API
+      win.classList.toggle('is-fullscreen');
+      if (btn) btn.textContent = win.classList.contains('is-fullscreen') ? '🗗 تصغير الشاشة' : '⛶ ملء الشاشة';
+      setTimeout(() => refitAttCanvas(), 120);
+    });
+  } else {
+    win.classList.toggle('is-fullscreen');
+    if (btn) btn.textContent = win.classList.contains('is-fullscreen') ? '🗗 تصغير الشاشة' : '⛶ ملء الشاشة';
+    setTimeout(() => refitAttCanvas(), 120);
+  }
+}
+
+document.addEventListener('fullscreenchange', () => {
+  const win = document.getElementById('attModalWindow');
+  const btn = document.getElementById('btnAttFullscreen');
+  const isFs = !!document.fullscreenElement;
+  if (win) win.classList.toggle('is-fullscreen', isFs);
+  if (btn) btn.textContent = isFs ? '🗗 تصغير الشاشة' : '⛶ ملء الشاشة';
+  setTimeout(() => refitAttCanvas(), 150);
+});
+
+function updateZoomUI() {
+  const lbl = document.getElementById('attZoomLabel');
+  const body = document.getElementById('attModalBody');
+  const btnIn = document.getElementById('btnZoomIn');
+  const btnOut = document.getElementById('btnZoomOut');
+  if (lbl) lbl.textContent = `${Math.round(attZoom * 100)}%`;
+  if (body) body.classList.toggle('is-zoomed', attZoom > 1.01);
+  if (btnIn) btnIn.disabled = attZoom >= 3.0;
+  if (btnOut) btnOut.disabled = attZoom <= 0.5;
+}
+
+function applyCanvasDisplaySize() {
+  const canvas = document.getElementById('attCanvas');
+  if (!canvas || !attBaseDisplayW || !attBaseDisplayH) return;
+  canvas.style.width = `${Math.round(attBaseDisplayW * attZoom)}px`;
+  canvas.style.height = `${Math.round(attBaseDisplayH * attZoom)}px`;
+  updateZoomUI();
+}
+
+function refitAttCanvas() {
+  const body = document.getElementById('attModalBody');
+  const canvas = document.getElementById('attCanvas');
+  if (!body || !canvas || !currentDocType) return;
+  const availW = Math.max(260, body.clientWidth - 36);
+  const availH = Math.max(220, body.clientHeight - 36);
+
+  if (currentDocType === 'image' && canvas.width > 0) {
+    const ratio = Math.min(availW / canvas.width, availH / canvas.height, 1.25);
+    attBaseDisplayW = Math.round(canvas.width * ratio);
+    attBaseDisplayH = Math.round(canvas.height * ratio);
+    applyCanvasDisplaySize();
+  } else if (currentDocType === 'pdf' && attPdfPageW > 0) {
+    const ratio = Math.min(availW / attPdfPageW, availH / attPdfPageH, 2.2);
+    attBaseDisplayW = Math.round(attPdfPageW * ratio);
+    attBaseDisplayH = Math.round(attPdfPageH * ratio);
+    renderPDFPage();
+  }
+}
+
+function adjustAttZoom(delta) {
+  const next = Math.round(Math.max(0.5, Math.min(3.0, attZoom + delta)) * 100) / 100;
+  if (next === attZoom) return;
+  attZoom = next;
+  if (currentDocType === 'pdf') {
+    renderPDFPage();
+  } else {
+    applyCanvasDisplaySize();
+  }
+}
+
+function resetAttZoom() {
+  attZoom = 1.0;
+  refitAttCanvas();
 }
 
 async function openAttachment(fileKey, title, type) {
@@ -1765,6 +2928,14 @@ async function openAttachment(fileKey, title, type) {
   modalTitle.textContent = title;
   modalIcon.textContent = type === 'pdf' ? '📕' : '🖼️';
   pdfControls.style.display = 'none';
+  setPrivacyShield(false);
+  attZoom = 1.0;
+  currentDocType = null;
+  attBaseDisplayW = 600;
+  attBaseDisplayH = 300;
+  canvas.style.width = '';
+  canvas.style.height = '';
+  updateZoomUI();
 
   canvas.width = 600;
   canvas.height = 300;
@@ -1797,6 +2968,7 @@ async function openAttachment(fileKey, title, type) {
       throw new Error(`تعذر تحميل الملف (كود ${res.status})`);
     }
 
+    attUserIdentity = res.headers.get('X-User-Identity') || '';
     const blob = await res.blob();
     const isPDF = type === 'pdf' || cleanKey.toLowerCase().endsWith('.pdf') || blob.type === 'application/pdf';
 
@@ -1832,7 +3004,8 @@ async function renderPDFDoc(blob) {
   currentPDFDoc = await loadingTask.promise;
   currentPDFTotalPages = currentPDFDoc.numPages;
   currentPDFPage = 1;
-  currentPDFScale = 1.6;
+  currentDocType = 'pdf';
+  attZoom = 1.0;
 
   document.getElementById('pdfControls').style.display = currentPDFTotalPages > 1 ? 'flex' : 'none';
   await renderPDFPage();
@@ -1841,16 +3014,29 @@ async function renderPDFDoc(blob) {
 async function renderPDFPage() {
   if (!currentPDFDoc) return;
   const page = await currentPDFDoc.getPage(currentPDFPage);
-  const viewport = page.getViewport({ scale: currentPDFScale });
+  const vp1 = page.getViewport({ scale: 1.0 });
+  attPdfPageW = vp1.width;
+  attPdfPageH = vp1.height;
+
+  const body = document.getElementById('attModalBody');
+  const availW = Math.max(260, (body ? body.clientWidth : 900) - 36);
+  const availH = Math.max(220, (body ? body.clientHeight : 600) - 36);
+  const fitRatio = Math.min(availW / attPdfPageW, availH / attPdfPageH, 2.2);
+  attBaseDisplayW = Math.round(attPdfPageW * fitRatio);
+  attBaseDisplayH = Math.round(attPdfPageH * fitRatio);
+
+  const dpr = Math.min(window.devicePixelRatio || 1.5, 2.0);
+  const renderScale = Math.min(4.2, fitRatio * attZoom * dpr);
+  const viewport = page.getViewport({ scale: renderScale });
+
   const canvas = document.getElementById('attCanvas');
   const ctx = canvas.getContext('2d');
-
-  canvas.width = viewport.width;
-  canvas.height = viewport.height;
+  canvas.width = Math.round(viewport.width);
+  canvas.height = Math.round(viewport.height);
 
   await page.render({ canvasContext: ctx, viewport: viewport }).promise;
-
   drawWatermark(ctx, canvas.width, canvas.height);
+  applyCanvasDisplaySize();
 
   document.getElementById('pdfPageLabel').textContent = `${currentPDFPage} / ${currentPDFTotalPages}`;
   document.getElementById('btnPdfPrev').disabled = currentPDFPage <= 1;
@@ -1866,11 +3052,6 @@ function changePDFPage(delta) {
   }
 }
 
-function zoomPDF(delta) {
-  currentPDFScale = Math.max(0.8, Math.min(3.0, currentPDFScale + delta));
-  renderPDFPage();
-}
-
 async function renderImageDoc(blob) {
   const canvas = document.getElementById('attCanvas');
   const ctx = canvas.getContext('2d');
@@ -1879,12 +3060,14 @@ async function renderImageDoc(blob) {
 
   img.onload = () => {
     URL.revokeObjectURL(url);
-    const maxW = 900;
+    currentDocType = 'image';
+    const maxW = 1800;
     const scale = img.width > maxW ? maxW / img.width : 1;
-    canvas.width = img.width * scale;
-    canvas.height = img.height * scale;
+    canvas.width = Math.round(img.width * scale);
+    canvas.height = Math.round(img.height * scale);
     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
     drawWatermark(ctx, canvas.width, canvas.height);
+    refitAttCanvas();
   };
   img.src = url;
 }
@@ -1892,37 +3075,198 @@ async function renderImageDoc(blob) {
 function drawWatermark(ctx, w, h) {
   ctx.save();
   ctx.rotate(-22 * Math.PI / 180);
-  ctx.font = 'bold 22px Cairo';
+  const fontSize = Math.max(18, Math.round(w / 42));
+  ctx.font = `bold ${fontSize}px Cairo`;
   ctx.fillStyle = 'rgba(239, 68, 68, 0.16)';
   ctx.textAlign = 'center';
-  const text = 'معاينة فقط — أمانة المنطقة الشرقية · شركة إشراق';
-  for (let x = -w; x < w * 2; x += 320) {
-    for (let y = -h; y < h * 2; y += 140) {
+  const stamp = new Date().toLocaleString('ar-SA', { hour: '2-digit', minute: '2-digit', year: 'numeric', month: '2-digit', day: '2-digit' });
+  const idPart = attUserIdentity ? ` · ${attUserIdentity}` : '';
+  const text = `للعرض فقط — أمانة المنطقة الشرقية · إشراق${idPart} · ${stamp}`;
+  const stepX = Math.max(360, fontSize * 20);
+  const stepY = Math.max(130, fontSize * 6);
+  for (let x = -w; x < w * 2; x += stepX) {
+    for (let y = -h; y < h * 2; y += stepY) {
       ctx.fillText(text, x, y);
     }
   }
   ctx.restore();
 }
 
-/* Security Protection for Canvas */
+/* Security Protection, Wheel Zoom & Pan for Canvas Viewer */
 (() => {
+  let attShieldLockedUntil = 0;
+
+  function lockPrivacyShield(ms, reason) {
+    attShieldLockedUntil = Math.max(attShieldLockedUntil, Date.now() + ms);
+    setPrivacyShield(true, reason);
+  }
+
   document.addEventListener('contextmenu', e => {
-    if (e.target.closest('#attModal')) e.preventDefault();
-  });
-  window.addEventListener('keydown', e => {
-    if ((e.ctrlKey || e.metaKey) && (e.key === 'p' || e.key === 's')) {
+    if (e.target.closest('#attModal')) {
       e.preventDefault();
+      showAttSecToast('🛡️ القائمة السريعة معطّلة لحماية المستند');
     }
   });
+
+  // Pre-emptive Capture-Phase Key Interceptor (triggers in 0ms on first modifier key press BEFORE Win+Shift+S / Alt+PrtScn freezes the screen)
+  window.addEventListener('keydown', e => {
+    if ((e.ctrlKey || e.metaKey) && ['p', 's'].includes((e.key || '').toLowerCase())) {
+      e.preventDefault();
+      if (isAttModalOpen()) showAttSecToast('🛡️ الحفظ والطباعة معطّلان لهذا المستند المحمي');
+    }
+    if (!isAttModalOpen()) return;
+
+    const k = e.key || '';
+    if (k === 'Escape') {
+      if (!document.fullscreenElement) closeAttachmentModal();
+      return;
+    }
+
+    // Instant 0ms blackout as soon as Win (Meta/OS), Shift, Alt, Control, PrintScreen, or F12 is touched!
+    if (
+      k === 'Meta' || k === 'OS' || k === 'Shift' || k === 'Alt' || k === 'Control' ||
+      k === 'PrintScreen' || e.keyCode === 44 || k === 'F12' ||
+      e.metaKey || e.altKey || e.shiftKey || e.ctrlKey
+    ) {
+      if (k === 'PrintScreen' || e.keyCode === 44 || k === 'F12' || ((e.ctrlKey || e.metaKey) && ['c', 'u', 'p', 's', 'i'].includes(k.toLowerCase()))) {
+        e.preventDefault();
+      }
+      lockPrivacyShield(1800, 'تم حجب المستند فوراً (0ms) عند الضغط على مفاتيح الاختصار أو التصوير (Win / Shift / Alt / PrtScn)');
+      clearTimeout(attShieldTimer);
+      attShieldTimer = setTimeout(() => {
+        if (document.hasFocus() && Date.now() >= attShieldLockedUntil) setPrivacyShield(false);
+      }, 1850);
+      return;
+    }
+
+    if (k === '+' || k === '=') { adjustAttZoom(0.25); }
+    if (k === '-') { adjustAttZoom(-0.25); }
+    if (k === '0') { resetAttZoom(); }
+  }, true);
+
+  window.addEventListener('keyup', e => {
+    if (!isAttModalOpen()) return;
+    const k = e.key || '';
+    if (k === 'PrintScreen' || e.keyCode === 44) {
+      lockPrivacyShield(2800, 'تم رصد مفتاح PrintScreen — تم حجب المستند مؤقتاً للحماية');
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText('مستند محمي — يُمنع التقاط الشاشة أو التداول').catch(() => {});
+      }
+    } else if (['Meta', 'OS', 'Shift', 'Alt', 'Control'].includes(k)) {
+      clearTimeout(attShieldTimer);
+      attShieldTimer = setTimeout(() => {
+        if (document.hasFocus() && Date.now() >= attShieldLockedUntil) setPrivacyShield(false);
+      }, 600);
+    }
+  }, true);
+
+  // Instant 0ms Shield when cursor leaves the modal window or browser viewport (blocks taskbar Snipping Tool before clicking "New")
+  const modalWin = document.getElementById('attModalWindow');
+  if (modalWin) {
+    modalWin.addEventListener('mouseleave', () => {
+      if (isAttModalOpen()) {
+        setPrivacyShield(true, 'تم إخفاء المستند تلقائياً عند مغادرة مؤشر الماوس لنافذة المرفق');
+      }
+    });
+    modalWin.addEventListener('mouseenter', () => {
+      if (isAttModalOpen() && document.hasFocus() && Date.now() >= attShieldLockedUntil) {
+        setPrivacyShield(false);
+      }
+    });
+    modalWin.addEventListener('mousemove', e => {
+      if (isAttModalOpen() && document.hasFocus() && !e.metaKey && !e.shiftKey && !e.altKey && !e.ctrlKey && Date.now() >= attShieldLockedUntil) {
+        const shield = document.getElementById('attPrivacyShield');
+        if (shield && shield.classList.contains('active')) setPrivacyShield(false);
+      }
+    });
+  }
+
+  document.documentElement.addEventListener('mouseleave', () => {
+    if (isAttModalOpen()) {
+      setPrivacyShield(true, 'تم إخفاء المستند تلقائياً عند خروج المؤشر خارج المتصفح');
+    }
+  });
+
+  // Privacy Shield on focus loss (e.g., Windows Snipping Tool Win+Shift+S, Alt+Tab, external app capture)
+  window.addEventListener('blur', () => {
+    if (isAttModalOpen()) {
+      lockPrivacyShield(1200, 'تم حجب المستند تلقائياً لأن نافذة العرض فقدت التركيز');
+    }
+  });
+  window.addEventListener('focus', () => {
+    if (isAttModalOpen() && Date.now() >= attShieldLockedUntil) {
+      setPrivacyShield(false);
+    }
+  });
+  document.addEventListener('visibilitychange', () => {
+    if (isAttModalOpen()) {
+      if (document.hidden) lockPrivacyShield(1200, 'تم حجب المستند تلقائياً عند مغادرة التبويب');
+      else if (document.hasFocus() && Date.now() >= attShieldLockedUntil) setPrivacyShield(false);
+    }
+  });
+
+  // Direct Mouse Wheel Zoom + Drag-to-Pan inside #attModalBody
+  const modalBody = document.getElementById('attModalBody');
+  if (modalBody) {
+    modalBody.addEventListener('wheel', e => {
+      if (!isAttModalOpen()) return;
+      e.preventDefault();
+      adjustAttZoom(e.deltaY < 0 ? 0.15 : -0.15);
+    }, { passive: false });
+
+    let isDown = false, startX = 0, startY = 0, sLeft = 0, sTop = 0;
+    modalBody.addEventListener('mousedown', e => {
+      if (attZoom <= 1.01) return;
+      isDown = true;
+      modalBody.classList.add('is-dragging');
+      startX = e.pageX;
+      startY = e.pageY;
+      sLeft = modalBody.scrollLeft;
+      sTop = modalBody.scrollTop;
+    });
+    window.addEventListener('mouseup', () => {
+      isDown = false;
+      modalBody.classList.remove('is-dragging');
+    });
+    modalBody.addEventListener('mousemove', e => {
+      if (!isDown) return;
+      e.preventDefault();
+      modalBody.scrollLeft = sLeft - (e.pageX - startX);
+      modalBody.scrollTop = sTop - (e.pageY - startY);
+    });
+  }
 })();
 
 /* ===================================================================
    LIVE SYNC WITH ARCGIS FEATURE LAYERS
    =================================================================== */
-async function loadLiveFeatureLayer() {
+let INITIAL_STATIC_CACHE = null;
+
+async function loadLiveFeatureLayer(isManual = false) {
   const syncPill = document.getElementById('liveSyncStatus');
   const syncText = document.getElementById('syncText');
+  const refreshBtn = document.getElementById('btnRefreshData');
+  const refreshLabel = document.getElementById('btnRefreshLabel');
 
+  if (!INITIAL_STATIC_CACHE) {
+    const sm = new Map(), sbn = new Map();
+    D.forEach(s => {
+      sm.set(s.code, s);
+      if (s.siteNo) sbn.set(s.siteNo, s);
+      if (s.n) sbn.set(s.n, s);
+    });
+    INITIAL_STATIC_CACHE = { staticMap: sm, staticByNo: sbn };
+  }
+
+  if (refreshBtn) {
+    refreshBtn.disabled = true;
+    refreshBtn.classList.add('spinning');
+    if (refreshLabel) refreshLabel.textContent = 'جاري التحديث...';
+  }
+  syncText.textContent = 'جاري مزامنة وقراءة طبقة معالم ArcGIS الحية...';
+  syncPill.style.borderColor = 'rgba(56, 189, 248, 0.45)';
+
+  let succeeded = false;
   try {
     let token = null;
     try {
@@ -1946,17 +3290,20 @@ async function loadLiveFeatureLayer() {
     if (!token) {
       console.warn('Could not acquire ArcGIS OAuth token');
       syncText.textContent = 'تعذر الحصول على تصريح طبقة ArcGIS';
+      syncPill.style.borderColor = 'rgba(239, 68, 68, 0.45)';
       return;
     }
 
+    const ts = Date.now();
     const [l0Res, l1Res] = await Promise.all([
-      fetch('https://services-ap1.arcgis.com/HRZVvitYCIwFb7oA/arcgis/rest/services/Sites/FeatureServer/0/query?where=1=1&outFields=*&f=json&token=' + token),
-      fetch('https://services-ap1.arcgis.com/HRZVvitYCIwFb7oA/arcgis/rest/services/Sites/FeatureServer/1/query?where=1=1&outFields=Parent_GlobalID,Attachment_Title,File_Type,R2_File_Key&f=json&token=' + token)
+      fetch(`https://services-ap1.arcgis.com/HRZVvitYCIwFb7oA/arcgis/rest/services/Sites/FeatureServer/0/query?where=1=1&outFields=*&f=json&token=${token}&_ts=${ts}`, { cache: 'no-store' }),
+      fetch(`https://services-ap1.arcgis.com/HRZVvitYCIwFb7oA/arcgis/rest/services/Sites/FeatureServer/1/query?where=1=1&outFields=Parent_GlobalID,Attachment_Title,File_Type,R2_File_Key&f=json&token=${token}&_ts=${ts}`, { cache: 'no-store' })
     ]);
 
     if (!l0Res.ok || !l1Res.ok) {
       console.warn('ArcGIS FeatureServer query error:', l0Res.status, l1Res.status);
       syncText.textContent = 'خطأ في استجابة طبقة معالم ArcGIS';
+      syncPill.style.borderColor = 'rgba(239, 68, 68, 0.45)';
       return;
     }
 
@@ -1981,14 +3328,7 @@ async function loadLiveFeatureLayer() {
       });
     }
 
-    const staticMap = new Map();
-    const staticByNo = new Map();
-    D.forEach(s => {
-      staticMap.set(s.code, s);
-      if (s.siteNo) staticByNo.set(s.siteNo, s);
-      if (s.n) staticByNo.set(s.n, s);
-    });
-
+    const { staticMap, staticByNo } = INITIAL_STATIC_CACHE;
     const prefixMap = { 'يونيبول': 'UN-', 'ميجاكوم': 'MG-', 'موبي': 'MU-', 'جسور وأنفاق': 'BR-', 'شاشات': 'SC-' };
 
     D = l0Data.features.map((f, idx) => {
@@ -2000,7 +3340,7 @@ async function loadLiveFeatureLayer() {
       const atts = (attMap.get(gid) && attMap.get(gid).length) ? attMap.get(gid) : (st ? st.atts : []);
       const note = a.ObstDesc || a.Notes || (st ? st.note : '');
       const dec = a.FinalExecStatus || (st ? st.dec : 'غير منفذ');
-      const ob = (dec === 'عوائق' || !!a.ObstType || (st ? st.ob : false));
+      const ob = a.FinalExecStatus ? (dec === 'عوائق' || !!a.ObstType) : (st ? st.ob : false);
 
       const lat = parseFloat(a.Lat) || (f.geometry ? f.geometry.y : (st ? st.lat : 26.4));
       const lon = parseFloat(a.Lon) || (f.geometry ? f.geometry.x : (st ? st.lon : 50.1));
@@ -2025,10 +3365,28 @@ async function loadLiveFeatureLayer() {
     const nowTime = new Date().toLocaleTimeString('ar-SA');
     syncText.textContent = `🟢 متصل بالطبقة المباشرة (${D.length} موقع — ${nowTime})`;
     syncPill.style.borderColor = 'rgba(34, 197, 94, 0.4)';
+    map.closePopup();
     applyFilters();
+    succeeded = true;
   } catch (err) {
     console.warn('Live ArcGIS sync notice:', err);
     syncText.textContent = `تعذر الاتصال بالطبقة المباشرة: ${err.message}`;
+    syncPill.style.borderColor = 'rgba(239, 68, 68, 0.45)';
+  } finally {
+    if (refreshBtn) {
+      refreshBtn.disabled = false;
+      refreshBtn.classList.remove('spinning');
+      if (refreshLabel) {
+        if (isManual && succeeded) {
+          refreshLabel.textContent = '✓ تم التحديث';
+          setTimeout(() => {
+            if (!refreshBtn.disabled) refreshLabel.textContent = 'تحديث البيانات';
+          }, 2000);
+        } else {
+          refreshLabel.textContent = 'تحديث البيانات';
+        }
+      }
+    }
   }
 }
 
@@ -2048,6 +3406,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Fallback if live layer didn't render
   if (!markerLayer.getLayers().length) {
     applyFilters();
+  }
+
+  // Open site detail page if URL hash specifies #site=...
+  if (location.hash.startsWith('#site=')) {
+    const hashCode = decodeURIComponent(location.hash.replace('#site=', '').trim());
+    if (hashCode) openSiteDetailPage(hashCode, false);
   }
 
   // Search input
@@ -2083,6 +3447,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     btnExec.classList.remove('active');
     execView.style.display = 'none';
     tableView.style.display = 'flex';
+  });
+
+  // Refresh Data Button
+  document.getElementById('btnRefreshData').addEventListener('click', () => {
+    loadLiveFeatureLayer(true);
   });
 
   // Reset Filters
