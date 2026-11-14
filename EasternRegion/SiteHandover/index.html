@@ -819,8 +819,11 @@ tbody tr:hover{background:rgba(212,168,83,.07)}
 footer{margin-top:22px;padding:16px;color:var(--muted);font-size:12.5px;text-align:center;border-top:1px solid var(--hair)}
 footer b{color:var(--gl)}
 ::-webkit-scrollbar{width:10px;height:10px}::-webkit-scrollbar-thumb{background:rgba(212,168,83,.3);border-radius:10px}::-webkit-scrollbar-track{background:transparent}
+@media(max-width:1340px){.fbar select{max-width:98px!important;padding-inline:6px}.fbar input[type=search]{min-width:80px!important}.reset{padding:7px 10px}}
+@media(max-width:1500px){.fbar .ttl{display:none}.fbar select{max-width:118px}.fbar input[type=search]{min-width:100px}}
 @media(max-width:1280px){.kpis{grid-template-columns:repeat(3,1fr)}.charts{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:700px){.kpis,.charts{grid-template-columns:1fr 1fr}h1{font-size:23px}#map{height:440px}.brandrow{display:none}}
+.leaflet-bar a.homebtn{display:grid!important;place-items:center;background:#0b1a40!important;color:var(--gl)!important;border:1px solid var(--hair)!important}.leaflet-bar a.homebtn:hover{background:#13285e!important}.leaflet-bar a.homebtn svg{display:block}
 </style>
 </head>
 <body>
@@ -877,7 +880,7 @@ footer b{color:var(--gl)}
   </div>
 
   <details class="anl" id="anl">
-  <summary><span class="gold-text">الرسوم البيانية والتحليلات</span><span class="sm">حسب النوع · البلدية · الملاحظات · الأحياء · وتيرة الاستلام اليومية</span><span class="tg"><span class="lt">عرض</span> <i>▾</i></span></summary>
+  <summary><span class="gold-text">الرسوم البيانية والتحليلات</span><span class="sm">حسب النوع · البلدية · الملاحظات · الأحياء</span><span class="tg"><span class="lt">عرض</span> <i>▾</i></span></summary>
   <div class="inner">
   <div class="charts">
     <div class="card"><h3>حسب نوع اللوحة <small>اضغط للتصفية</small></h3><div class="chart"><div class="ckey"><span><i style="background:var(--green)"></i>دون ملاحظات</span><span><i style="background:var(--amber)"></i>مع ملاحظات</span></div><div id="cType"></div></div></div>
@@ -886,12 +889,12 @@ footer b{color:var(--gl)}
     <div class="card"><h3>أعلى الأحياء <small>اضغط للتصفية</small></h3><div class="chart" id="cHay"></div></div>
   </div>
 
+  </div>
+  </details>
   <div class="card" style="margin-top:14px">
     <h3>وتيرة الاستلام اليومية <small>عدد المواقع المستلمة في كل يوم · اضغط على اليوم للتصفية</small></h3>
     <div class="chart"><div class="tl" id="cDate"></div></div>
   </div>
-  </div>
-  </details>
 
   <div class="card" style="margin-top:14px">
     <h3>سجل المواقع <span style="display:flex;gap:10px;align-items:center"><small id="tblCount"></small><button class="xls" id="csv">تصدير CSV ⤓</button></span></h3>
@@ -990,6 +993,8 @@ try{
   L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}',{maxZoom:19,opacity:.85}).addTo(map);
   D.forEach(s=>{ markers[s.n]=L.marker([s.lat,s.lon],{icon:pinIcon(colorOf(s),TYPE_R[s.type]||5),riseOnHover:true}).bindPopup(popup(s)); });
   map.fitBounds(L.latLngBounds(D.map(s=>[s.lat,s.lon])).pad(.05));
+  L.Control.Home=L.Control.extend({options:{position:'topleft'},onAdd:function(){const d=L.DomUtil.create('div','leaflet-bar leaflet-control');d.innerHTML='<a href="#" class="homebtn" title="العودة للعرض الكامل" role="button" aria-label="العودة للعرض الكامل"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h5v-6h4v6h5V10"/></svg></a>';L.DomEvent.disableClickPropagation(d);d.firstChild.onclick=function(e){e.preventDefault();goHome();};return d;}});
+  new L.Control.Home().addTo(map);
 }catch(err){
   console.warn(err); map=null;
   $('#map').innerHTML='<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--muted)">تعذّر تحميل الخريطة. بقية اللوحة تعمل بشكل طبيعي.</div>';
@@ -1001,6 +1006,7 @@ document.querySelectorAll('#mode button').forEach(b=>b.onclick=()=>{
   update();
 });
 const legendKey = s => mode==='type' ? s.type : s.dec;
+function goHome(){ if(!map) return; const vis=D.filter(s=>markers[s.n]&&map.hasLayer(markers[s.n])); const pts=(vis.length?vis:D).map(s=>[s.lat,s.lon]); map.closePopup(); map.flyToBounds(L.latLngBounds(pts).pad(.08),{duration:.7,maxZoom:16}); }
 function drawMap(V){
   const pal = mode==='type'?TYPE_C:DEC_C;
   const cnt={}; V.forEach(s=>cnt[legendKey(s)]=(cnt[legendKey(s)]||0)+1);
@@ -1099,5 +1105,8 @@ function drawNow(V){
 sync(); update();
 $('#anl').addEventListener('toggle',e=>{$('#anl .lt').textContent=e.target.open?'إخفاء':'عرض';});
 </script>
+<style id="toTopCss">#toTop{position:fixed;left:24px;bottom:24px;z-index:9999;width:46px;height:46px;border-radius:14px;border:1px solid rgba(212,168,83,.45);background:rgba(6,17,41,.88);color:#f0d48e;display:grid;place-items:center;cursor:pointer;box-shadow:0 10px 26px rgba(0,0,0,.45);backdrop-filter:blur(8px);opacity:0;transform:translateY(14px);pointer-events:none;transition:opacity .25s,transform .25s,background .2s}#toTop.on{opacity:1;transform:none;pointer-events:auto}#toTop:hover{background:linear-gradient(180deg,#f0d48e,#d4a853);color:#1a1405}@media print{#toTop{display:none}}</style>
+<button id="toTop" type="button" title="العودة لأعلى الصفحة" aria-label="العودة لأعلى الصفحة"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
+<script>(function(){var b=document.getElementById("toTop");function u(){b.classList.toggle("on",(window.scrollY||document.documentElement.scrollTop)>350)}window.addEventListener("scroll",u,{passive:true});u();b.onclick=function(){window.scrollTo({top:0,behavior:"smooth"})}})();</script>
 </body>
 </html>

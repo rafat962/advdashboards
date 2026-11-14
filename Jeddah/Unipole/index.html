@@ -798,6 +798,7 @@ footer b{color:var(--gl)}
 .leaflet-div-icon.pin{background:none;border:0}
 .pin svg{transition:transform .15s;transform-origin:50% 100%}
 .pin:hover svg{transform:scale(1.25)}
+.leaflet-bar a.homebtn{display:grid!important;place-items:center;background:#0b1a40!important;color:var(--gl)!important;border:1px solid var(--hair)!important}.leaflet-bar a.homebtn:hover{background:#13285e!important}.leaflet-bar a.homebtn svg{display:block}
 </style>
 </head>
 <body>
@@ -926,6 +927,9 @@ const layers = {};
 const byId = {};
 try {
 map = L.map('map', {center:[21.58,39.17], zoom:11, scrollWheelZoom:true});
+const HOMEB=L.latLngBounds(S.map(x=>[x.lat,x.lon])).pad(.05);
+L.Control.Home=L.Control.extend({options:{position:'topleft'},onAdd:function(){const d=L.DomUtil.create('div','leaflet-bar leaflet-control');d.innerHTML='<a href="#" class="homebtn" title="العودة للعرض الكامل" role="button" aria-label="العودة للعرض الكامل"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h5v-6h4v6h5V10"/></svg></a>';L.DomEvent.disableClickPropagation(d);d.firstChild.onclick=function(e){e.preventDefault();map.closePopup();map.flyToBounds(HOMEB,{duration:.7});};return d;}});
+new L.Control.Home().addTo(map);
 L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
   {attribution:'Tiles &copy; Esri — Maxar, Earthstar Geographics', maxZoom:19,
    errorTileUrl:'data:image/gif;base64,R0lGODlhAQABAIAAAO7y9wAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=='}).addTo(map);
@@ -1068,5 +1072,8 @@ document.querySelectorAll('th').forEach(th => th.onclick = () => {
 $('#fQ').oninput = render;
 render();
 </script>
+<style id="toTopCss">#toTop{position:fixed;left:24px;bottom:24px;z-index:9999;width:46px;height:46px;border-radius:14px;border:1px solid rgba(212,168,83,.45);background:rgba(6,17,41,.88);color:#f0d48e;display:grid;place-items:center;cursor:pointer;box-shadow:0 10px 26px rgba(0,0,0,.45);backdrop-filter:blur(8px);opacity:0;transform:translateY(14px);pointer-events:none;transition:opacity .25s,transform .25s,background .2s}#toTop.on{opacity:1;transform:none;pointer-events:auto}#toTop:hover{background:linear-gradient(180deg,#f0d48e,#d4a853);color:#1a1405}@media print{#toTop{display:none}}</style>
+<button id="toTop" type="button" title="العودة لأعلى الصفحة" aria-label="العودة لأعلى الصفحة"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
+<script>(function(){var b=document.getElementById("toTop");function u(){b.classList.toggle("on",(window.scrollY||document.documentElement.scrollTop)>350)}window.addEventListener("scroll",u,{passive:true});u();b.onclick=function(){window.scrollTo({top:0,behavior:"smooth"})}})();</script>
 </body>
 </html>
