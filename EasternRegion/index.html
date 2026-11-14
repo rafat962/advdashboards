@@ -1355,7 +1355,9 @@
       .kpi-grid { grid-template-columns: 1fr 1fr; }
       .charts-pane { grid-template-columns: 1fr; }
     }
-  </style>
+  .site-pin{background:none;border:0}
+.legend-dot{border-radius:50% 50% 50% 0 !important;transform:rotate(-45deg);border:1.5px solid #fff}
+</style>
 <style id="mapkey-css">
 .mapkey{direction:rtl;font-family:Cairo,Tajawal,system-ui,sans-serif;background:rgba(8,16,36,.88);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border:1px solid rgba(212,168,83,.45);border-radius:10px;color:#e8ecf6;min-width:150px;max-width:250px;box-shadow:0 6px 18px rgba(0,0,0,.45);font-size:11.5px;line-height:1.5;overflow:hidden}
 .mapkey .mk-h{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:6px 10px;cursor:pointer;user-select:none;background:rgba(212,168,83,.12);border-bottom:1px solid rgba(212,168,83,.25)}
@@ -1621,7 +1623,6 @@
         <h3 style="font-size:14px;color:#fff;">سجل المواقع والمرفقات الرسمية المعتمدة</h3>
         <span id="tableRecordCount" style="font-size:12px;color:var(--blue);font-weight:700;">985 موقع</span>
       </div>
-      <button class="pill-btn" onclick="exportTableCSV()" style="border-color:var(--green);color:#4ade80;">📥 تصدير CSV / Excel</button>
     </div>
     <div class="table-scroll-area">
       <table>
@@ -2386,6 +2387,11 @@ function renderMapLegend(filtered) {
   }).join('');
 }
 
+const _sitePins = {};
+function sitePin(c) {
+  if (_sitePins[c]) return _sitePins[c];
+  return _sitePins[c] = L.divIcon({ className: 'site-pin', html: `<svg width="18" height="25" viewBox="0 0 24 33"><path d="M12 1.5C6.2 1.5 1.5 6.1 1.5 11.8c0 7.6 9.1 18.3 9.9 19.2a.8.8 0 0 0 1.2 0c.8-.9 9.9-11.6 9.9-19.2C22.5 6.1 17.8 1.5 12 1.5z" fill="${c}" stroke="#fff" stroke-width="1.8" style="filter:drop-shadow(0 1px 2px rgba(0,0,0,.55))"/><circle cx="12" cy="11.8" r="4" fill="#fff" fill-opacity=".92"/></svg>`, iconSize: [18, 25], iconAnchor: [9, 24], popupAnchor: [0, -22] });
+}
 function updateMapMarkers(filtered) {
   markerLayer.clearLayers();
   document.getElementById('mapCounterBadge').textContent = `${filtered.length} موقع معروض`;
@@ -2396,13 +2402,7 @@ function updateMapMarkers(filtered) {
 
     const col = colorMode === 'type' ? (TYPE_COLORS[s.type] || '#38bdf8') : (STATUS_COLORS[s.dec] || '#94a3b8');
 
-    const m = L.circleMarker([s.lat, s.lon], {
-      radius: 6,
-      fillColor: col,
-      fillOpacity: 0.9,
-      color: '#ffffff',
-      weight: 1.5
-    });
+    const m = L.marker([s.lat, s.lon], { icon: sitePin(col), riseOnHover: true });
 
     // Rich Popup
     let attHtml = '';
@@ -2761,7 +2761,7 @@ function updateTable(filtered) {
   tbody.innerHTML = rows;
 }
 
-function exportTableCSV() {
+function exportTableCSV() { return; /* التصدير معطّل */
   const data = getFilteredData();
   const headers = ['رمز الموقع', 'نوع اللوحة', 'البلدية', 'الحي', 'حالة الموقع', 'قاعدة سابقة', 'مصدر العائق', 'الملاحظات', 'خط العرض', 'خط الطول'];
   const rows = data.map(s => [

@@ -807,7 +807,33 @@
   .ctab tr.tot td{background:rgba(255,255,255,.06);font-weight:800;color:#fff}
   .mk-panel .sub{font-size:12px;color:#9fb0cf;margin:10px 0 4px;font-weight:700}
   .mk-panel .cwrap{height:230px;position:relative}
-  </style>
+  .site-pin{background:none;border:0}
+
+  /* ===== full-height (100vh) executive layout ===== */
+  .ctab-box .ctab-scroll{flex:1;min-height:0;overflow:auto}
+  .ctab-bus{font-size:10px;color:#f0d48e;font-weight:700;white-space:nowrap}
+  .ctab{width:100%;border-collapse:collapse;font-size:10.5px;line-height:1.25}
+  .ctab td:nth-child(2){white-space:nowrap}
+  .ctab th{background:rgba(212,168,83,.18);color:#f0d48e;padding:4px 6px;text-align:right;font-weight:800;position:sticky;top:0}
+  .ctab td{padding:2px 6px;border-bottom:1px solid rgba(255,255,255,.06)}
+  .ctab td.n{font-family:var(--mono,monospace);text-align:center;color:#e2e8f0;font-weight:700}
+  .ctab td.d{font-family:var(--mono,monospace);text-align:center;color:#4ade80}
+  .ctab tr.tot td{background:rgba(255,255,255,.06);font-weight:800;color:#fff}
+  @media (min-width:1100px) and (min-height:640px){
+    html,body{height:100vh;overflow:hidden}
+    .dash-wrap{height:100vh;min-height:0 !important;padding-bottom:10px;overflow:hidden}
+    .kpi-card{padding-top:8px !important;padding-bottom:8px !important}
+    .main-grid{min-height:0 !important;grid-template-columns:1fr 640px;grid-template-rows:minmax(0,1fr)}
+    .map-pane{min-height:0}
+    #map{min-height:0 !important}
+    .charts-pane{grid-template-rows:repeat(3,minmax(0,1fr));min-height:0 !important;height:100%}
+    .chart-box{min-height:0}
+    .chart-canvas-wrap{min-height:0 !important;height:auto !important;flex:1 1 0}
+    .table-pane{flex:1;min-height:0}
+    .table-scroll-area{flex:1;max-height:none !important;min-height:0}
+  }
+  @media (max-width:1099px),(max-height:639px){ .charts-pane{grid-template-rows:none} .chart-box{min-height:260px} }
+</style>
 <style id="mapkey-css">
 .mapkey{direction:rtl;font-family:Cairo,Tajawal,system-ui,sans-serif;background:rgba(8,16,36,.88);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border:1px solid rgba(212,168,83,.45);border-radius:10px;color:#e8ecf6;min-width:150px;max-width:250px;box-shadow:0 6px 18px rgba(0,0,0,.45);font-size:11.5px;line-height:1.5;overflow:hidden}
 .mapkey .mk-h{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:6px 10px;cursor:pointer;user-select:none;background:rgba(212,168,83,.12);border-bottom:1px solid rgba(212,168,83,.25)}
@@ -1048,29 +1074,23 @@
           <canvas id="chartStatuses"></canvas>
         </div>
       </div>
+      <div class="chart-box">
+        <div class="chart-head"><h3 id="cancelTitle">المواقع الملغاة</h3></div>
+        <div class="chart-canvas-wrap"><canvas id="chartCancel"></canvas></div>
+      </div>
+      <div class="chart-box ctab-box">
+        <div class="chart-head"><h3>إجمالي المواقع بالعقد</h3><span class="ctab-bus">+ 200 لوحة على الحافلات</span></div>
+        <div class="ctab-scroll">
+          <table class="ctab">
+            <thead><tr><th style="width:24px">م</th><th>نوع الوسيلة</th><th style="width:54px;text-align:center">بالعقد</th><th style="width:58px;text-align:center">منفّذ</th></tr></thead>
+            <tbody id="ctabBody"></tbody>
+          </table>
+        </div>
+      </div>
     </div>
   </main>
 
-  <!-- Contract composition + cancellations (Makkah) -->
-  <section class="mk-extra" id="mkExtra">
-    <div class="mk-panel">
-      <h3>إجمالي المواقع بالعقد</h3>
-      <table class="ctab">
-        <thead><tr><th style="width:30px">م</th><th>نوع الوسيلة</th><th style="width:70px;text-align:center">بالعقد</th><th style="width:80px;text-align:center">منفّذ (حي)</th></tr></thead>
-        <tbody id="ctabBody"></tbody>
-      </table>
-      <div class="sub">لوحات إعلانية على الحافلات</div>
-      <table class="ctab">
-        <thead><tr><th style="width:30px">م</th><th>نوع الوسيلة</th><th style="width:70px;text-align:center">عدد</th><th style="width:80px"></th></tr></thead>
-        <tbody><tr><td>1</td><td>لوحات إعلانية على كامل جوانب حافلات النقل العام</td><td class="n">200</td><td></td></tr>
-        <tr class="tot"><td></td><td>مجموع عدد اللوحات</td><td class="n">200</td><td></td></tr></tbody>
-      </table>
-    </div>
-    <div class="mk-panel">
-      <h3 id="cancelTitle">المواقع الملغاة</h3>
-      <div class="cwrap"><canvas id="chartCancel"></canvas></div>
-    </div>
-  </section>
+
 
   <!-- Main View 2: Detailed Table View -->
   <section class="table-pane" id="tableView" style="display:none;">
@@ -1079,7 +1099,6 @@
         <h3 style="font-size:14px;color:#fff;">سجل المواقع والمرفقات الرسمية المعتمدة</h3>
         <span id="tableRecordCount" style="font-size:12px;color:var(--blue);font-weight:700;">0 موقع</span>
       </div>
-      <button class="pill-btn" onclick="exportTableCSV()" style="border-color:var(--green);color:#4ade80;">📥 تصدير CSV / Excel</button>
     </div>
     <div class="table-scroll-area">
       <table>
@@ -1160,8 +1179,8 @@ const STATUS_COLORS = {
 const CONTRACT_TOTAL = 614;
 const CONTRACT_MIX = [
   ['ميجاكوم', 165, ['ميجاكوم']], ['يونيبول', 147, ['يونيبول']], ['معلم', 8, ['معلم']], ['موبي', 80, ['موبي']],
-  ['جسر أو نفق خرساني (عدد واجهات)', 32, ['جسور وأنفاق', 'جسر أو نفق']], ['جسر مشاة (عدد واجهات)', 26, ['جسر مشاة']],
-  ['شاشات إلكترونية', 4, ['شاشات']], ['موبي مدمج في مواقف حافلات', 152, ['موبي مدمج']]
+  ['جسر/نفق خرساني (واجهات)', 32, ['جسور وأنفاق', 'جسر أو نفق']], ['جسر مشاة (واجهات)', 26, ['جسر مشاة']],
+  ['شاشات إلكترونية', 4, ['شاشات']], ['موبي بمواقف الحافلات', 152, ['موبي مدمج']]
 ];
 const DONE = 'تم التنفيذ', CANC = 'تم الإلغاء';
 Object.assign(STATUS_COLORS, { 'تم التنفيذ': '#22c55e', 'تم الإلغاء': '#ef4444', 'مخطط للبدء': '#a78bfa', 'جاري التنفيذ': '#eab308' });
@@ -1241,7 +1260,7 @@ function updateContractTable() {
     const dn = D.filter(s => s.dec === DONE && r[2].some(k => (s.type || '').startsWith(k) && !(k === 'موبي' && (s.type || '').includes('مدمج')))).length;
     tot += r[1]; totDone += dn;
     return `<tr><td>${i + 1}</td><td>${r[0]}</td><td class="n">${r[1]}</td><td class="d">${LIVE_OK ? dn : '—'}</td></tr>`;
-  }).join('') + `<tr class="tot"><td></td><td>مجموع عدد اللوحات</td><td class="n">${tot}</td><td class="d">${LIVE_OK ? totDone : '—'}</td></tr>`;
+  }).join('') + `<tr class="tot"><td></td><td>المجموع</td><td class="n">${tot}</td><td class="d">${LIVE_OK ? totDone : '—'}</td></tr>`;
 }
 
 function updateFilterChips() {
@@ -1377,7 +1396,7 @@ function buildMuniChartConfig(mode) {
 
 function buildTypeChartConfig(mode) {
   const common = getCommonChartOptions();
-  const typeOrder = ['موبي', 'ميجاكوم', 'يونيبول', 'جسور وأنفاق'];
+  const typeOrder = [];
   const colors = ['#a3e635', '#3b82f6', '#06b6d4', '#a855f7'];
 
   if (mode === 'doughnut' || mode === 'pie') {
@@ -1422,7 +1441,7 @@ function buildTypeChartConfig(mode) {
 
 function buildObstChartConfig(mode) {
   const common = getCommonChartOptions();
-  const labels = ['اشتراطات مكانية', 'اشتراطات مكانية + المقاول', 'الاستشاري', 'الاستشاري + المقاول', 'المقاول', 'أخرى'];
+  const labels = [];
   const colors = ['#c026d3', '#d946ef', '#a855f7', '#9333ea', '#7e22ce'];
 
   if (mode === 'doughnut' || mode === 'pie') {
@@ -1467,7 +1486,7 @@ function buildObstChartConfig(mode) {
 
 function buildStatChartConfig(mode) {
   const common = getCommonChartOptions();
-  const statOrder = ['إزالة الموقع', 'ايقاف الموقع', 'تم التشغيل', 'جاري العمل', 'عوائق', 'غير منفذ', 'متوقف بطلب المالك', 'يجب إعادة التحقق'];
+  const statOrder = [];
   const colors = ['#ef4444', '#f97316', '#fb923c', '#eab308', '#2dd4bf', '#c084fc', '#64748b', '#ec4899'];
 
   if (mode === 'doughnut' || mode === 'pie') {
@@ -1520,7 +1539,7 @@ function updateCancelChart(filtered) {
     dated.forEach(s => { const d = new Date(s.cdate); const k = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0'); m[k] = (m[k] || 0) + 1; });
     labels = Object.keys(m).sort(); data = labels.map(k => m[k]);
     labels = labels.map(k => k.split('-').reverse().join('/'));
-    title = `المواقع الملغاة عبر الزمن (${canc.length})`;
+    title = `المواقع الملغاة عبر الزمن (${canc.length})` + (window.CDATE_LABEL ? ` — حسب «${window.CDATE_LABEL}»` : '');
   } else {
     const m = {}; canc.forEach(s => { const t = s.type || 'غير محدد'; m[t] = (m[t] || 0) + 1; });
     labels = Object.keys(m); data = labels.map(k => m[k]);
@@ -1683,6 +1702,11 @@ function setColorMode(mode) {
   updateMapMarkers(getFilteredData());
 }
 
+const _sitePins = {};
+function sitePin(c) {
+  if (_sitePins[c]) return _sitePins[c];
+  return _sitePins[c] = L.divIcon({ className: 'site-pin', html: `<svg width="18" height="25" viewBox="0 0 24 33"><path d="M12 1.5C6.2 1.5 1.5 6.1 1.5 11.8c0 7.6 9.1 18.3 9.9 19.2a.8.8 0 0 0 1.2 0c.8-.9 9.9-11.6 9.9-19.2C22.5 6.1 17.8 1.5 12 1.5z" fill="${c}" stroke="#fff" stroke-width="1.8" style="filter:drop-shadow(0 1px 2px rgba(0,0,0,.55))"/><circle cx="12" cy="11.8" r="4" fill="#fff" fill-opacity=".92"/></svg>`, iconSize: [18, 25], iconAnchor: [9, 24], popupAnchor: [0, -22] });
+}
 function updateMapMarkers(filtered) {
   markerLayer.clearLayers();
   document.getElementById('mapCounterBadge').textContent = `${filtered.length} موقع معروض`;
@@ -1691,7 +1715,7 @@ function updateMapMarkers(filtered) {
     const cnt = {};
     filtered.forEach(s => { if (!s.lat || !s.lon) return; const k = (byType ? s.type : s.dec) || 'غير محدد'; cnt[k] = (cnt[k] || 0) + 1; });
     const ks = Object.keys(cnt).sort((a, b) => cnt[b] - cnt[a]);
-    const items = ks.map(k => ({ c: byType ? (TYPE_COLORS[k] || '#38bdf8') : (STATUS_COLORS[k] || '#94a3b8'), l: k, n: cnt[k], s: 'dot' }));
+    const items = ks.map(k => ({ c: byType ? (TYPE_COLORS[k] || '#38bdf8') : (STATUS_COLORS[k] || '#94a3b8'), l: k, n: cnt[k] }));
     const extra = (window._mkExtra || []).filter(() => typeof contractOn === 'undefined' || contractOn);
     window._mk.set(items.concat(extra), byType ? 'التلوين حسب نوع اللوحة' : 'التلوين حسب حالة الموقع', 'الرقم = عدد المواقع المعروضة على الخريطة');
   }
@@ -1701,13 +1725,7 @@ function updateMapMarkers(filtered) {
 
     const col = colorMode === 'type' ? (TYPE_COLORS[s.type] || '#38bdf8') : (STATUS_COLORS[s.dec] || '#94a3b8');
 
-    const m = L.circleMarker([s.lat, s.lon], {
-      radius: 6,
-      fillColor: col,
-      fillOpacity: 0.9,
-      color: '#ffffff',
-      weight: 1.5
-    });
+    const m = L.marker([s.lat, s.lon], { icon: sitePin(col), riseOnHover: true });
 
     // Rich Popup
     let attHtml = '';
@@ -1811,7 +1829,7 @@ function updateTable(filtered) {
   tbody.innerHTML = rows;
 }
 
-function exportTableCSV() {
+function exportTableCSV() { return; /* التصدير معطّل */
   const data = getFilteredData();
   const headers = ['رمز الموقع', 'نوع اللوحة', 'البلدية', 'الحي', 'حالة الموقع', 'قاعدة سابقة', 'مصدر العائق', 'الملاحظات', 'خط العرض', 'خط الطول'];
   const rows = data.map(s => [
@@ -2099,6 +2117,53 @@ function normType(v) {
   if (/screen|digital|شاش/.test(k)) return 'شاشات';
   return String(v);
 }
+async function loadAttachmentsLater(token, layers, tables, mainId, meta, oidField) {
+  try {
+    const attMap = new Map();
+    const cands = [...layers, ...tables].filter(t => t.id !== mainId);
+    await Promise.all(cands.map(async t => {
+      try {
+        const tm = await esriJson(`${MK_SVC}/${t.id}`, token);
+        const has = n => (tm.fields || []).some(f => f.name.toLowerCase() === n.toLowerCase());
+        if (!has('R2_File_Key') || !has('Parent_GlobalID')) return;
+        const d = await esriJson(`${MK_SVC}/${t.id}/query?where=1%3D1&outFields=Parent_GlobalID,Attachment_Title,File_Type,R2_File_Key`, token);
+        (d.features || []).forEach(f => {
+          const a = f.attributes; if (!a || !a.Parent_GlobalID || !a.R2_File_Key) return;
+          const gid = String(a.Parent_GlobalID).toLowerCase().replace(/[{}]/g, '').trim();
+          if (!attMap.has(gid)) attMap.set(gid, []);
+          attMap.get(gid).push({ title: a.Attachment_Title || 'مرفق', type: (a.File_Type || '').toLowerCase() === 'pdf' ? 'pdf' : 'image', key: a.R2_File_Key });
+        });
+      } catch (e) {}
+    }));
+    const nativeAtt = new Map();
+    if (meta.hasAttachments) {
+      const oids = D.map(s => s.objectId).filter(v => v != null);
+      const chunks = []; for (let k = 0; k < oids.length; k += 200) chunks.push(oids.slice(k, k + 200));
+      await Promise.all(chunks.map(async ch => {
+        try {
+          const d = await esriJson(`${MK_SVC}/${mainId}/queryAttachments?objectIds=${ch.join(',')}`, token);
+          (d.attachmentGroups || []).forEach(g => nativeAtt.set(g.parentObjectId, (g.attachmentInfos || []).map(ai => ({
+            title: ai.name || 'مرفق', type: /pdf/i.test(ai.contentType || ai.name || '') ? 'pdf' : 'image',
+            key: `esri:${MK_SVC}/${mainId}/${g.parentObjectId}/attachments/${ai.id}` }))));
+        } catch (e) {}
+      }));
+    }
+    if (!attMap.size && !nativeAtt.size) return;
+    D.forEach(s => { s.atts = (attMap.get(s.globalId) || []).concat(nativeAtt.get(s.objectId) || []); });
+    applyFilters();
+  } catch (e) { console.warn('attachments later:', e); }
+}
+function restoreCachedSites() {
+  try {
+    const c = JSON.parse(localStorage.getItem('mkLiveCache') || 'null');
+    if (!c || !Array.isArray(c.D) || !c.D.length) return false;
+    D = c.D; LIVE_OK = true; window.CDATE_LABEL = c.label || '';
+    const t = new Date(c.t).toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit' });
+    document.getElementById('syncText').textContent = `آخر بيانات محفوظة (${t}) — جارٍ التحديث الحي...`;
+    applyFilters(); recenterMap();
+    return true;
+  } catch (e) { return false; }
+}
 async function loadLiveFeatureLayer() {
   const syncPill = document.getElementById('liveSyncStatus');
   const syncText = document.getElementById('syncText');
@@ -2115,14 +2180,15 @@ async function loadLiveFeatureLayer() {
     const layers = svc.layers || [];
     const tables = svc.tables || [];
     const mainId = (layers.find(l => /point/i.test(l.geometryType || '')) || layers[0] || { id: 0 }).id;
-    const meta = await esriJson(`${MK_SVC}/${mainId}`, token);
+    const qBase = `${MK_SVC}/${mainId}/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326`;
+    const [meta, first] = await Promise.all([esriJson(`${MK_SVC}/${mainId}`, token), esriJson(qBase, token)]);
     const dom = buildDomainMap(meta.fields);
     const oidField = meta.objectIdField || 'OBJECTID';
 
-    // 2) Read every feature (paged), coordinates in WGS84
+    // 2) Read every feature (first page already fetched in parallel; page on if needed)
     const pageSize = meta.maxRecordCount || 1000;
-    let feats = [], offset = 0;
-    while (true) {
+    let feats = (first.features || []).slice(), offset = feats.length;
+    while (first.exceededTransferLimit) {
       const d = await esriJson(`${MK_SVC}/${mainId}/query?where=1%3D1&outFields=*&returnGeometry=true&outSR=4326&orderByFields=${oidField}&resultOffset=${offset}&resultRecordCount=${pageSize}`, token);
       feats = feats.concat(d.features || []);
       if (!d.exceededTransferLimit || !(d.features || []).length) break;
@@ -2135,43 +2201,12 @@ async function loadLiveFeatureLayer() {
       return;
     }
 
-    // 3) Attachments — R2 table (same pattern as Dammam) if present
-    const attMap = new Map();
-    const r2Cand = [...layers, ...tables].filter(t => t.id !== mainId);
-    for (const t of r2Cand) {
-      try {
-        const tm = await esriJson(`${MK_SVC}/${t.id}`, token);
-        const has = n => (tm.fields || []).some(f => f.name.toLowerCase() === n.toLowerCase());
-        if (!has('R2_File_Key') || !has('Parent_GlobalID')) continue;
-        const d = await esriJson(`${MK_SVC}/${t.id}/query?where=1%3D1&outFields=Parent_GlobalID,Attachment_Title,File_Type,R2_File_Key`, token);
-        (d.features || []).forEach(f => {
-          const a = f.attributes;
-          if (!a || !a.Parent_GlobalID || !a.R2_File_Key) return;
-          const gid = String(a.Parent_GlobalID).toLowerCase().replace(/[{}]/g, '').trim();
-          if (!attMap.has(gid)) attMap.set(gid, []);
-          attMap.get(gid).push({ title: a.Attachment_Title || 'مرفق', type: (a.File_Type || '').toLowerCase() === 'pdf' ? 'pdf' : 'image', key: a.R2_File_Key });
-        });
-      } catch (e) { console.warn('R2 table read skipped:', e.message); }
-    }
-
-    // 4) Native ArcGIS attachments (if the layer has them)
-    const nativeAtt = new Map();
-    if (meta.hasAttachments) {
-      const oids = feats.map(f => f.attributes[oidField]).filter(v => v != null);
-      for (let k = 0; k < oids.length; k += 200) {
-        try {
-          const d = await esriJson(`${MK_SVC}/${mainId}/queryAttachments?objectIds=${oids.slice(k, k + 200).join(',')}`, token);
-          (d.attachmentGroups || []).forEach(g => {
-            nativeAtt.set(g.parentObjectId, (g.attachmentInfos || []).map(ai => ({
-              title: ai.name || 'مرفق',
-              type: /pdf/i.test(ai.contentType || ai.name || '') ? 'pdf' : 'image',
-              key: `esri:${MK_SVC}/${mainId}/${g.parentObjectId}/attachments/${ai.id}`
-            })));
-          });
-        } catch (e) { console.warn('queryAttachments skipped:', e.message); break; }
-      }
-    }
-
+    // date field used for the cancellation timeline
+    const dfs = (meta.fields || []).filter(f => f.type === 'esriFieldTypeDate');
+    const pickDF = re => dfs.find(f => re.test(f.name) || re.test(f.alias || ''));
+    const cField = pickDF(/cancel|ملغ|إلغاء|الغاء/i) || pickDF(/status.?date|exec.?date|تاريخ.?الحالة/i) || pickDF(/^(?!.*(creat|edit|last_ed)).*date/i) || pickDF(/editdate|last_edited_date/i) || pickDF(/creat/i);
+    window.CDATE_LABEL = cField ? (cField.alias || cField.name) : '';
+    const attMap = new Map(), nativeAtt = new Map();
     // 5) Map attributes → dashboard records
     const val = (a, names) => {
       for (const n of names) {
@@ -2217,7 +2252,7 @@ async function loadLiveFeatureLayer() {
         atts: atts,
         permit: val(a, ['Permit_No', 'PermitNo', 'Permit_Number', 'رقم_التصريح']) || '',
         op: normOp(val(a, ['Operation_Status', 'Operational_Status', 'OperationStatus', 'Op_Status', 'Operating_Status', 'حالة_التشغيل'])),
-        cdate: (() => { const v = val(a, ['Cancel_Date', 'CancelDate', 'Cancellation_Date', 'Canceled_Date', 'Cancelled_Date', 'Status_Date', 'StatusDate']); const t = typeof v === 'number' ? v : Date.parse(v); return isNaN(t) ? null : t; })(),
+        cdate: (() => { const v = cField ? a[cField.name] : null; if (v == null) return null; const t = typeof v === 'number' ? v : Date.parse(v); return isNaN(t) ? null : t; })(),
         objectId: oid,
         globalId: gid
       };
@@ -2229,6 +2264,8 @@ async function loadLiveFeatureLayer() {
     syncPill.style.borderColor = 'rgba(34, 197, 94, 0.4)';
     applyFilters();
     recenterMap();
+    try { localStorage.setItem('mkLiveCache', JSON.stringify({ t: Date.now(), label: window.CDATE_LABEL, D })); } catch (e) {}
+    loadAttachmentsLater(token, layers, tables, mainId, meta, oidField);
   } catch (err) {
     console.warn('Live ArcGIS sync notice:', err);
     syncText.textContent = `تعذّر التحديث الحي: ${err.message}`;
@@ -2325,6 +2362,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   syncText.textContent = 'جاري مزامنة وقراءة طبقة معالم ArcGIS الحية...';
 
   // Load live feature layer directly so all points load in a single unified stage!
+  restoreCachedSites();
   await loadLiveFeatureLayer();
   loadContractSitesLayer();
 

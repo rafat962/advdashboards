@@ -988,7 +988,7 @@ footer b{color:var(--gl)}
   </div>
 
   <div class="card" style="margin-top:14px">
-    <h3>سجل المواقع <span style="display:flex;gap:10px;align-items:center"><small id="tblCount"></small><button class="xls" id="csv">تصدير CSV ⤓</button></span></h3>
+    <h3>سجل المواقع <span style="display:flex;gap:10px;align-items:center"><small id="tblCount"></small></span></h3>
     <div class="tblwrap">
       <table>
         <thead><tr>
@@ -1218,7 +1218,7 @@ $('#tbody').onclick=e=>{const tr=e.target.closest('tr'); if(!tr||!map) return; c
   document.getElementById('map').scrollIntoView({behavior:'smooth',block:'center'});
   map.flyTo([s.lat,s.lon],17,{duration:.7}); setTimeout(()=>m.openPopup(),750);};
 document.querySelectorAll('th').forEach(th=>th.onclick=()=>{const k=th.dataset.k; sortDir=k===sortK?-sortDir:1; sortK=k; drawTable(VIEW);});
-$('#csv').onclick=()=>{
+if($('#csv'))$('#csv').onclick=()=>{
   const H=['م','كود الموقع','النوع','البلدية','الحي','تاريخ الاستلام','قرار اللجنة','يوجد قاعدة','تصنيف الملاحظة','الملاحظات','خط العرض','خط الطول'];
   const rows=VIEW.map(s=>[s.n,s.code,s.type,s.bal,s.hay,s.date,s.dec,s.base,s.cat,s.note,s.lat,s.lon]);
   const csv='﻿'+[H,...rows].map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\r\n');

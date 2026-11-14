@@ -686,20 +686,21 @@
             #map .pin.sel text {
                 fill: var(--gl);
             }
-            #map .compass circle {
+            .mcompass{position:absolute;top:12px;right:18px;z-index:4;pointer-events:none}
+            #map .compass circle, .mcompass .compass circle {
                 fill: none;
                 stroke: rgba(240, 212, 142, 0.35);
                 stroke-width: 0.25;
             }
-            #map .compass path {
+            #map .compass path, .mcompass .compass path {
                 fill: none;
                 stroke: rgba(240, 212, 142, 0.6);
                 stroke-width: 0.3;
             }
-            #map .compass path.n {
+            #map .compass path.n, .mcompass .compass path.n {
                 fill: rgba(240, 212, 142, 0.8);
             }
-            #map .compass text {
+            #map .compass text, .mcompass .compass text {
                 fill: var(--gl);
                 font:
                     600 3px "Montserrat",
@@ -3422,15 +3423,15 @@ body.viewing{overflow:hidden}
 </script>
 
 <style id="mapkey-portal">
-.hero-map .mapkey{font-size:9.5px;min-width:0;max-width:165px;border-radius:8px;line-height:1.35}
-.hero-map .mapkey .mk-h{padding:3px 8px;gap:6px}
-.hero-map .mapkey .mk-h b{font-size:10px}
-.hero-map .mapkey .mk-h span{font-size:8.5px}
-.hero-map .mapkey .mk-b{padding:3px 8px 5px}
-.hero-map .mapkey .mk-sub,.hero-map .mapkey .mk-note{font-size:8.5px}
-.hero-map .mapkey .mk-r{gap:5px;padding:1px 0}
-.hero-map .mapkey .mk-r .mk-n{font-size:9px}
-.hero-map .mapkey .mk-s{flex-basis:11px;transform:scale(.78)}
+.hero-map .mapkey{font-size:10.5px;max-width:none;min-width:0;border-radius:10px;line-height:1.4}
+.hero-map .mapkey .mk-h{padding:4px 12px}
+.hero-map .mapkey .mk-h b{font-size:11px}
+.hero-map .mapkey .mk-b{display:flex;flex-wrap:wrap;align-items:center;gap:4px 16px;padding:6px 12px 7px;max-height:none}
+.hero-map .mapkey .mk-sub{flex-basis:100%;margin:0;font-size:9.5px}
+.hero-map .mapkey .mk-r{padding:0;gap:5px}
+.hero-map .mapkey .mk-r .mk-l{flex:none}
+.hero-map .mapkey .mk-note{flex-basis:100%;margin-top:2px;padding-top:3px;font-size:9.5px}
+.hero-map .mapkey .mk-s{flex-basis:12px;transform:scale(.85)}
 </style>
 </head>
     <body class="locked">
@@ -4334,15 +4335,28 @@ body.viewing{overflow:hidden}
       <text x="${x + dx}" y="${y + dy}" text-anchor="${anc}">${d.ar}</text></g>`;
                     });
                 }
-                const cx = 1625,
-                    cy = 536;
-                h += `<g class="compass"><circle cx="${cx}" cy="${cy}" r="6"/><circle cx="${cx}" cy="${cy}" r="3.6"/><path class="n" d="M${cx} ${cy - 8}L${cx + 1.5} ${cy}L${cx - 1.5} ${cy}Z"/><path d="M${cx} ${cy + 8}L${cx + 1.5} ${cy}L${cx - 1.5} ${cy}Z"/><path d="M${cx - 8} ${cy}H${cx + 8}"/><text x="${cx}" y="${cy - 9.3}" text-anchor="middle">N</text></g>`;
+                if (!document.querySelector(".hero-map .mcompass")) {
+                    const cmp = document.createElement("div");
+                    cmp.className = "mcompass";
+                    cmp.innerHTML = `<svg viewBox="-10 -14 20 24" width="54" height="65"><g class="compass"><circle cx="0" cy="0" r="6"/><circle cx="0" cy="0" r="3.6"/><path class="n" d="M0 -8L1.5 0L-1.5 0Z"/><path d="M0 8L1.5 0L-1.5 0Z"/><path d="M-8 0H8"/><text x="0" y="-9.3" text-anchor="middle">N</text></g></svg>`;
+                    document.querySelector(".hero-map .mapbox").appendChild(cmp);
+                }
                 $("map").innerHTML = h;
                 try {
                     if (!window._pkey) window._pkey = mapKeyIn(document.querySelector(".hero-map .mapbox"), { style: { left: "18px", bottom: "16px" } });
                     const pk = [{ c: "#e3b862", l: "منطقة ضمن المحفظة", n: PROJECTS.length }];
                     if (mapMode === "all") pk.push({ c: "#c3cce0", l: "منطقة تحت التطوير", n: DEV.length });
-                    window._pkey.set(pk, mapMode === "all" ? "جميع مشاريع الحديثة" : "المحفظة الاستثمارية", "اضغط على الدبوس للتفاصيل");
+                    window._pkey.set(pk);
+                    const mr = document.querySelector(".hero-map .mright"), mb = document.querySelector(".hero-map .mapbox");
+                    const fit = () => {
+                        const el = window._pkey.el;
+                        if (mr && mb && getComputedStyle(mr).display !== "none") {
+                            const r = mr.getBoundingClientRect(), b = mb.getBoundingClientRect();
+                            el.style.width = r.width + "px"; el.style.right = (b.right - r.right) + "px"; el.style.left = "auto";
+                        } else { el.style.width = ""; el.style.right = "18px"; }
+                    };
+                    fit();
+                    if (!window._pkeyRs) { window._pkeyRs = 1; window.addEventListener("resize", fit); }
                 } catch (e) {}
                 $("map")
                     .querySelectorAll(".pin.dev")
@@ -4958,20 +4972,21 @@ body.viewing{overflow:hidden}
             };
         
 /* ---------- Dashboard viewer (same tab) ---------- */
+function vNav(u){const f=document.getElementById("vFrame");try{f.contentWindow.location.replace(u);}catch(e){f.src=u;}}
 (function(){
   const V=document.getElementById("viewer"),F=document.getElementById("vFrame"),T=document.getElementById("vTitle"),X=document.getElementById("vExt"),LD=document.getElementById("vLoad");
   let open=false;
   const show=(url,title,push)=>{
-    V.querySelector(".vbody").classList.remove("pdfmode");document.getElementById("pdfPages").innerHTML="";T.textContent=title||"لوحة المتابعة";X.href=url;LD.classList.remove("done");F.src=url;clearTimeout(window.__vt);window.__vt=setTimeout(()=>LD.classList.add("done"),2500);
+    V.querySelector(".vbody").classList.remove("pdfmode");document.getElementById("pdfPages").innerHTML="";T.textContent=title||"لوحة المتابعة";X.href=url;LD.classList.remove("done");vNav(url);clearTimeout(window.__vt);window.__vt=setTimeout(()=>LD.classList.add("done"),2500);
     V.hidden=false;document.body.classList.add("viewing");open=true;
     if(typeof closeDrawer==="function")closeDrawer();
-    if(push)history.pushState({dash:url,title:title},"","#view");
+    if(push){ if(location.hash==="#view")history.replaceState({dash:url,title:title},"","#view"); else history.pushState({dash:url,title:title},"","#view"); }
   };
   const hide=(fromPop)=>{
-    if(!open)return;open=false;V.hidden=true;document.body.classList.remove("viewing");F.src="about:blank";
-    if(!fromPop&&location.hash==="#view")history.back();
+    if(!open)return;open=false;V.hidden=true;document.body.classList.remove("viewing");vNav("about:blank");
+    if(!fromPop&&location.hash==="#view")history.replaceState(null,"",location.pathname+location.search);
   };
-  F.addEventListener("load",()=>{if(F.src!=="about:blank")LD.classList.add("done");});
+  F.addEventListener("load",()=>{LD.classList.add("done");});
   document.addEventListener("click",e=>{
     const a=e.target.closest("a.dlink");if(!a)return;
     if(e.ctrlKey||e.metaKey||e.shiftKey||e.button===1)return;
@@ -4980,7 +4995,7 @@ body.viewing{overflow:hidden}
   document.getElementById("vClose").onclick=()=>hide(false);
   document.addEventListener("keydown",e=>{if(e.key==="Escape"&&open)hide(false);});
   window.addEventListener("popstate",e=>{
-    if(e.state&&e.state.dash){show(e.state.dash,e.state.title,false);}else hide(true);
+    if(e.state&&e.state.dash&&location.hash==="#view"){show(e.state.dash,e.state.title,false);}else hide(true);
   });
   if(location.hash==="#view")history.replaceState(null,"",location.pathname+location.search);
 })();
@@ -4993,7 +5008,7 @@ const PAGES={"site-completion-certificate": 1, "site-completion-form": 2, "site-
   async function showPdf(url,title){
     const fm=document.getElementById("fmodal");if(fm){fm.classList.remove("open");}
     pdfOn=true;T.textContent=title;X.removeAttribute("href");X.style.display="none";P.innerHTML="";B.classList.add("pdfmode");LD.classList.remove("done");
-    V.hidden=false;document.body.classList.add("viewing");history.pushState({pdf:url,title:title},"","#view");
+    V.hidden=false;document.body.classList.add("viewing");if(location.hash==="#view")history.replaceState({pdf:url,title:title},"","#view");else history.pushState({pdf:url,title:title},"","#view");
     try{
       const base=url.replace(/\.pdf$/i,"").split("/").pop(), n=PAGES[base]||0;
       if(!n) throw new Error("no pages");
@@ -5001,13 +5016,13 @@ const PAGES={"site-completion-certificate": 1, "site-completion-form": 2, "site-
       for(let i=1;i<=n;i++){const im=new Image();im.alt=title+" — صفحة "+i;im.src="forms/pages/"+base+"-"+i+".jpg";im.draggable=false;im.oncontextmenu=ev=>ev.preventDefault();
         im.onload=()=>{if(first){first=false;LD.classList.add("done");}};im.onerror=()=>{LD.classList.add("done");};P.appendChild(im);}
     }catch(e){
-      B.classList.remove("pdfmode");document.getElementById("vFrame").src=url;LD.classList.add("done");
+      B.classList.remove("pdfmode");vNav(url);LD.classList.add("done");
     }
   }
   document.addEventListener("click",e=>{const a=e.target.closest("a.pdfv");if(!a)return;e.preventDefault();showPdf(a.getAttribute("href"),a.dataset.title);});
   let pdfOn=false;
   const reset=()=>{B.classList.remove("pdfmode");P.innerHTML="";X.style.display="";};
-  const closePdf=()=>{if(!pdfOn)return;pdfOn=false;reset();document.getElementById("vFrame").src="about:blank";V.hidden=true;document.body.classList.remove("viewing");if(location.hash==="#view")history.back();};
+  const closePdf=()=>{if(!pdfOn)return;pdfOn=false;reset();vNav("about:blank");V.hidden=true;document.body.classList.remove("viewing");if(location.hash==="#view")history.replaceState(null,"",location.pathname+location.search);};
   document.getElementById("vClose").addEventListener("click",closePdf);
   window.addEventListener("popstate",()=>{if(pdfOn&&!(history.state&&history.state.pdf)){pdfOn=false;reset();V.hidden=true;document.body.classList.remove("viewing");}});
   document.addEventListener("keydown",e=>{if(e.key==="Escape")closePdf();});
