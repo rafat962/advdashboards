@@ -241,9 +241,16 @@ export default {
                 return new Response(null, { status: 204, headers: corsHeaders });
             }
 
-            const clientId = env.ESRI_CLIENT_ID || "6ttJbMd8nlGNpChz";
-            const clientSecret = env.ESRI_CLIENT_SECRET || "05ef1fd000954620a10dd34907d9c8aa";
+            const clientId = env.ESRI_CLIENT_ID;
+            const clientSecret = env.ESRI_CLIENT_SECRET;
             const portalUrl = (env.ESRI_PORTAL_URL || "https://mahagroup.maps.arcgis.com/").replace(/\/+$/, "");
+
+            if (!clientId || !clientSecret) {
+                return new Response(
+                    JSON.stringify({ error: "Missing ESRI_CLIENT_ID or ESRI_CLIENT_SECRET in environment variables" }),
+                    { status: 500, headers: { "Content-Type": "application/json", ...corsHeaders } }
+                );
+            }
 
             try {
                 const body = new URLSearchParams({

@@ -1004,7 +1004,8 @@ async function fetchEsriToken() {
   }
   tokenFetchPromise = (async () => {
     try {
-      const res = await fetch('/api/esri-token', { cache: 'no-store' });
+      const apiBase = location.protocol === 'file:' ? 'https://ads-dashboard.almahagroup.org' : '';
+      const res = await fetch(`${apiBase}/api/esri-token`, { cache: 'no-store' });
       if (res.ok) {
         const data = await res.json();
         const token = data.access_token || data.token;
@@ -1015,30 +1016,7 @@ async function fetchEsriToken() {
         }
       }
     } catch(e) {
-      console.warn('Backend /api/esri-token unavailable, using direct fallback:', e);
-    }
-    // Direct OAuth fallback for local file:// testing
-    try {
-      const body = new URLSearchParams({
-        client_id: '6ttJbMd8nlGNpChz',
-        client_secret: '05ef1fd000954620a10dd34907d9c8aa',
-        grant_type: 'client_credentials',
-        expiration: '60',
-        f: 'json'
-      });
-      const res = await fetch('https://mahagroup.maps.arcgis.com/sharing/rest/oauth2/token', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: body.toString()
-      });
-      const data = await res.json();
-      if (data.access_token) {
-        esriToken = data.access_token;
-        tokenExpiry = Date.now() + (data.expires_in ? (data.expires_in - 300) * 1000 : 3300 * 1000);
-        return esriToken;
-      }
-    } catch(err) {
-      console.error('Failed to acquire Esri token:', err);
+      console.warn('Backend /api/esri-token unavailable:', e);
     }
     return null;
   })();
