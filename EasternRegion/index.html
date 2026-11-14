@@ -57,8 +57,8 @@
       display: flex;
       flex-direction: column;
       min-height: 100vh;
-      padding: 10px 14px 20px;
-      gap: 10px;
+      padding: 6px 12px 10px;
+      gap: 6px;
     }
 
     /* Header Nav */
@@ -67,54 +67,56 @@
       align-items: center;
       justify-content: space-between;
       flex-wrap: wrap;
-      gap: 10px;
-      padding: 8px 14px;
+      gap: 8px;
+      padding: 5px 12px;
       background: var(--card-bg);
       border: 1px solid var(--card-border);
-      border-radius: 10px;
+      border-radius: 9px;
       backdrop-filter: blur(12px);
     }
     .brand-section {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
     }
     .brand-logo-area {
       display: flex;
       flex-direction: column;
-      gap: 2px;
+      gap: 0px;
     }
     .brand-title {
-      font-size: 18px;
+      font-size: 15.5px;
       font-weight: 800;
       color: #fff;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 7px;
+      line-height: 1.25;
     }
     .brand-title .contract-badge {
-      font-size: 11px;
+      font-size: 10.5px;
       font-weight: 700;
       background: linear-gradient(135deg, rgba(245, 158, 11, 0.25), rgba(245, 158, 11, 0.08));
       color: var(--gold);
       border: 1px solid rgba(245, 158, 11, 0.4);
-      padding: 2px 8px;
+      padding: 1px 7px;
       border-radius: 20px;
     }
     .brand-sub {
-      font-size: 11.5px;
+      font-size: 10.5px;
       color: var(--text-dim);
+      line-height: 1.25;
     }
     .live-sync-pill {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      font-size: 11px;
+      gap: 5px;
+      font-size: 10.5px;
       font-weight: 700;
       background: rgba(34, 197, 94, 0.12);
       border: 1px solid rgba(34, 197, 94, 0.35);
       color: #4ade80;
-      padding: 3px 10px;
+      padding: 2px 8px;
       border-radius: 20px;
     }
     .live-dot {
@@ -251,18 +253,18 @@
     .kpi-grid {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
-      gap: 8px;
+      gap: 6px;
       direction: rtl; /* Right-to-left */
     }
     .kpi-card {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
-      border-radius: 10px;
-      padding: 10px 14px;
+      border-radius: 9px;
+      padding: 6px 11px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 10px;
+      gap: 8px;
       backdrop-filter: blur(10px);
       cursor: pointer;
       transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -288,26 +290,26 @@
     .kpi-details {
       display: flex;
       flex-direction: column;
-      gap: 2px;
+      gap: 1px;
     }
     .kpi-title {
-      font-size: 13px;
+      font-size: 11.5px;
       font-weight: 700;
       color: var(--text-dim);
     }
     .kpi-val {
-      font-size: 26px;
+      font-size: 21px;
       font-weight: 900;
       color: #fff;
       font-family: var(--mono);
-      line-height: 1.15;
+      line-height: 1.1;
     }
     .kpi-sub {
-      font-size: 10.5px;
+      font-size: 9.8px;
       color: var(--text-muted);
     }
     .kpi-ring-icon {
-      width: 40px; height: 40px;
+      width: 32px; height: 32px;
       border-radius: 50%;
       display: flex;
       align-items: center;
@@ -317,7 +319,7 @@
       color: var(--kpi-color, var(--blue));
       flex-shrink: 0;
     }
-    .kpi-ring-icon svg { width: 20px; height: 20px; }
+    .kpi-ring-icon svg { width: 16px; height: 16px; }
 
     /* Active Filter Chips Bar */
     .active-filters-bar {
@@ -325,11 +327,11 @@
       align-items: center;
       flex-wrap: wrap;
       gap: 6px;
-      padding: 5px 12px;
+      padding: 4px 10px;
       background: rgba(30, 58, 138, 0.2);
       border: 1px dashed rgba(56, 189, 248, 0.4);
       border-radius: 6px;
-      font-size: 11.5px;
+      font-size: 11px;
     }
     .af-title {
       color: var(--blue);
@@ -355,11 +357,11 @@
     /* Main Dashboard Layout: Map on LEFT, Charts on RIGHT */
     .main-grid {
       display: grid;
-      grid-template-columns: 1fr 540px;
+      grid-template-columns: 1fr 485px;
       direction: ltr; /* Map Left, Charts Right */
-      gap: 10px;
+      gap: 8px;
       flex: 1;
-      min-height: calc(100vh - 195px);
+      min-height: calc(100vh - 132px);
     }
 
     /* Map Pane (Left) */
@@ -378,18 +380,18 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 6px 12px;
+      padding: 4px 10px;
       background: rgba(0, 0, 0, 0.35);
       border-bottom: 1px solid var(--card-border);
       z-index: 500;
-      gap: 6px;
+      gap: 5px;
       flex-wrap: wrap;
     }
     .pill-btn {
       font-family: var(--font);
-      font-size: 11px;
+      font-size: 10.5px;
       font-weight: 700;
-      padding: 3px 8px;
+      padding: 2px 7px;
       border-radius: 6px;
       border: 1px solid rgba(255, 255, 255, 0.15);
       background: rgba(0, 0, 0, 0.3);
@@ -412,8 +414,8 @@
       border: 1px solid var(--card-border);
       color: var(--text);
       font-family: var(--font);
-      font-size: 11px;
-      padding: 3px 6px;
+      font-size: 10.5px;
+      padding: 2px 6px;
       border-radius: 6px;
       cursor: pointer;
     }
@@ -422,7 +424,7 @@
     #map {
       flex: 1;
       width: 100%;
-      min-height: 480px;
+      min-height: 550px;
       background: #0d1726;
       z-index: 1;
     }
@@ -992,10 +994,13 @@
       max-width: none;
       pointer-events: none;
       -webkit-user-drag: none;
-      transition: filter 0.12s ease;
+      transition: none !important;
     }
     .att-modal-canvas.blurred {
-      filter: blur(28px) brightness(0.35);
+      opacity: 0 !important;
+      visibility: hidden !important;
+      filter: blur(40px) brightness(0) !important;
+      transition: none !important;
     }
     .att-privacy-shield {
       position: absolute;
@@ -1005,12 +1010,12 @@
       align-items: center;
       justify-content: center;
       gap: 10px;
-      background: rgba(6, 10, 18, 0.78);
-      backdrop-filter: blur(18px);
+      background: #060a12;
       z-index: 10;
       text-align: center;
       padding: 24px;
       color: #f8fafc;
+      transition: none !important;
     }
     .att-privacy-shield.active { display: flex; }
     .att-shield-icon { font-size: 38px; }
@@ -1334,14 +1339,15 @@
       <div class="att-privacy-shield" id="attPrivacyShield">
         <div class="att-shield-icon">🛡️</div>
         <div class="att-shield-title">تم حجب المستند مؤقتاً للحماية</div>
-        <div class="att-shield-sub" id="attShieldMsg">تم تفعيل ستار الخصوصية تلقائياً لحماية المرفق عند فقدان التركيز أو محاولة الالتقاط. أعد التركيز إلى النافذة للاستمرار بالعرض.</div>
+        <div class="att-shield-sub" id="attShieldMsg">تم تفعيل ستار الخصوصية تلقائياً لحماية المرفق عند فقدان التركيز أو محاولة الالتقاط. حرّك الماوس داخل النافذة أو اضغط أدناه للاستمرار بالعرض.</div>
+        <button class="att-tool-btn" onclick="setPrivacyShield(false)" style="margin-top:6px;padding:5px 14px;border-color:var(--blue);color:#38bdf8;">👁️ إظهار المستند</button>
       </div>
       <div class="att-sec-toast" id="attSecToast">🛡️ هذا المستند محمي للعرض فقط — يُمنع الحفظ أو الطباعة أو النسخ</div>
     </div>
 
     <div class="att-modal-footer">
-      <span>🛡️ عرض محمي بعلامة مائية رقمية وحجب تلقائي عند فقدان التركيز — يُمنع التحميل أو الطباعة</span>
-      <span style="color:#64748b;">تلميح: استخدم Ctrl + عجلة الماوس للتكبير، واسحب للتحريك</span>
+      <span>🛡️ عرض محمي بعلامة مائية رقمية وحجب فوري (0ms) ضد أزرار التصوير ومغادرة المؤشر</span>
+      <span style="color:#64748b;">تلميح: استخدم عجلة الماوس للتكبير، واسحب للتحريك</span>
     </div>
   </div>
 </div>
@@ -2128,10 +2134,14 @@ function setPrivacyShield(active, reason) {
   const msgEl = document.getElementById('attShieldMsg');
   if (!canvas || !shield) return;
   if (active && isAttModalOpen()) {
+    canvas.style.opacity = '0';
+    canvas.style.visibility = 'hidden';
     canvas.classList.add('blurred');
     shield.classList.add('active');
     if (reason && msgEl) msgEl.textContent = reason;
   } else {
+    canvas.style.opacity = '1';
+    canvas.style.visibility = 'visible';
     canvas.classList.remove('blurred');
     shield.classList.remove('active');
   }
@@ -2413,6 +2423,13 @@ function drawWatermark(ctx, w, h) {
 
 /* Security Protection, Wheel Zoom & Pan for Canvas Viewer */
 (() => {
+  let attShieldLockedUntil = 0;
+
+  function lockPrivacyShield(ms, reason) {
+    attShieldLockedUntil = Math.max(attShieldLockedUntil, Date.now() + ms);
+    setPrivacyShield(true, reason);
+  }
+
   document.addEventListener('contextmenu', e => {
     if (e.target.closest('#attModal')) {
       e.preventDefault();
@@ -2420,75 +2437,110 @@ function drawWatermark(ctx, w, h) {
     }
   });
 
-  // Block Save, Print, Copy, DevTools shortcuts & detect PrintScreen while modal is open
+  // Pre-emptive Capture-Phase Key Interceptor (triggers in 0ms on first modifier key press BEFORE Win+Shift+S / Alt+PrtScn freezes the screen)
   window.addEventListener('keydown', e => {
-    if ((e.ctrlKey || e.metaKey) && ['p', 's'].includes(e.key.toLowerCase())) {
+    if ((e.ctrlKey || e.metaKey) && ['p', 's'].includes((e.key || '').toLowerCase())) {
       e.preventDefault();
       if (isAttModalOpen()) showAttSecToast('🛡️ الحفظ والطباعة معطّلان لهذا المستند المحمي');
     }
     if (!isAttModalOpen()) return;
 
-    if (e.key === 'Escape') {
+    const k = e.key || '';
+    if (k === 'Escape') {
       if (!document.fullscreenElement) closeAttachmentModal();
       return;
     }
-    if (e.key === 'PrintScreen' || (e.metaKey && e.shiftKey && e.key.toLowerCase() === 's')) {
-      e.preventDefault();
-      setPrivacyShield(true, 'تم رصد محاولة التقاط شاشة — تم حجب المستند مؤقتاً للحماية');
+
+    // Instant 0ms blackout as soon as Win (Meta/OS), Shift, Alt, Control, PrintScreen, or F12 is touched!
+    if (
+      k === 'Meta' || k === 'OS' || k === 'Shift' || k === 'Alt' || k === 'Control' ||
+      k === 'PrintScreen' || e.keyCode === 44 || k === 'F12' ||
+      e.metaKey || e.altKey || e.shiftKey || e.ctrlKey
+    ) {
+      if (k === 'PrintScreen' || e.keyCode === 44 || k === 'F12' || ((e.ctrlKey || e.metaKey) && ['c', 'u', 'p', 's', 'i'].includes(k.toLowerCase()))) {
+        e.preventDefault();
+      }
+      lockPrivacyShield(1800, 'تم حجب المستند فوراً (0ms) عند الضغط على مفاتيح الاختصار أو التصوير (Win / Shift / Alt / PrtScn)');
       clearTimeout(attShieldTimer);
       attShieldTimer = setTimeout(() => {
-        if (document.hasFocus()) setPrivacyShield(false);
-      }, 2500);
+        if (document.hasFocus() && Date.now() >= attShieldLockedUntil) setPrivacyShield(false);
+      }, 1850);
+      return;
     }
-    if ((e.ctrlKey || e.metaKey) && ['c', 'u'].includes(e.key.toLowerCase())) {
-      e.preventDefault();
-      showAttSecToast('🛡️ النسخ معطّل للمستندات المحمية');
-    }
-    if (e.key === '+' || e.key === '=') { adjustAttZoom(0.25); }
-    if (e.key === '-') { adjustAttZoom(-0.25); }
-    if (e.key === '0') { resetAttZoom(); }
-  });
+
+    if (k === '+' || k === '=') { adjustAttZoom(0.25); }
+    if (k === '-') { adjustAttZoom(-0.25); }
+    if (k === '0') { resetAttZoom(); }
+  }, true);
 
   window.addEventListener('keyup', e => {
-    if (isAttModalOpen() && e.key === 'PrintScreen') {
-      setPrivacyShield(true, 'تم رصد مفتاح PrintScreen — تم حجب المستند مؤقتاً');
+    if (!isAttModalOpen()) return;
+    const k = e.key || '';
+    if (k === 'PrintScreen' || e.keyCode === 44) {
+      lockPrivacyShield(2800, 'تم رصد مفتاح PrintScreen — تم حجب المستند مؤقتاً للحماية');
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText('مستند محمي — يُمنع التقاط الشاشة أو التداول').catch(() => {});
       }
+    } else if (['Meta', 'OS', 'Shift', 'Alt', 'Control'].includes(k)) {
       clearTimeout(attShieldTimer);
       attShieldTimer = setTimeout(() => {
-        if (document.hasFocus()) setPrivacyShield(false);
-      }, 2500);
+        if (document.hasFocus() && Date.now() >= attShieldLockedUntil) setPrivacyShield(false);
+      }, 600);
+    }
+  }, true);
+
+  // Instant 0ms Shield when cursor leaves the modal window or browser viewport (blocks taskbar Snipping Tool before clicking "New")
+  const modalWin = document.getElementById('attModalWindow');
+  if (modalWin) {
+    modalWin.addEventListener('mouseleave', () => {
+      if (isAttModalOpen()) {
+        setPrivacyShield(true, 'تم إخفاء المستند تلقائياً عند مغادرة مؤشر الماوس لنافذة المرفق');
+      }
+    });
+    modalWin.addEventListener('mouseenter', () => {
+      if (isAttModalOpen() && document.hasFocus() && Date.now() >= attShieldLockedUntil) {
+        setPrivacyShield(false);
+      }
+    });
+    modalWin.addEventListener('mousemove', e => {
+      if (isAttModalOpen() && document.hasFocus() && !e.metaKey && !e.shiftKey && !e.altKey && !e.ctrlKey && Date.now() >= attShieldLockedUntil) {
+        const shield = document.getElementById('attPrivacyShield');
+        if (shield && shield.classList.contains('active')) setPrivacyShield(false);
+      }
+    });
+  }
+
+  document.documentElement.addEventListener('mouseleave', () => {
+    if (isAttModalOpen()) {
+      setPrivacyShield(true, 'تم إخفاء المستند تلقائياً عند خروج المؤشر خارج المتصفح');
     }
   });
 
   // Privacy Shield on focus loss (e.g., Windows Snipping Tool Win+Shift+S, Alt+Tab, external app capture)
   window.addEventListener('blur', () => {
     if (isAttModalOpen()) {
-      setPrivacyShield(true, 'تم حجب المستند تلقائياً لأن نافذة العرض فقدت التركيز');
+      lockPrivacyShield(1200, 'تم حجب المستند تلقائياً لأن نافذة العرض فقدت التركيز');
     }
   });
   window.addEventListener('focus', () => {
-    if (isAttModalOpen()) {
+    if (isAttModalOpen() && Date.now() >= attShieldLockedUntil) {
       setPrivacyShield(false);
     }
   });
   document.addEventListener('visibilitychange', () => {
     if (isAttModalOpen()) {
-      if (document.hidden) setPrivacyShield(true, 'تم حجب المستند تلقائياً عند مغادرة التبويب');
-      else if (document.hasFocus()) setPrivacyShield(false);
+      if (document.hidden) lockPrivacyShield(1200, 'تم حجب المستند تلقائياً عند مغادرة التبويب');
+      else if (document.hasFocus() && Date.now() >= attShieldLockedUntil) setPrivacyShield(false);
     }
   });
 
-  // Ctrl + Mouse Wheel Zoom + Drag-to-Pan inside #attModalBody
+  // Direct Mouse Wheel Zoom + Drag-to-Pan inside #attModalBody
   const modalBody = document.getElementById('attModalBody');
   if (modalBody) {
     modalBody.addEventListener('wheel', e => {
       if (!isAttModalOpen()) return;
-      if (e.ctrlKey || e.metaKey) {
-        e.preventDefault();
-        adjustAttZoom(e.deltaY < 0 ? 0.2 : -0.2);
-      }
+      e.preventDefault();
+      adjustAttZoom(e.deltaY < 0 ? 0.15 : -0.15);
     }, { passive: false });
 
     let isDown = false, startX = 0, startY = 0, sLeft = 0, sTop = 0;
