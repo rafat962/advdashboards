@@ -1716,9 +1716,9 @@
         <canvas id="attCanvas" class="att-modal-canvas"></canvas>
       </div>
       <div class="att-privacy-shield" id="attPrivacyShield">
-        <div class="att-shield-icon">🛡️</div>
-        <div class="att-shield-title">تم حجب المستند مؤقتاً للحماية</div>
-        <div class="att-shield-sub" id="attShieldMsg">تم تفعيل ستار الخصوصية تلقائياً لحماية المرفق عند فقدان التركيز أو محاولة الالتقاط. حرّك الماوس داخل النافذة أو اضغط أدناه للاستمرار بالعرض.</div>
+        <div class="att-shield-icon">🚫</div>
+        <div class="att-shield-title">غير مسموح بأخذ لقطة من الشاشة — ليس من ضمن الصلاحيات</div>
+        <div class="att-shield-sub" id="attShieldMsg">هذا المستند محمي للعرض فقط ولا تملك صلاحية تصوير الشاشة أو النسخ. حرّك المؤشر داخل النافذة أو اضغط أدناه للعودة إلى المعاينة.</div>
         <button class="att-tool-btn" onclick="setPrivacyShield(false)" style="margin-top:6px;padding:5px 14px;border-color:var(--blue);color:#38bdf8;">👁️ إظهار المستند</button>
       </div>
       <div class="att-sec-toast" id="attSecToast">🛡️ هذا المستند محمي للعرض فقط — يُمنع الحفظ أو الطباعة أو النسخ</div>
@@ -3094,11 +3094,11 @@ function drawWatermark(ctx, w, h) {
       if (k === 'PrintScreen' || e.keyCode === 44 || k === 'F12' || ((e.ctrlKey || e.metaKey) && ['c', 'u', 'p', 's', 'i'].includes(k.toLowerCase()))) {
         e.preventDefault();
       }
-      lockPrivacyShield(1800, 'تم حجب المستند فوراً (0ms) عند الضغط على مفاتيح الاختصار أو التصوير (Win / Shift / Alt / PrtScn)');
+      lockPrivacyShield(2200, 'غير مسموح بأخذ لقطة من الشاشة — هذا الإجراء ليس من ضمن الصلاحيات المتاحة.');
       clearTimeout(attShieldTimer);
       attShieldTimer = setTimeout(() => {
         if (document.hasFocus() && Date.now() >= attShieldLockedUntil) setPrivacyShield(false);
-      }, 1850);
+      }, 2250);
       return;
     }
 
@@ -3111,9 +3111,9 @@ function drawWatermark(ctx, w, h) {
     if (!isAttModalOpen()) return;
     const k = e.key || '';
     if (k === 'PrintScreen' || e.keyCode === 44) {
-      lockPrivacyShield(2800, 'تم رصد مفتاح PrintScreen — تم حجب المستند مؤقتاً للحماية');
+      lockPrivacyShield(3000, 'غير مسموح بأخذ لقطة من الشاشة (PrintScreen) — هذا الإجراء ليس من ضمن الصلاحيات.');
       if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText('مستند محمي — يُمنع التقاط الشاشة أو التداول').catch(() => {});
+        navigator.clipboard.writeText('غير مسموح بأخذ لقطة من الشاشة — ليس من ضمن الصلاحيات').catch(() => {});
       }
     } else if (['Meta', 'OS', 'Shift', 'Alt', 'Control'].includes(k)) {
       clearTimeout(attShieldTimer);
@@ -3128,7 +3128,7 @@ function drawWatermark(ctx, w, h) {
   if (modalWin) {
     modalWin.addEventListener('mouseleave', () => {
       if (isAttModalOpen()) {
-        setPrivacyShield(true, 'تم إخفاء المستند تلقائياً عند مغادرة مؤشر الماوس لنافذة المرفق');
+        setPrivacyShield(true, 'غير مسموح بأخذ لقطة من الشاشة — ليس من ضمن الصلاحيات (تم حجب المستند عند مغادرة المؤشر)');
       }
     });
     modalWin.addEventListener('mouseenter', () => {
@@ -3146,14 +3146,14 @@ function drawWatermark(ctx, w, h) {
 
   document.documentElement.addEventListener('mouseleave', () => {
     if (isAttModalOpen()) {
-      setPrivacyShield(true, 'تم إخفاء المستند تلقائياً عند خروج المؤشر خارج المتصفح');
+      setPrivacyShield(true, 'غير مسموح بأخذ لقطة من الشاشة — ليس من ضمن الصلاحيات (تم حجب المستند عند خروج المؤشر)');
     }
   });
 
   // Privacy Shield on focus loss (e.g., Windows Snipping Tool Win+Shift+S, Alt+Tab, external app capture)
   window.addEventListener('blur', () => {
     if (isAttModalOpen()) {
-      lockPrivacyShield(1200, 'تم حجب المستند تلقائياً لأن نافذة العرض فقدت التركيز');
+      lockPrivacyShield(1500, 'غير مسموح بأخذ لقطة من الشاشة — ليس من ضمن الصلاحيات (فقدت نافذة العرض التركيز)');
     }
   });
   window.addEventListener('focus', () => {
@@ -3163,7 +3163,7 @@ function drawWatermark(ctx, w, h) {
   });
   document.addEventListener('visibilitychange', () => {
     if (isAttModalOpen()) {
-      if (document.hidden) lockPrivacyShield(1200, 'تم حجب المستند تلقائياً عند مغادرة التبويب');
+      if (document.hidden) lockPrivacyShield(1500, 'غير مسموح بأخذ لقطة من الشاشة — ليس من ضمن الصلاحيات (تم مغادرة التبويب)');
       else if (document.hasFocus() && Date.now() >= attShieldLockedUntil) setPrivacyShield(false);
     }
   });
