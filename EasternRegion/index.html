@@ -210,12 +210,12 @@
       color: #fff;
     }
 
-    /* KPI Row - Matching Executive Image (Ordered from Left to Right) */
+    /* KPI Row */
     .kpi-grid {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
       gap: 8px;
-      direction: ltr; /* Display left-to-right matching reference image */
+      direction: ltr; /* Left-to-right matching reference */
     }
     .kpi-card {
       background: var(--card-bg);
@@ -230,7 +230,7 @@
       cursor: pointer;
       transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
       position: relative;
-      direction: rtl; /* Text inside card is RTL */
+      direction: rtl;
     }
     .kpi-card.total-card {
       border: 1.5px solid rgba(56, 189, 248, 0.5);
@@ -319,7 +319,7 @@
     .main-grid {
       display: grid;
       grid-template-columns: 1fr 540px;
-      direction: ltr; /* Left side = Map, Right side = Charts */
+      direction: ltr; /* Map Left, Charts Right */
       gap: 10px;
       flex: 1;
       min-height: calc(100vh - 195px);
@@ -335,7 +335,7 @@
       overflow: hidden;
       backdrop-filter: blur(10px);
       position: relative;
-      direction: rtl; /* UI inside map is RTL */
+      direction: rtl;
     }
     .map-toolbar {
       display: flex;
@@ -396,7 +396,7 @@
       grid-template-columns: 1fr 1fr;
       grid-template-rows: 1fr 1fr;
       gap: 8px;
-      direction: rtl; /* Charts are rendered RTL */
+      direction: rtl;
     }
     .chart-box {
       background: var(--card-bg);
@@ -425,9 +425,25 @@
       font-weight: 700;
       color: #fff;
     }
-    .chart-head .hint {
+    .chart-actions {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .btn-chart-mode {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: var(--text-dim);
+      border-radius: 4px;
+      padding: 1px 6px;
       font-size: 10px;
-      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .btn-chart-mode:hover, .btn-chart-mode.active {
+      background: rgba(56, 189, 248, 0.2);
+      border-color: var(--blue);
+      color: #fff;
     }
     .chart-canvas-wrap {
       flex: 1;
@@ -759,18 +775,24 @@
       <div class="chart-box">
         <div class="chart-head">
           <h3>أعداد المواقع بالبلدية</h3>
-          <span class="hint">اضغط للتصفية</span>
+          <div class="chart-actions">
+            <button class="btn-chart-mode active" id="btnMuniBar" onclick="toggleMuniChart('bar')">📊 أعمدة</button>
+            <button class="btn-chart-mode" id="btnMuniPie" onclick="toggleMuniChart('pie')">🍩 دائري</button>
+          </div>
         </div>
         <div class="chart-canvas-wrap">
           <canvas id="chartMunicipalities"></canvas>
         </div>
       </div>
 
-      <!-- Chart 2 (Top Right in charts section): أعداد المواقع بالعقد (Horizontal Bar) -->
+      <!-- Chart 2 (Top Right in charts section): توزيع اللوحات بالعقد (Doughnut / Pie Chart by Default!) -->
       <div class="chart-box">
         <div class="chart-head">
-          <h3>أعداد المواقع بالعقد</h3>
-          <span class="hint">اضغط للتصفية</span>
+          <h3>توزيع اللوحات بالعقد</h3>
+          <div class="chart-actions">
+            <button class="btn-chart-mode active" id="btnTypePie" onclick="toggleTypeChart('doughnut')">🍩 دائري</button>
+            <button class="btn-chart-mode" id="btnTypeBar" onclick="toggleTypeChart('bar')">📊 أشرطة</button>
+          </div>
         </div>
         <div class="chart-canvas-wrap">
           <canvas id="chartAdvTypes"></canvas>
@@ -781,7 +803,10 @@
       <div class="chart-box">
         <div class="chart-head">
           <h3>مصدر العوائق بالعقد</h3>
-          <span class="hint">اضغط للتصفية</span>
+          <div class="chart-actions">
+            <button class="btn-chart-mode active" id="btnObstBar" onclick="toggleObstChart('bar')">📊 أشرطة</button>
+            <button class="btn-chart-mode" id="btnObstPie" onclick="toggleObstChart('doughnut')">🍩 دائري</button>
+          </div>
         </div>
         <div class="chart-canvas-wrap">
           <canvas id="chartObstacles"></canvas>
@@ -792,7 +817,10 @@
       <div class="chart-box">
         <div class="chart-head">
           <h3>حالة الموقع</h3>
-          <span class="hint">اضغط للتصفية</span>
+          <div class="chart-actions">
+            <button class="btn-chart-mode active" id="btnStatBar" onclick="toggleStatChart('bar')">📊 أشرطة</button>
+            <button class="btn-chart-mode" id="btnStatPie" onclick="toggleStatChart('doughnut')">🍩 دائري</button>
+          </div>
         </div>
         <div class="chart-canvas-wrap">
           <canvas id="chartStatuses"></canvas>
@@ -898,6 +926,10 @@ let filters = {
 let colorMode = 'type'; // 'type' or 'status'
 let map, markerLayer, basemapLayers = {};
 let chartMuni, chartType, chartObst, chartStat;
+let chartMuniMode = 'bar';
+let chartTypeMode = 'doughnut'; // Default DOUGHNUT chart for visual diversity!
+let chartObstMode = 'bar';
+let chartStatMode = 'bar';
 
 /* Helper: compute obstacle source for a site */
 function getSiteObstacleSource(s) {
@@ -1019,131 +1051,274 @@ function setKpiFilter(k) {
 }
 
 /* ===================================================================
-   CHART.JS IMPLEMENTATION
+   CHART.JS IMPLEMENTATION (WITH PIE / DOUGHNUT SUPPORT)
    =================================================================== */
-function initCharts() {
-  Chart.defaults.font.family = "'Cairo', sans-serif";
-  Chart.defaults.color = '#94a3b8';
-
-  const commonOptions = {
+function getCommonChartOptions() {
+  return {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
-      legend: { display: false },
+      legend: {
+        display: false,
+        position: 'right',
+        labels: {
+          color: '#cbd5e1',
+          font: { family: "'Cairo', sans-serif", size: 11, weight: 'bold' },
+          boxWidth: 10,
+          padding: 8
+        }
+      },
       tooltip: {
         backgroundColor: '#0f172a',
         borderColor: 'rgba(56, 189, 248, 0.4)',
         borderWidth: 1,
         titleColor: '#fff',
         bodyColor: '#38bdf8',
-        bodyFont: { family: "'Cairo', sans-serif", weight: 'bold' }
+        bodyFont: { family: "'Cairo', sans-serif", weight: 'bold' },
+        callbacks: {
+          label: function(ctx) {
+            const val = ctx.raw || 0;
+            const total = ctx.dataset.data.reduce((a,b) => a + b, 0);
+            const pct = total ? Math.round(val * 100 / total) : 0;
+            return ` ${val.toLocaleString('en-US')} موقع (${pct}%)`;
+          }
+        }
       }
     }
   };
+}
 
-  // 1. Municipalities (Vertical Bar) - Matching Top Left
-  const ctxMuni = document.getElementById('chartMunicipalities').getContext('2d');
-  chartMuni = new Chart(ctxMuni, {
-    type: 'bar',
-    data: { labels: ['الخبر', 'الدمام', 'الظهران'], datasets: [{ data: [352, 533, 74], backgroundColor: '#38bdf8', borderRadius: 3 }] },
-    options: {
-      ...commonOptions,
-      scales: {
-        x: { grid: { display: false }, ticks: { font: { weight: 'bold' } } },
-        y: { grid: { color: 'rgba(255, 255, 255, 0.06)' }, beginAtZero: true, max: 600 }
-      },
-      onClick: (e, elements) => {
-        if (!elements.length) return;
-        const idx = elements[0].index;
-        const val = chartMuni.data.labels[idx];
-        filters.bal = filters.bal === val ? null : val;
-        applyFilters();
+function buildMuniChartConfig(mode) {
+  const common = getCommonChartOptions();
+  if (mode === 'pie' || mode === 'doughnut') {
+    return {
+      type: 'doughnut',
+      data: { labels: ['الخبر', 'الدمام', 'الظهران'], datasets: [{ data: [352, 533, 74], backgroundColor: ['#38bdf8', '#0ea5e9', '#60a5fa'], borderWidth: 2, borderColor: '#0f172a', hoverOffset: 6 }] },
+      options: {
+        ...common,
+        cutout: '60%',
+        plugins: { ...common.plugins, legend: { display: true, position: 'right' } },
+        onClick: (e, elements) => {
+          if (!elements.length) return;
+          const idx = elements[0].index;
+          const val = chartMuni.data.labels[idx];
+          filters.bal = filters.bal === val ? null : val;
+          applyFilters();
+        }
       }
-    }
-  });
+    };
+  } else {
+    return {
+      type: 'bar',
+      data: { labels: ['الخبر', 'الدمام', 'الظهران'], datasets: [{ data: [352, 533, 74], backgroundColor: '#38bdf8', borderRadius: 3 }] },
+      options: {
+        ...common,
+        scales: {
+          x: { grid: { display: false }, ticks: { font: { weight: 'bold' } } },
+          y: { grid: { color: 'rgba(255, 255, 255, 0.06)' }, beginAtZero: true, max: 600 }
+        },
+        onClick: (e, elements) => {
+          if (!elements.length) return;
+          const idx = elements[0].index;
+          const val = chartMuni.data.labels[idx];
+          filters.bal = filters.bal === val ? null : val;
+          applyFilters();
+        }
+      }
+    };
+  }
+}
 
-  // 2. Contract Adv Types (Horizontal Bar) - Matching Top Right
-  const ctxType = document.getElementById('chartAdvTypes').getContext('2d');
-  chartType = new Chart(ctxType, {
-    type: 'bar',
-    data: {
-      labels: ['جسور وأنفاق', 'موبي', 'ميجاكوم', 'يونيبول'],
-      datasets: [{ data: [32, 600, 256, 91], backgroundColor: ['#a855f7', '#a3e635', '#3b82f6', '#06b6d4'], borderRadius: 3 }]
-    },
-    options: {
-      ...commonOptions,
-      indexAxis: 'y',
-      scales: {
-        y: { grid: { display: false }, ticks: { font: { weight: 'bold' } } },
-        x: { grid: { color: 'rgba(255, 255, 255, 0.06)' }, beginAtZero: true }
-      },
-      onClick: (e, elements) => {
-        if (!elements.length) return;
-        const idx = elements[0].index;
-        const val = chartType.data.labels[idx];
-        filters.type = filters.type === val ? null : val;
-        applyFilters();
-      }
-    }
-  });
+function buildTypeChartConfig(mode) {
+  const common = getCommonChartOptions();
+  const typeOrder = ['موبي', 'ميجاكوم', 'يونيبول', 'جسور وأنفاق'];
+  const colors = ['#a3e635', '#3b82f6', '#06b6d4', '#a855f7'];
 
-  // 3. Obstacle Sources (Horizontal Bar) - Matching Bottom Left
-  const ctxObst = document.getElementById('chartObstacles').getContext('2d');
-  chartObst = new Chart(ctxObst, {
-    type: 'bar',
-    data: {
-      labels: ['اشتراطات مكانية', 'اشتراطات مكانية + المقاول', 'الاستشاري', 'الاستشاري + المقاول', 'المقاول'],
-      datasets: [{ data: [75, 4, 150, 18, 45], backgroundColor: '#c026d3', borderRadius: 3 }]
-    },
-    options: {
-      ...commonOptions,
-      indexAxis: 'y',
-      scales: {
-        y: { grid: { display: false }, ticks: { font: { weight: 'bold' } } },
-        x: { grid: { color: 'rgba(255, 255, 255, 0.06)' }, beginAtZero: true, max: 200 }
-      },
-      onClick: (e, elements) => {
-        if (!elements.length) return;
-        const idx = elements[0].index;
-        const val = chartObst.data.labels[idx];
-        filters.obstacleSource = filters.obstacleSource === val ? null : val;
-        applyFilters();
+  if (mode === 'doughnut' || mode === 'pie') {
+    return {
+      type: 'doughnut',
+      data: { labels: typeOrder, datasets: [{ data: [600, 256, 91, 32], backgroundColor: colors, borderWidth: 2, borderColor: '#0f172a', hoverOffset: 6 }] },
+      options: {
+        ...common,
+        cutout: '58%',
+        plugins: { ...common.plugins, legend: { display: true, position: 'right', labels: { boxWidth: 10, padding: 6, font: { size: 10.5, family: "'Cairo', sans-serif" } } } },
+        onClick: (e, elements) => {
+          if (!elements.length) return;
+          const idx = elements[0].index;
+          const val = chartType.data.labels[idx];
+          filters.type = filters.type === val ? null : val;
+          applyFilters();
+        }
       }
-    }
-  });
+    };
+  } else {
+    return {
+      type: 'bar',
+      data: { labels: typeOrder, datasets: [{ data: [600, 256, 91, 32], backgroundColor: colors, borderRadius: 3 }] },
+      options: {
+        ...common,
+        indexAxis: 'y',
+        scales: {
+          y: { grid: { display: false }, ticks: { font: { weight: 'bold' } } },
+          x: { grid: { color: 'rgba(255, 255, 255, 0.06)' }, beginAtZero: true }
+        },
+        onClick: (e, elements) => {
+          if (!elements.length) return;
+          const idx = elements[0].index;
+          const val = chartType.data.labels[idx];
+          filters.type = filters.type === val ? null : val;
+          applyFilters();
+        }
+      }
+    };
+  }
+}
 
-  // 4. Site Status (Horizontal Bar) - Matching Bottom Right
-  const ctxStat = document.getElementById('chartStatuses').getContext('2d');
-  chartStat = new Chart(ctxStat, {
-    type: 'bar',
-    data: {
-      labels: ['إزالة الموقع', 'ايقاف الموقع', 'تم التشغيل', 'جاري العمل', 'عوائق', 'غير منفذ', 'متوقف بطلب المالك', 'يجب إعادة التحقق'],
-      datasets: [{
-        data: [3, 10, 69, 5, 269, 615, 5, 4],
-        backgroundColor: ['#ef4444', '#f97316', '#fb923c', '#eab308', '#2dd4bf', '#c084fc', '#64748b', '#ec4899'],
-        borderRadius: 3
-      }]
-    },
-    options: {
-      ...commonOptions,
-      indexAxis: 'y',
-      scales: {
-        y: { grid: { display: false }, ticks: { font: { weight: 'bold' } } },
-        x: { grid: { color: 'rgba(255, 255, 255, 0.06)' }, beginAtZero: true }
-      },
-      onClick: (e, elements) => {
-        if (!elements.length) return;
-        const idx = elements[0].index;
-        const val = chartStat.data.labels[idx];
-        filters.status = filters.status === val ? null : val;
-        applyFilters();
+function buildObstChartConfig(mode) {
+  const common = getCommonChartOptions();
+  const labels = ['اشتراطات مكانية', 'اشتراطات مكانية + المقاول', 'الاستشاري', 'الاستشاري + المقاول', 'المقاول'];
+  const colors = ['#c026d3', '#d946ef', '#a855f7', '#9333ea', '#7e22ce'];
+
+  if (mode === 'doughnut' || mode === 'pie') {
+    return {
+      type: 'doughnut',
+      data: { labels: labels, datasets: [{ data: [75, 4, 150, 18, 45], backgroundColor: colors, borderWidth: 2, borderColor: '#0f172a', hoverOffset: 6 }] },
+      options: {
+        ...common,
+        cutout: '55%',
+        plugins: { ...common.plugins, legend: { display: true, position: 'right', labels: { boxWidth: 9, padding: 5, font: { size: 9.5, family: "'Cairo', sans-serif" } } } },
+        onClick: (e, elements) => {
+          if (!elements.length) return;
+          const idx = elements[0].index;
+          const val = chartObst.data.labels[idx];
+          filters.obstacleSource = filters.obstacleSource === val ? null : val;
+          applyFilters();
+        }
       }
-    }
-  });
+    };
+  } else {
+    return {
+      type: 'bar',
+      data: { labels: labels, datasets: [{ data: [75, 4, 150, 18, 45], backgroundColor: '#c026d3', borderRadius: 3 }] },
+      options: {
+        ...common,
+        indexAxis: 'y',
+        scales: {
+          y: { grid: { display: false }, ticks: { font: { weight: 'bold', size: 10 } } },
+          x: { grid: { color: 'rgba(255, 255, 255, 0.06)' }, beginAtZero: true, max: 200 }
+        },
+        onClick: (e, elements) => {
+          if (!elements.length) return;
+          const idx = elements[0].index;
+          const val = chartObst.data.labels[idx];
+          filters.obstacleSource = filters.obstacleSource === val ? null : val;
+          applyFilters();
+        }
+      }
+    };
+  }
+}
+
+function buildStatChartConfig(mode) {
+  const common = getCommonChartOptions();
+  const statOrder = ['إزالة الموقع', 'ايقاف الموقع', 'تم التشغيل', 'جاري العمل', 'عوائق', 'غير منفذ', 'متوقف بطلب المالك', 'يجب إعادة التحقق'];
+  const colors = ['#ef4444', '#f97316', '#fb923c', '#eab308', '#2dd4bf', '#c084fc', '#64748b', '#ec4899'];
+
+  if (mode === 'doughnut' || mode === 'pie') {
+    return {
+      type: 'doughnut',
+      data: { labels: statOrder, datasets: [{ data: [3, 10, 69, 5, 269, 615, 5, 4], backgroundColor: colors, borderWidth: 2, borderColor: '#0f172a', hoverOffset: 6 }] },
+      options: {
+        ...common,
+        cutout: '55%',
+        plugins: { ...common.plugins, legend: { display: true, position: 'right', labels: { boxWidth: 9, padding: 5, font: { size: 9.5, family: "'Cairo', sans-serif" } } } },
+        onClick: (e, elements) => {
+          if (!elements.length) return;
+          const idx = elements[0].index;
+          const val = chartStat.data.labels[idx];
+          filters.status = filters.status === val ? null : val;
+          applyFilters();
+        }
+      }
+    };
+  } else {
+    return {
+      type: 'bar',
+      data: { labels: statOrder, datasets: [{ data: [3, 10, 69, 5, 269, 615, 5, 4], backgroundColor: colors, borderRadius: 3 }] },
+      options: {
+        ...common,
+        indexAxis: 'y',
+        scales: {
+          y: { grid: { display: false }, ticks: { font: { weight: 'bold', size: 10 } } },
+          x: { grid: { color: 'rgba(255, 255, 255, 0.06)' }, beginAtZero: true }
+        },
+        onClick: (e, elements) => {
+          if (!elements.length) return;
+          const idx = elements[0].index;
+          const val = chartStat.data.labels[idx];
+          filters.status = filters.status === val ? null : val;
+          applyFilters();
+        }
+      }
+    };
+  }
+}
+
+function initCharts() {
+  Chart.defaults.font.family = "'Cairo', sans-serif";
+  Chart.defaults.color = '#94a3b8';
+
+  // 1. Municipalities (Bar by default)
+  chartMuni = new Chart(document.getElementById('chartMunicipalities').getContext('2d'), buildMuniChartConfig(chartMuniMode));
+
+  // 2. Adv Types (Doughnut / Pie by default for visual diversity!)
+  chartType = new Chart(document.getElementById('chartAdvTypes').getContext('2d'), buildTypeChartConfig(chartTypeMode));
+
+  // 3. Obstacle Sources (Bar by default)
+  chartObst = new Chart(document.getElementById('chartObstacles').getContext('2d'), buildObstChartConfig(chartObstMode));
+
+  // 4. Statuses (Bar by default)
+  chartStat = new Chart(document.getElementById('chartStatuses').getContext('2d'), buildStatChartConfig(chartStatMode));
+}
+
+function toggleMuniChart(mode) {
+  chartMuniMode = mode;
+  document.getElementById('btnMuniBar').classList.toggle('active', mode === 'bar');
+  document.getElementById('btnMuniPie').classList.toggle('active', mode === 'pie');
+  chartMuni.destroy();
+  chartMuni = new Chart(document.getElementById('chartMunicipalities').getContext('2d'), buildMuniChartConfig(mode));
+  updateChartsData(getFilteredData());
+}
+
+function toggleTypeChart(mode) {
+  chartTypeMode = mode;
+  document.getElementById('btnTypePie').classList.toggle('active', mode === 'doughnut');
+  document.getElementById('btnTypeBar').classList.toggle('active', mode === 'bar');
+  chartType.destroy();
+  chartType = new Chart(document.getElementById('chartAdvTypes').getContext('2d'), buildTypeChartConfig(mode));
+  updateChartsData(getFilteredData());
+}
+
+function toggleObstChart(mode) {
+  chartObstMode = mode;
+  document.getElementById('btnObstBar').classList.toggle('active', mode === 'bar');
+  document.getElementById('btnObstPie').classList.toggle('active', mode === 'doughnut');
+  chartObst.destroy();
+  chartObst = new Chart(document.getElementById('chartObstacles').getContext('2d'), buildObstChartConfig(mode));
+  updateChartsData(getFilteredData());
+}
+
+function toggleStatChart(mode) {
+  chartStatMode = mode;
+  document.getElementById('btnStatBar').classList.toggle('active', mode === 'bar');
+  document.getElementById('btnStatPie').classList.toggle('active', mode === 'doughnut');
+  chartStat.destroy();
+  chartStat = new Chart(document.getElementById('chartStatuses').getContext('2d'), buildStatChartConfig(mode));
+  updateChartsData(getFilteredData());
 }
 
 function updateChartsData(filtered) {
-  // 1. Municipalities: الخبر, الدمام, الظهران
+  // 1. Municipalities
   const muniCounts = { 'الخبر': 0, 'الدمام': 0, 'الظهران': 0 };
   filtered.forEach(s => {
     const b = s.bal || '';
@@ -1153,12 +1328,14 @@ function updateChartsData(filtered) {
   });
   chartMuni.data.labels = ['الخبر', 'الدمام', 'الظهران'];
   chartMuni.data.datasets[0].data = [muniCounts['الخبر'], muniCounts['الدمام'], muniCounts['الظهران']];
-  chartMuni.data.datasets[0].backgroundColor = ['الخبر', 'الدمام', 'الظهران'].map(k => k === filters.bal ? '#60a5fa' : '#38bdf8');
+  if (chartMuniMode === 'bar') {
+    chartMuni.data.datasets[0].backgroundColor = ['الخبر', 'الدمام', 'الظهران'].map(k => k === filters.bal ? '#60a5fa' : '#38bdf8');
+  }
   chartMuni.update();
 
   // 2. Adv Types
-  const typeOrder = ['جسور وأنفاق', 'موبي', 'ميجاكوم', 'يونيبول'];
-  const typeCounts = { 'جسور وأنفاق': 0, 'موبي': 0, 'ميجاكوم': 0, 'يونيبول': 0 };
+  const typeOrder = ['موبي', 'ميجاكوم', 'يونيبول', 'جسور وأنفاق'];
+  const typeCounts = { 'موبي': 0, 'ميجاكوم': 0, 'يونيبول': 0, 'جسور وأنفاق': 0 };
   filtered.forEach(s => {
     if (typeCounts[s.type] !== undefined) typeCounts[s.type]++;
   });
@@ -1176,10 +1353,12 @@ function updateChartsData(filtered) {
   });
   chartObst.data.labels = obstOrder;
   chartObst.data.datasets[0].data = obstOrder.map(o => obstCounts[o]);
-  chartObst.data.datasets[0].backgroundColor = obstOrder.map(o => o === filters.obstacleSource ? '#e879f9' : '#c026d3');
+  if (chartObstMode === 'bar') {
+    chartObst.data.datasets[0].backgroundColor = obstOrder.map(o => o === filters.obstacleSource ? '#e879f9' : '#c026d3');
+  }
   chartObst.update();
 
-  // 4. Statuses in exact order
+  // 4. Statuses
   const statOrder = ['إزالة الموقع', 'ايقاف الموقع', 'تم التشغيل', 'جاري العمل', 'عوائق', 'غير منفذ', 'متوقف بطلب المالك', 'يجب إعادة التحقق'];
   const statCounts = {};
   statOrder.forEach(k => statCounts[k] = 0);
@@ -1392,7 +1571,6 @@ async function openAttachment(fileKey, title, type) {
   modalIcon.textContent = type === 'pdf' ? '📕' : '🖼️';
   pdfControls.style.display = 'none';
 
-  // Draw loading state on canvas
   canvas.width = 600;
   canvas.height = 300;
   ctx.fillStyle = '#0f172a';
@@ -1436,7 +1614,7 @@ async function renderPDFDoc(blob) {
     cMapUrl: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@4.0.379/cmaps/',
     cMapPacked: true,
     standardFontDataUrl: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@4.0.379/standard_fonts/',
-    disableFontFace: true, // Fix Arabic letters disconnected / corrupted
+    disableFontFace: true, // Fix Arabic letters
     enableXfa: true
   });
 
@@ -1461,10 +1639,8 @@ async function renderPDFPage() {
 
   await page.render({ canvasContext: ctx, viewport: viewport }).promise;
 
-  // Security Watermark
   drawWatermark(ctx, canvas.width, canvas.height);
 
-  // Update Controls
   document.getElementById('pdfPageLabel').textContent = `${currentPDFPage} / ${currentPDFTotalPages}`;
   document.getElementById('btnPdfPrev').disabled = currentPDFPage <= 1;
   document.getElementById('btnPdfNext').disabled = currentPDFPage >= currentPDFTotalPages;
