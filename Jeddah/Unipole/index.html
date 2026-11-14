@@ -1746,6 +1746,59 @@
       window.__pdfjsLib = pdfjsLib;
     } catch (e) { console.warn('PDF.js load failed:', e); }
   </script>
+<style id="mapkey-css">
+.mapkey{direction:rtl;font-family:Cairo,Tajawal,system-ui,sans-serif;background:rgba(8,16,36,.88);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border:1px solid rgba(212,168,83,.45);border-radius:10px;color:#e8ecf6;min-width:150px;max-width:250px;box-shadow:0 6px 18px rgba(0,0,0,.45);font-size:11.5px;line-height:1.5;overflow:hidden}
+.mapkey .mk-h{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:6px 10px;cursor:pointer;user-select:none;background:rgba(212,168,83,.12);border-bottom:1px solid rgba(212,168,83,.25)}
+.mapkey .mk-h b{color:#f0d48e;font-size:12px;font-weight:800}
+.mapkey .mk-h span{color:#f0d48e;font-size:10px;transition:transform .2s}
+.mapkey.closed .mk-h{border-bottom:0}
+.mapkey.closed .mk-h span{transform:rotate(180deg)}
+.mapkey.closed .mk-b{display:none}
+.mapkey .mk-b{padding:6px 10px 8px;max-height:240px;overflow:auto}
+.mapkey .mk-sub{color:#9fb0cf;font-size:10.5px;margin-bottom:3px}
+.mapkey .mk-r{display:flex;align-items:center;gap:7px;padding:2px 0}
+.mapkey .mk-r .mk-l{flex:1}
+.mapkey .mk-r .mk-n{color:#9fb0cf;font-family:'JetBrains Mono',monospace;font-size:10.5px}
+.mapkey .mk-s{flex:0 0 16px;display:inline-flex;justify-content:center;align-items:center}
+.mapkey .mk-note{margin-top:4px;padding-top:4px;border-top:1px dashed rgba(255,255,255,.15);color:#9fb0cf;font-size:10.5px}
+</style>
+<script id="mapkey-js">
+(function(){
+  function sym(it){
+    const c=it.c||'#94a3c4', s=it.s||'pin';
+    if(s==='dot') return it.ring ? `<svg width="16" height="16"><circle cx="8" cy="8" r="5.5" fill="${c}" fill-opacity=".15" stroke="${c}" stroke-width="2.4"/></svg>` : `<svg width="14" height="14"><circle cx="7" cy="7" r="5" fill="${c}" stroke="#fff" stroke-width="1.5"/></svg>`;
+    if(s==='line') return `<svg width="16" height="10"><line x1="1" y1="5" x2="15" y2="5" stroke="${c}" stroke-width="2.5" stroke-dasharray="${it.dash||''}"/></svg>`;
+    if(s==='area') return `<svg width="16" height="12"><rect x="1" y="1" width="14" height="10" rx="2" fill="${c}" fill-opacity=".35" stroke="${c}" stroke-width="1.6"/></svg>`;
+    return `<svg width="12" height="16" viewBox="0 0 24 33"><path d="M12 1.5C6.2 1.5 1.5 6.1 1.5 11.8c0 7.6 9.1 18.3 9.9 19.2a.8.8 0 0 0 1.2 0c.8-.9 9.9-11.6 9.9-19.2C22.5 6.1 17.8 1.5 12 1.5z" fill="${c}" stroke="#fff" stroke-width="2"/><circle cx="12" cy="11.8" r="4" fill="#fff" fill-opacity=".85"/></svg>`;
+  }
+  function render(el,items,sub,note){
+    el.querySelector('.mk-b').innerHTML=(sub?`<div class="mk-sub">${sub}</div>`:'')+
+      (items||[]).map(it=>`<div class="mk-r"><span class="mk-s">${sym(it)}</span><span class="mk-l">${it.l}</span>${it.n!=null?`<span class="mk-n">${it.n}</span>`:''}</div>`).join('')+
+      (note?`<div class="mk-note">${note}</div>`:'');
+  }
+  function build(title){
+    const el=document.createElement('div'); el.className='mapkey';
+    el.innerHTML=`<div class="mk-h" title="إظهار/إخفاء مفتاح الخريطة"><b>🗺️ ${title||'مفتاح الخريطة'}</b><span>▾</span></div><div class="mk-b"></div>`;
+    if(window.innerWidth<640) el.classList.add('closed');
+    el.querySelector('.mk-h').onclick=e=>{e.stopPropagation();el.classList.toggle('closed');};
+    return el;
+  }
+  /* Leaflet: const k = mapKey(map,{position:'bottomleft'}); k.set(items, subtitle, note) */
+  window.mapKey=function(map,opt){
+    opt=opt||{}; const el=build(opt.title);
+    const C=L.Control.extend({options:{position:opt.position||'bottomleft'},onAdd:function(){L.DomEvent.disableClickPropagation(el);L.DomEvent.disableScrollPropagation(el);return el;}});
+    new C().addTo(map);
+    return {el:el,set:(items,sub,note)=>render(el,items,sub,note)};
+  };
+  /* Plain container (non-Leaflet maps) */
+  window.mapKeyIn=function(host,opt){
+    opt=opt||{}; const el=build(opt.title); el.style.position='absolute'; Object.assign(el.style,opt.style||{left:'10px',bottom:'10px'}); el.style.zIndex=5;
+    host.appendChild(el);
+    return {el:el,set:(items,sub,note)=>render(el,items,sub,note)};
+  };
+})();
+</script>
+
 </head>
 
 <body>
@@ -2322,9 +2375,12 @@
         const b = document.createElement('button');
         b.className = 'chip' + (l.on ? '' : ' off');
         b.innerHTML = `<i style="background:${l.color}"></i>${n}`;
-        b.onclick = () => { l.on = !l.on; b.classList.toggle('off', !l.on); l.on ? l.g.addTo(map) : map.removeLayer(l.g); };
+        b.onclick = () => { l.on = !l.on; b.classList.toggle('off', !l.on); l.on ? l.g.addTo(map) : map.removeLayer(l.g); refreshKey(); };
         chips.appendChild(b);
       });
+      const _uk = mapKey(map);
+      const refreshKey = () => _uk.set(Object.entries(layers).filter(([n, l]) => l.on).map(([n, l]) => ({ c: l.color, l: n })), 'الطبقات الظاهرة', 'فعّل/أخفِ الطبقات من الأزرار أعلى الخريطة');
+      refreshKey();
     } catch (err) {
       console.warn('map unavailable', err);
       $('#map').innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--muted);text-align:center;padding:24px">تعذّر تحميل الخريطة.<br>بقية لوحة المعلومات تعمل بشكل طبيعي.</div>';
