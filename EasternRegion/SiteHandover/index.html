@@ -1286,7 +1286,13 @@ async function renderPDF(buffer, canvas, ctx, userIdentity) {
     throw new Error('مكتبة PDF.js غير محملة. يرجى تحديث الصفحة.');
   }
 
-  const loadingTask = pdfjsLib.getDocument({ data: new Uint8Array(buffer) });
+  const loadingTask = pdfjsLib.getDocument({
+    data: new Uint8Array(buffer),
+    cMapUrl: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@4.0.379/cmaps/',
+    cMapPacked: true,
+    standardFontDataUrl: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@4.0.379/standard_fonts/',
+    enableXfa: true
+  });
   const pdf = await loadingTask.promise;
   const page = await pdf.getPage(1);
 

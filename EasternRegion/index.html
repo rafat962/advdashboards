@@ -1482,7 +1482,13 @@ async function renderPDF(blob) {
   }
 
   const arrayBuffer = await blob.arrayBuffer();
-  const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
+  const loadingTask = pdfjsLib.getDocument({
+    data: arrayBuffer,
+    cMapUrl: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@4.0.379/cmaps/',
+    cMapPacked: true,
+    standardFontDataUrl: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@4.0.379/standard_fonts/',
+    enableXfa: true
+  });
   currentPDFDoc = await loadingTask.promise;
   currentPDFTotalPages = currentPDFDoc.numPages;
   currentPDFPage = 1;
