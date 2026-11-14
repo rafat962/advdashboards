@@ -3368,6 +3368,27 @@ body.viewing{overflow:hidden}
 #pdfPages{display:none;flex-direction:column;align-items:center;gap:14px;padding:18px}
 .vbody.pdfmode #pdfPages{display:flex}
 #pdfPages img{max-width:min(1100px,100%);height:auto!important;background:#fff;box-shadow:0 8px 24px rgba(0,0,0,.45);border-radius:4px}
+@media(min-width:1151px){header{display:grid!important;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);column-gap:18px}
+header>.brand{justify-self:start;min-width:0}
+header>.htitle{position:static!important;transform:none!important;left:auto!important;justify-self:center;text-align:center;flex:none!important}
+header>.htitle .sub{justify-content:center}
+header>.hactions{justify-self:end;min-width:0}}
+header .logout span{display:none!important}header .logout{padding:9px 11px!important;gap:0!important}
+#betaBtn{background:repeating-linear-gradient(135deg,rgba(240,191,90,.30) 0 7px,rgba(10,16,32,.92) 7px 14px)!important;border:1.5px dashed #f0bf5a!important;color:#ffe2a3!important;box-shadow:0 0 0 3px rgba(240,191,90,.10),0 0 16px rgba(240,191,90,.25)!important;text-shadow:0 1px 2px #000}
+#betaBtn:hover{border-style:solid!important;box-shadow:0 0 0 3px rgba(240,191,90,.22),0 0 22px rgba(240,191,90,.4)!important}
+#betaBtn svg{color:#f0bf5a}
+#betaBtn .betab{position:relative;padding-inline-start:16px}
+#betaBtn .betab::before{content:"";position:absolute;inset-inline-start:6px;top:50%;width:6px;height:6px;margin-top:-3px;border-radius:50%;background:#fff;animation:betaPulse 1.4s ease-in-out infinite}
+@keyframes betaPulse{0%,100%{opacity:1}50%{opacity:.25}}
+.betadd{position:relative;display:inline-block}
+.betadd .betacar{transition:transform .2s;margin-inline-start:2px}.betadd.open .betacar{transform:rotate(180deg)}
+.betamenu{display:none;position:absolute;top:calc(100% + 8px);right:0;min-width:250px;z-index:3000;background:rgba(6,17,41,.97);border:1px solid rgba(212,168,83,.45);border-radius:12px;box-shadow:0 14px 34px rgba(0,0,0,.55);padding:6px;direction:rtl}
+.betadd.open .betamenu{display:block}
+.betahd{font-size:11px;font-weight:800;color:#ffb3ab;padding:4px 10px 6px;border-bottom:1px solid rgba(255,255,255,.08);margin-bottom:4px}
+.betait{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:9px;color:#eef2fa;text-decoration:none}
+.betait:hover{background:rgba(212,168,83,.12)}.betait svg{color:#f0d48e;flex:none}
+.betait span{display:flex;flex-direction:column;line-height:1.35}.betait b{font-size:13px}.betait small{font-size:11px;color:#94a3c4}
+.betab{font-style:normal;font-size:10.5px;font-weight:800;line-height:1.5;padding:0 7px;border-radius:999px;background:#c0392b;color:#fff;border:1px solid #e0685c;margin-inline-start:6px;white-space:nowrap}
 </style>
     <style id="mapkey-css">
 .mapkey{direction:rtl;font-family:Cairo,Tajawal,system-ui,sans-serif;background:rgba(8,16,36,.88);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border:1px solid rgba(212,168,83,.45);border-radius:10px;color:#e8ecf6;min-width:150px;max-width:250px;box-shadow:0 6px 18px rgba(0,0,0,.45);font-size:11.5px;line-height:1.5;overflow:hidden}
@@ -3423,7 +3444,7 @@ body.viewing{overflow:hidden}
 </script>
 
 <style id="mapkey-portal">
-.hero-map .mapkey{font-size:10.5px;max-width:none;min-width:0;border-radius:10px;line-height:1.4}
+.hero-map .mapkey{box-sizing:border-box;font-size:10.5px;max-width:none;min-width:0;border-radius:10px;line-height:1.4}
 .hero-map .mapkey .mk-h{padding:4px 12px}
 .hero-map .mapkey .mk-h b{font-size:11px}
 .hero-map .mapkey .mk-b{display:flex;flex-wrap:wrap;align-items:center;gap:4px 16px;padding:6px 12px 7px;max-height:none}
@@ -3618,9 +3639,8 @@ body.viewing{overflow:hidden}
                 </div>
             </div>
             <div class="hactions">
-                <a class="formsbtn dlink finbtn" href="Finance/index.html" data-title="لوحة المتابعة المالية" style="text-decoration:none"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/><path d="M15 8h4v4"/></svg><span>المتابعة المالية</span></a
-                >
-                <a class="formsbtn dlink finbtn" href="Procurement/index.html" data-title="متابعة طلبات الشراء" style="text-decoration:none"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12l2 2 4-4"/></svg><span>طلبات الشراء</span></a>                <button class="formsbtn" id="formsBtn" type="button">
+                <div class="betadd" id="betaDD"><button class="formsbtn" id="betaBtn" type="button" aria-haspopup="true" aria-expanded="false" title="صفحات تجريبية — قيد التطوير"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6M10 3v6L4.5 18.5A1.7 1.7 0 0 0 6 21h12a1.7 1.7 0 0 0 1.5-2.5L14 9V3"/><path d="M7 15h10"/></svg><span>صفحات تجريبية</span><i class="betab">تحت التطوير</i><svg class="betacar" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button
+                ><div class="betamenu" role="menu"><div class="betahd">نسخ تجريبية — قيد التطوير</div><a class="dlink betait" role="menuitem" href="Finance/index.html" data-title="لوحة المتابعة المالية — نسخة تجريبية قيد التطوير"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/><path d="M15 8h4v4"/></svg><span><b>المتابعة المالية</b><small>الاستحقاقات والسيولة</small></span></a><a class="dlink betait" role="menuitem" href="Procurement/index.html" data-title="متابعة طلبات الشراء — نسخة تجريبية قيد التطوير"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12l2 2 4-4"/></svg><span><b>طلبات الشراء</b><small>مسار الشراء حتى قرار الترسية</small></span></a></div></div>                <button class="formsbtn" id="formsBtn" type="button">
                     <svg
                         width="17"
                         height="17"
@@ -4354,11 +4374,12 @@ body.viewing{overflow:hidden}
                         const el = window._pkey.el;
                         if (mr && mb && getComputedStyle(mr).display !== "none") {
                             const r = mr.getBoundingClientRect(), b = mb.getBoundingClientRect();
-                            el.style.width = r.width + "px"; el.style.right = (b.right - r.right) + "px"; el.style.left = "auto";
-                        } else { el.style.width = ""; el.style.right = "18px"; }
+                            const rt = Math.max(8, Math.round(b.right - r.right)), w = Math.min(Math.round(r.width), Math.round(b.width) - rt - 8);
+                            el.style.boxSizing = "border-box"; el.style.width = w + "px"; el.style.right = rt + "px"; el.style.left = "auto";
+                        } else { el.style.boxSizing = "border-box"; el.style.width = ""; el.style.maxWidth = "calc(100% - 36px)"; el.style.right = "18px"; el.style.left = "auto"; }
                     };
-                    fit();
-                    if (!window._pkeyRs) { window._pkeyRs = 1; window.addEventListener("resize", fit); }
+                    fit(); requestAnimationFrame(fit); setTimeout(fit, 400);
+                    if (!window._pkeyRs) { window._pkeyRs = 1; window.addEventListener("resize", fit); try { new ResizeObserver(fit).observe(mb); if (mr) new ResizeObserver(fit).observe(mr); } catch (e) {} }
                 } catch (e) {}
                 $("map")
                     .querySelectorAll(".pin.dev")
@@ -5030,5 +5051,6 @@ const PAGES={"site-completion-certificate": 1, "site-completion-form": 2, "site-
   document.addEventListener("keydown",e=>{if(e.key==="Escape")closePdf();});
 })();
 </script>
-    </body>
+    <script>(function(){var d=document.getElementById('betaDD'),b=document.getElementById('betaBtn');if(!d||!b)return;b.addEventListener('click',function(e){e.stopPropagation();var o=d.classList.toggle('open');b.setAttribute('aria-expanded',o)});d.querySelectorAll('.betait').forEach(function(a){a.addEventListener('click',function(){setTimeout(function(){d.classList.remove('open');b.setAttribute('aria-expanded',false)},0)})});document.addEventListener('click',function(e){if(!d.contains(e.target)){d.classList.remove('open');b.setAttribute('aria-expanded',false)}});document.addEventListener('keydown',function(e){if(e.key==='Escape')d.classList.remove('open')})})();</script>
+</body>
 </html>
