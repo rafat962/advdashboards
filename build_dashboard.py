@@ -230,7 +230,7 @@ html_template = '''<!DOCTYPE html>
       display: grid;
       grid-template-columns: repeat(5, 1fr);
       gap: 8px;
-      direction: ltr; /* Left-to-right matching reference */
+      direction: rtl; /* Right-to-left */
     }
     .kpi-card {
       background: var(--card-bg);
