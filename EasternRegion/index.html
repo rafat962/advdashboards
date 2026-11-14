@@ -2020,10 +2020,20 @@ async function loadLiveFeatureLayer() {
 /* ===================================================================
    EVENT LISTENERS & STARTUP
    =================================================================== */
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
   initMap();
   initCharts();
-  applyFilters();
+
+  const syncText = document.getElementById('syncText');
+  syncText.textContent = 'جاري مزامنة وقراءة طبقة معالم ArcGIS الحية...';
+
+  // Load live feature layer directly so all points load in a single unified stage!
+  await loadLiveFeatureLayer();
+
+  // Fallback if live layer didn't render
+  if (!markerLayer.getLayers().length) {
+    applyFilters();
+  }
 
   // Search input
   const searchInput = document.getElementById('globalSearch');
@@ -2063,8 +2073,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Reset Filters
   document.getElementById('btnResetFilters').addEventListener('click', clearAllFilters);
 
-  // Sync with live ArcGIS feature layer in background
-  setTimeout(loadLiveFeatureLayer, 1000);
+  // Startup sync complete
 });
 </script>
 </body>
