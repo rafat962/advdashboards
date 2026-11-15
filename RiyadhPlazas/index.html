@@ -944,7 +944,7 @@ function showAtt(d){
   if(img) docs.push({t:'مخطط مواقع شاشات الموبي',p:[img]});
   A.filter(x=>x.t!=='الخطاب').forEach(x=>docs.push({t:x.t,p:x.p}));
   if(!docs.length){el.innerHTML='<span class="muted">لا توجد مرفقات لهذا الموقع.</span>';return;}
-  el.innerHTML='<div class="attlist">'+docs.map((x,i)=>`<button class="attbtn" data-i="${i}"><img src="${x.p[0]}" alt="" loading="lazy" decoding="async"><span>${x.t}<small>${x.p.length} ${x.p.length>2?'صفحات':(x.p.length==2?'صفحتان':'صفحة')}</small></span></button>`).join('')+'</div>';
+  el.innerHTML='<div class="attlist">'+docs.map((x,i)=>`<button class="attbtn" data-i="${i}"><img src="${x.p[0].replace('att/','att/t/')}" alt="" loading="lazy" decoding="async"><span>${x.t}<small>${x.p.length} ${x.p.length>2?'صفحات':(x.p.length==2?'صفحتان':'صفحة')}</small></span></button>`).join('')+'</div>';
   el.querySelectorAll('.attbtn').forEach(b=>b.onclick=()=>{const x=docs[+b.dataset.i];
     document.getElementById('dttl').textContent=d.Name_AR+' — '+x.t;
     document.getElementById('dpages').innerHTML=x.p.map(s=>`<img src="${s}" alt="">`).join('');
