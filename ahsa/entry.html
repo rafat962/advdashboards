@@ -1057,6 +1057,7 @@ document.getElementById("entryForm").addEventListener("keydown", e => {
   }
 });
 
+try { if (window.top !== window.self) { const b = document.querySelector('a[href="../index.html"]'); if (b) b.style.display = "none"; } } catch (e) {}
 loadLayer(false);
 </script>
 </body>

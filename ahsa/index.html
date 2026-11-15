@@ -15,6 +15,8 @@ header h1{margin:0;font-size:21px;font-weight:800;background:linear-gradient(180
 header small{color:var(--muted);font-size:11.5px}
 .back{border:1px solid var(--line);border-radius:10px;padding:7px 14px;font-size:13px;font-weight:700;text-decoration:none;background:rgba(212,168,83,.06)}
 .back:hover{background:linear-gradient(180deg,var(--gl),var(--gold) 60%,var(--gd));color:#1c1405}
+.entrybtn{border:1px solid var(--gl);border-radius:10px;padding:7px 14px;font-size:13px;font-weight:800;text-decoration:none;background:linear-gradient(180deg,var(--gl),var(--gold) 60%,var(--gd));color:#1c1405;box-shadow:0 4px 14px rgba(212,168,83,.28);white-space:nowrap}
+.entrybtn:hover{filter:brightness(1.07)}
 html,body{height:100%}
 body{display:flex;flex-direction:column;overflow:hidden}
 header{flex:0 0 auto;padding:8px 12px!important}
@@ -73,7 +75,7 @@ input[type=search]:focus{border-color:var(--gold)}
 </style></head><body>
 <header><div><h1>مواقع لوحات الإعلانات الخارجية – محافظة الأحساء</h1>
 <small>شركة واحة للتنمية والتطوير · متصل بـ Feature Layer</small></div>
-<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="syncPill" style="display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:999px;font-size:12px;font-weight:700;border:1px solid rgba(56,189,248,.4);background:rgba(6,17,41,.85);color:#c3cce0"><span id="syncDot" style="width:8px;height:8px;border-radius:50%;background:#38bdf8"></span><span id="syncText">جاري الاتصال بالطبقة...</span><button id="refreshBtn" type="button" title="تحديث من Feature Layer" style="background:none;border:0;color:#f0d48e;cursor:pointer;font:inherit;padding:0 3px">⟳</button></span><small id="shown"></small><a class="back" href="entry.html">📝 إدخال التقييم التجاري</a><a class="back" href="../index.html">← بوابة المشاريع</a></div></header>
+<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="syncPill" style="display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:999px;font-size:12px;font-weight:700;border:1px solid rgba(56,189,248,.4);background:rgba(6,17,41,.85);color:#c3cce0"><span id="syncDot" style="width:8px;height:8px;border-radius:50%;background:#38bdf8"></span><span id="syncText">جاري الاتصال بالطبقة...</span><button id="refreshBtn" type="button" title="تحديث من Feature Layer" style="background:none;border:0;color:#f0d48e;cursor:pointer;font:inherit;padding:0 3px">⟳</button></span><small id="shown"></small><a class="entrybtn" href="entry.html">📝 إدخال التقييم التجاري والملاحظات</a><a class="back" href="../index.html">← بوابة المشاريع</a></div></header>
 <div class="wrap">
 <div class="kpis">
 <div class="k"><span>الأصول المطروحة رسمياً</span><b id="kBase">—</b></div>
