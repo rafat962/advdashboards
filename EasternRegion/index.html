@@ -3361,7 +3361,8 @@ async function loadLiveFeatureLayer(isManual = false) {
   let succeeded = false;
   try {
     let token = null;
-    try {
+    try { const c = JSON.parse(sessionStorage.getItem('esriTok') || 'null'); if (c && c.exp > Date.now()) token = c.t; } catch (e) {}
+    if (!token) try {
       const tokRes = await fetch('/api/esri-token', { cache: 'no-store' });
       if (tokRes.ok) {
         const tokData = await tokRes.json();
@@ -3379,6 +3380,7 @@ async function loadLiveFeatureLayer(isManual = false) {
       } catch (e) {}
     }
 
+    if (token) { try { const c = JSON.parse(sessionStorage.getItem('esriTok') || 'null'); if (!c || c.t !== token) sessionStorage.setItem('esriTok', JSON.stringify({ t: token, exp: Date.now() + 50 * 60 * 1000 })); } catch (e) {} }
     if (!token) {
       console.warn('Could not acquire ArcGIS OAuth token');
       syncText.textContent = 'تعذر الحصول على تصريح طبقة ArcGIS';
@@ -3387,22 +3389,27 @@ async function loadLiveFeatureLayer(isManual = false) {
     }
 
     const ts = Date.now();
-    const [l0Res, l1Res] = await Promise.all([
-      fetch(`https://services-ap1.arcgis.com/HRZVvitYCIwFb7oA/arcgis/rest/services/Sites/FeatureServer/0/query?where=1=1&outFields=*&f=json&token=${token}&_ts=${ts}`, { cache: 'no-store' }),
-      fetch(`https://services-ap1.arcgis.com/HRZVvitYCIwFb7oA/arcgis/rest/services/Sites/FeatureServer/1/query?where=1=1&outFields=Parent_GlobalID,Attachment_Title,File_Type,R2_File_Key&f=json&token=${token}&_ts=${ts}`, { cache: 'no-store' })
-    ]);
+    const SVC = 'https://services-ap1.arcgis.com/HRZVvitYCIwFb7oA/arcgis/rest/services/Sites/FeatureServer';
+    const F0 = 'OBJECTID,SiteNo,AdvType,GlobalID,ObstDesc,Notes,FinalExecStatus,ObstType,Lat,Lon,City,PrevBase';
+    const l1P = fetch(`${SVC}/1/query?where=1=1&outFields=Parent_GlobalID,Attachment_Title,File_Type,R2_File_Key&returnGeometry=false&f=json&token=${token}&_ts=${ts}`, { cache: 'no-store' }).then(r => r.ok ? r.json() : null).catch(() => null);
+    let l0Res = await fetch(`${SVC}/0/query?where=1=1&outFields=${F0}&outSR=4326&geometryPrecision=6&f=json&token=${token}&_ts=${ts}`, { cache: 'no-store' });
+    let l0Data = l0Res.ok ? await l0Res.json() : null;
+    if (!l0Data || l0Data.error) {
+      l0Res = await fetch(`${SVC}/0/query?where=1=1&outFields=*&f=json&token=${token}&_ts=${ts}`, { cache: 'no-store' });
+      l0Data = l0Res.ok ? await l0Res.json() : null;
+    }
+    const l1Res = { ok: true };
 
-    if (!l0Res.ok || !l1Res.ok) {
-      console.warn('ArcGIS FeatureServer query error:', l0Res.status, l1Res.status);
+    if (!l0Res.ok || !l0Data) {
+      try { sessionStorage.removeItem('esriTok'); } catch (e) {}
+      console.warn('ArcGIS FeatureServer query error:', l0Res.status);
       syncText.textContent = 'خطأ في استجابة طبقة معالم ArcGIS';
       syncPill.style.borderColor = 'rgba(239, 68, 68, 0.45)';
       return;
     }
 
-    const l0Data = await l0Res.json();
-    const l1Data = await l1Res.json();
-
     if (!l0Data.features || !l0Data.features.length) return;
+    const l1Data = {};
 
     // Attachments Map
     const attMap = new Map();
@@ -3461,6 +3468,16 @@ async function loadLiveFeatureLayer(isManual = false) {
     map.closePopup();
     applyFilters();
     succeeded = true;
+    const saveCache = () => { try { localStorage.setItem('dammamLive_v1', JSON.stringify({ t: Date.now(), D })); } catch (e) {} };
+    saveCache();
+    l1P.then(j => {
+      if (!j || !j.features) return;
+      const am = new Map();
+      j.features.forEach(f => { const a = f.attributes; if (!a || !a.Parent_GlobalID) return; const g = a.Parent_GlobalID.toLowerCase().replace(/[{}]/g, '').trim(); if (!am.has(g)) am.set(g, []); am.get(g).push({ title: a.Attachment_Title || 'مرفق', type: (a.File_Type || '').toLowerCase() === 'pdf' ? 'pdf' : 'image', key: a.R2_File_Key }); });
+      const gidOf = new Map(l0Data.features.map((f, i) => [i, (f.attributes.GlobalID || '').toLowerCase().replace(/[{}]/g, '').trim()]));
+      D.forEach((s, i) => { const g = gidOf.get(i); if (g && am.has(g)) s.atts = am.get(g); });
+      saveCache();
+    });
   } catch (err) {
     console.warn('Live ArcGIS sync notice:', err);
     syncText.textContent = `تعذر الاتصال بالطبقة المباشرة: ${err.message}`;
@@ -3493,13 +3510,17 @@ document.addEventListener('DOMContentLoaded', async () => {
   const syncText = document.getElementById('syncText');
   syncText.textContent = 'جاري مزامنة وقراءة طبقة معالم ArcGIS الحية...';
 
-  // Load live feature layer directly so all points load in a single unified stage!
-  await loadLiveFeatureLayer();
-
-  // Fallback if live layer didn't render
-  if (!markerLayer.getLayers().length) {
-    applyFilters();
-  }
+  // Show last saved live data instantly (or embedded data), then refresh from the live layer in the background
+  try {
+    const c = JSON.parse(localStorage.getItem('dammamLive_v1') || 'null');
+    if (c && Array.isArray(c.D) && c.D.length) {
+      if (!INITIAL_STATIC_CACHE) { const sm = new Map(), sbn = new Map(); D.forEach(s => { sm.set(s.code, s); if (s.siteNo) sbn.set(s.siteNo, s); if (s.n) sbn.set(s.n, s); }); INITIAL_STATIC_CACHE = { staticMap: sm, staticByNo: sbn }; }
+      D = c.D;
+      syncText.textContent = `آخر بيانات محفوظة (${new Date(c.t).toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit' })}) — جاري التحديث من الطبقة...`;
+    }
+  } catch (e) {}
+  applyFilters();
+  loadLiveFeatureLayer();
 
   // Open site detail page if URL hash specifies #site=...
   if (location.hash.startsWith('#site=')) {
