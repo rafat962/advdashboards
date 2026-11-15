@@ -299,4 +299,13 @@ draw();
    <div class="target">⏱ تاريخ الانتهاء المستهدف: <b class="mono">30/11/2026</b></div></div>
 </div></section>
 <!-- CONTRACT-INFO:END -->
+<style id="ahsaFix">
+@media(min-width:901px){
+ html,body{height:auto!important}
+ body{display:block!important;overflow-x:hidden!important;overflow-y:visible!important}
+ body>.wrap{height:calc(100vh - var(--hdrH,54px))!important;min-height:520px}
+ .ccx{min-height:0!important}
+}
+</style>
+<script>(function(){function f(){var h=document.querySelector('header');if(h)document.documentElement.style.setProperty('--hdrH',h.offsetHeight+'px');try{if(typeof map!=='undefined'&&map.invalidateSize)map.invalidateSize();}catch(e){}}window.addEventListener('load',function(){f();setTimeout(f,300)});window.addEventListener('resize',f);})();</script>
 </body></html>
