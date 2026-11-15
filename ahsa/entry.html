@@ -137,13 +137,6 @@ textarea{resize:vertical;min-height:84px;line-height:1.6}
 .sh-title b{font-size:17px;color:#fff}
 .sh-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px 10px;font-size:12px;color:var(--ink2)}
 .sh-grid span b{color:#fff}
-.nav-btns{display:flex;gap:6px;flex-wrap:wrap}
-.btn-sm{
-  flex:1;border:1px solid var(--hair);background:rgba(255,255,255,.04);color:var(--ink2);
-  border-radius:9px;padding:6px 8px;font:700 12px Cairo,sans-serif;cursor:pointer;transition:.15s;text-align:center;text-decoration:none;
-}
-.btn-sm:hover:not(:disabled){border-color:var(--line);color:var(--gl);background:rgba(212,168,83,.09)}
-.btn-sm:disabled{opacity:.4;cursor:not-allowed}
 
 .field-group{display:flex;flex-direction:column;gap:5px}
 .field-head{display:flex;justify-content:space-between;align-items:center;font-size:12.5px;font-weight:700;color:var(--gl)}
@@ -316,12 +309,6 @@ textarea{resize:vertical;min-height:84px;line-height:1.6}
             <span>رقم ضمن النوع: <b id="sNo">—</b></span>
             <span>الترتيب: <b id="sSeq">—</b></span>
             <span>الإحداثي: <b id="sCoord" style="direction:ltr;display:inline-block">—</b></span>
-          </div>
-          <div class="nav-btns">
-            <button type="button" class="btn-sm" id="btnPrev">⏮ السابق</button>
-            <button type="button" class="btn-sm" id="btnNext">التالي ⏭</button>
-            <button type="button" class="btn-sm" id="btnNextPending">التالي المتبقي ⏭</button>
-            <a class="btn-sm" id="sGmaps" target="_blank" rel="noopener">خرائط جوجل ↗</a>
           </div>
         </div>
 
@@ -680,7 +667,6 @@ function applyFilters() {
   document.getElementById("listCount").textContent = FILTERED.length;
   renderList();
   renderMapMarkers();
-  updateNavButtons();
 }
 
 function renderList() {
@@ -754,7 +740,6 @@ function selectSite(oid, fly = true) {
   renderSelectedForm(s, true);
   renderList();
   renderMapMarkers();
-  updateNavButtons();
 
   const activeCard = document.querySelector(`.site-card[data-oid="${oid}"]`);
   if (activeCard) activeCard.scrollIntoView({ block: "nearest", behavior: "smooth" });
@@ -773,9 +758,6 @@ function renderSelectedForm(s, loadAtts) {
   document.getElementById("sNo").textContent = s.no;
   document.getElementById("sSeq").textContent = s.seq;
   document.getElementById("sCoord").textContent = `${s.lat.toFixed(5)}, ${s.lon.toFixed(5)}`;
-
-  const gm = s.gmaps && /^https?:/i.test(s.gmaps) ? s.gmaps : `https://maps.google.com/?q=${s.lat},${s.lon}`;
-  document.getElementById("sGmaps").href = gm;
 
   const cb = document.getElementById("sClassBadge");
   cb.textContent = s.p ? "مقترح (-P)" : "أساسي";
@@ -814,14 +796,6 @@ function renderRatingPresets() {
 function updateNotesCounter() {
   const len = document.getElementById("inNotes").value.length;
   document.getElementById("notesCounter").textContent = `${len} / 255`;
-}
-
-function updateNavButtons() {
-  const idx = FILTERED.findIndex(s => s.oid === selectedOid);
-  document.getElementById("btnPrev").disabled = idx <= 0;
-  document.getElementById("btnNext").disabled = idx < 0 || idx >= FILTERED.length - 1;
-  const nextPend = findNextPendingOid(selectedOid);
-  document.getElementById("btnNextPending").disabled = !nextPend;
 }
 
 function findNextPendingOid(afterOid) {
@@ -1034,18 +1008,6 @@ document.getElementById("inNotes").oninput = () => { setDirty(true); updateNotes
 document.getElementById("clearRating").onclick = () => { document.getElementById("inRating").value = ""; setDirty(true); renderRatingPresets(); };
 document.getElementById("clearNotes").onclick = () => { document.getElementById("inNotes").value = ""; setDirty(true); updateNotesCounter(); };
 
-document.getElementById("btnPrev").onclick = () => {
-  const i = FILTERED.findIndex(s => s.oid === selectedOid);
-  if (i > 0) selectSite(FILTERED[i - 1].oid, true);
-};
-document.getElementById("btnNext").onclick = () => {
-  const i = FILTERED.findIndex(s => s.oid === selectedOid);
-  if (i >= 0 && i < FILTERED.length - 1) selectSite(FILTERED[i + 1].oid, true);
-};
-document.getElementById("btnNextPending").onclick = () => {
-  const nextOid = findNextPendingOid(selectedOid);
-  if (nextOid) selectSite(nextOid, true);
-};
 document.getElementById("jumpFirstPending").onclick = () => {
   const nextOid = findNextPendingOid(null);
   if (nextOid) selectSite(nextOid, true);
