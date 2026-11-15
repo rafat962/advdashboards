@@ -168,6 +168,43 @@ td:first-child{color:#fff;font-weight:700}
 @keyframes flow{to{stroke-dashoffset:-14}}
 @media(prefers-reduced-motion:reduce){.arr .fl,.ps.prog{animation:none}}
 @media(max-width:1000px){.wf-row,.wf-row.r2,.wf-down{display:flex;flex-direction:column;direction:rtl}.wf-row .arr{height:40px}.wf-row .arr svg{width:24px;height:40px;transform:rotate(90deg)}.wf-row.r1 .arr svg{transform:rotate(-90deg)}.wf-down{height:40px;align-items:center}.wf-down .vd{width:24px;height:40px}}
+.ov{display:grid;grid-template-columns:300px minmax(0,1.25fr) minmax(0,1fr);gap:14px;margin-bottom:14px}
+.ovc{background:var(--glass);border:1px solid var(--hair);border-radius:var(--r);padding:14px 16px;position:relative;overflow:hidden}
+.ovc h4{margin:0 0 10px;font-size:14px;font-weight:800;color:#fff;display:flex;justify-content:space-between;align-items:center}
+.ovc h4 small{font-size:11.5px;color:var(--muted);font-weight:600}
+.ring{display:flex;align-items:center;gap:16px}
+.ring svg{flex:none}
+.ring .rv{font:900 26px 'Cairo';fill:#fff}.ring .rl{font:700 10px 'Cairo';fill:#94a3c4}
+.ring ul{list-style:none;margin:0;padding:0;font-size:12.5px;color:var(--ink2)}
+.ring li{display:flex;align-items:center;gap:7px;margin:4px 0}.ring li i{width:9px;height:9px;border-radius:50%}
+.ring li b{color:#fff;margin-inline-start:auto;padding-inline-start:10px;font-family:'JetBrains Mono'}
+.spot{display:flex;flex-direction:column;gap:8px}
+.sp{display:flex;gap:10px;align-items:flex-start;padding:9px 11px;border-radius:12px;border:1px solid rgba(90,169,255,.35);background:rgba(90,169,255,.07)}
+.sp .no{flex:none;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font:800 12px 'JetBrains Mono';color:#fff;background:#1f5fb0;border:1.5px solid #5aa9ff;animation:psGlow 2.2s infinite}
+.sp b{display:block;color:#fff;font-size:13.5px}.sp span{display:block;font-size:12px;color:var(--ink2)}
+.sp.nx{border-color:rgba(240,191,90,.35);background:rgba(240,191,90,.06)}.sp.nx .no{background:transparent;color:#f0bf5a;border-color:#f0bf5a;animation:none}
+.own{display:flex;flex-direction:column;gap:9px}
+.ow .t{display:flex;justify-content:space-between;font-size:12.5px;color:var(--ink2);margin-bottom:4px}.ow .t b{color:#fff;font-family:'JetBrains Mono'}
+.ow .b{height:7px;border-radius:5px;background:rgba(255,255,255,.07);overflow:hidden}.ow .b span{display:block;height:100%;border-radius:5px;background:linear-gradient(90deg,#5aa9ff,#8fc8ff)}
+.ow.idle .b span{background:rgba(148,163,184,.35)}
+.dist{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:8px;padding:16px 18px}
+.ds{text-align:center;border-radius:12px;padding:10px 6px 9px;border:1px solid var(--hair);background:rgba(3,9,21,.4)}
+.ds .c{font:900 22px 'Cairo';color:#fff;line-height:1.1}.ds .l{font-size:11px;color:var(--ink2);margin-top:4px;line-height:1.35;min-height:30px}
+.ds .s{display:flex;gap:4px;justify-content:center;margin-top:6px;font-size:10.5px}
+.ds .s span{padding:0 6px;border-radius:999px;border:1px solid}
+.ds.on{border-color:rgba(90,169,255,.55);background:linear-gradient(180deg,rgba(90,169,255,.16),rgba(3,9,21,.4))}
+.ds .i{font:800 10.5px 'JetBrains Mono';color:var(--gold)}
+.rprog{display:flex;align-items:center;gap:10px;margin-top:10px}
+.rprog .b{flex:1;height:8px;border-radius:6px;background:rgba(255,255,255,.07);overflow:hidden;display:flex}
+.rprog .b span{height:100%}
+.rprog b{font:800 13px 'JetBrains Mono';color:#f0d48e;min-width:44px;text-align:left}
+.dl{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:10px}
+.dl div{display:flex;gap:8px;align-items:center;font-size:12px;color:var(--ink2);padding:7px 9px;border-radius:10px;border:1px solid var(--hair);background:rgba(3,9,21,.35)}
+.dl div i{flex:none;width:20px;height:20px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-size:11px;font-weight:800}
+.dl .done i{background:#2b9e63;color:#fff}.dl .prog i{background:#1f5fb0;color:#fff}.dl .next i{border:1.5px solid rgba(240,191,90,.6);color:#f0bf5a}
+.dl .done{border-color:rgba(79,209,139,.3)}.dl .prog{border-color:rgba(90,169,255,.4)}
+@media(max-width:1200px){.ov{grid-template-columns:1fr 1fr}.ov .ovc:first-child{grid-column:1/-1}.dist{grid-template-columns:repeat(4,minmax(0,1fr))}.dl{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:760px){.ov{grid-template-columns:1fr}}
 .lg{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--muted);padding:0 18px 14px}
 .lg i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-inline-end:6px;vertical-align:-1px}
 .empty{padding:30px;text-align:center;color:var(--muted)}
@@ -188,8 +225,14 @@ td:first-child{color:#fff;font-weight:700}
     <div style="flex:none;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:rgba(255,107,94,.18);border:1px solid rgba(255,107,94,.6);color:#ff9d93;font-size:20px;font-weight:800">!</div>
     <div><div style="color:#ffc2bb;font-size:17px;font-weight:800;margin-bottom:2px">تنبيه: هذه نسخة تجريبية قيد التطوير</div><div style="color:#e8ecf5;font-size:14px">الصفحة لعرض فكرة متابعة مسار الشراء، وستُستكمل بيانات الطلبات وتواريخ المراحل تباعاً.</div></div>
   </div>
+  <section class="ov">
+    <div class="ovc"><h4>نسبة الإنجاز في المسار<small id="ovSub"></small></h4><div class="ring" id="ring"></div></div>
+    <div class="ovc"><h4>المرحلة الحالية والخطوة التالية<small>ما يجب إنجازه الآن</small></h4><div class="spot" id="spot"></div></div>
+    <div class="ovc"><h4>عند مَن الطلبات الآن<small>المراحل المفتوحة حسب الجهة</small></h4><div class="own" id="own"></div></div>
+  </section>
   <section class="kpis" id="kpis"></section>
-  <div class="flt seg" id="flt" style="width:max-content"><button data-f="all" class="on">كل الطلبات</button><button data-f="open">مفتوحة</button><button data-f="late">متأخرة</button><button data-f="closed">مُرسّاة</button></div>
+  <div class="card"><h3>توزيع المراحل<small>عدد الطلبات في كل مرحلة من مراحل المسار</small></h3><div class="dist" id="dist"></div></div>
+  <div class="flt seg" id="flt" style="width:max-content"><button data-f="all" class="on">كل الطلبات</button><button data-f="open">مفتوحة</button><button data-f="late">متأخرة</button><button data-f="closed">تمت الترسية</button></div>
   <div class="card"><h3>الطلبات<small id="rcount"></small></h3><div id="reqs"></div>
     <div class="lg"><span><i style="background:#4fd18b"></i>تم الانتهاء</span><span><i style="background:#5aa9ff"></i>تحت الإجراء</span><span><i style="border:2px solid #f0bf5a"></i>مرحلة قادمة</span></div></div>
   <div class="card"><h3>مسار الشراء المعتمد (Workflow)<small>8 مراحل — من إعداد الوصف حتى قرار الترسية · الحالة حسب الطلبات المرفوعة حالياً</small></h3><div class="path" id="path"></div></div>
@@ -248,7 +291,9 @@ function reqs(){
     const badge=x.closed?'<span class="pill p-done">تمت الترسية</span>':`<span class="pill ${x.late?'p-late':'p-prog'}">${x.done} من ${STAGES.length} مراحل منتهية${x.late?' · متأخر':''}</span>`;
     return `<div class="req"><div class="rh"><div><b>${r.title}</b><div class="sub"><span class="mono">${r.id}</span>${r.scope?' · '+r.scope:''}${r.contract?' · العقد: '+(r.link?`<a href="${r.link}" style="color:var(--gl)">${r.contract}</a>`:r.contract):''}</div></div>${badge}</div>
      <div class="track">${STAGES.map((s,i)=>{const t=r.stages[i]||{st:'next'};return `<div class="stp ${t.st}"><div class="dot">${t.st==='done'?'✓':i+1}</div><div class="lb">${s[0]}</div></div>`}).join('')}</div>
+     <div class="rprog"><div class="b">${r.stages.map(t=>`<span style="width:${100/STAGES.length}%;background:${t.st==='done'?'#4fd18b':t.st==='prog'?'#5aa9ff':'transparent'};border-inline-start:1px solid rgba(3,9,21,.6)"></span>`).join('')}</div><b>${Math.round(x.done*100/STAGES.length)}%</b></div>
      ${cur.length?`<div class="now">${cur.map(i=>{const t=r.stages[i];return `<span>الآن: <b>${STAGES[i][0]}</b> — لدى ${STAGES[i][1]}${t.from?` · منذ ${days(t.from)} يوماً`:''} · المخرج المطلوب: ${STAGES[i][2]}</span>`}).join('')}</div>`:''}
+     <div class="dl">${STAGES.map((s,i)=>{const t=(r.stages[i]||{st:'next'}).st;return `<div class="${t}" title="${s[0]}"><i>${t==='done'?'✓':t==='prog'?'…':i+1}</i>${s[2]}</div>`}).join('')}</div>
      <details class="dt"><summary>تفاصيل المراحل <span class="ar">▾</span></summary><div class="tw"><table><thead><tr><th>المرحلة</th><th>الجهة المسؤولة</th><th>المخرج</th><th>الحالة</th><th>من</th><th>إلى</th><th>المدة</th><th>ملاحظات</th></tr></thead><tbody>
      ${STAGES.map((s,i)=>{const t=r.stages[i]||{st:'next'};return `<tr><td><span class="num">${i+1}</span>${s[0]}</td><td>${s[1]}</td><td>${s[2]}</td><td><span class="pill ${SL[t.st][1]}">${SL[t.st][0]}</span></td><td class="mono">${fd(t.from)}</td><td class="mono">${fd(t.to)}</td><td>${t.from&&t.st!=='next'?days(t.from,t.to)+' يوماً':'—'}${t.sla?` <small style="color:var(--muted)">/ ${t.sla}</small>`:''}</td><td>${t.note||'—'}</td></tr>`}).join('')}
      </tbody></table></div></details></div>`;
@@ -268,6 +313,30 @@ function reqs(){
 })();
 $('#flt').querySelectorAll('button').forEach(b=>b.onclick=()=>{F=b.dataset.f;$('#flt').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));reqs();});
 kpis();reqs();
+function overview(){
+  const I=REQS.map(info), T=REQS.length*STAGES.length;
+  const dn=REQS.reduce((a,r)=>a+r.stages.filter(s=>s.st==='done').length,0), pg=REQS.reduce((a,r)=>a+r.stages.filter(s=>s.st==='prog').length,0), nx=T-dn-pg;
+  const pct=T?Math.round(dn*100/T):0, C=2*Math.PI*48, seg=(v,o,c)=>`<circle cx="60" cy="60" r="48" fill="none" stroke="${c}" stroke-width="11" stroke-dasharray="${C*v/T} ${C}" stroke-dashoffset="${-C*o/T}" transform="rotate(-90 60 60)" stroke-linecap="butt"/>`;
+  $('#ring').innerHTML=`<svg width="128" height="128" viewBox="0 0 120 120"><circle cx="60" cy="60" r="48" fill="none" stroke="rgba(255,255,255,.07)" stroke-width="11"/>${seg(dn,0,'#4fd18b')}${seg(pg,dn,'#5aa9ff')}<text x="60" y="62" text-anchor="middle" class="rv">${pct}%</text><text x="60" y="80" text-anchor="middle" class="rl">مراحل منجزة</text></svg>
+   <ul><li><i style="background:#4fd18b"></i>تم الانتهاء<b>${dn}</b></li><li><i style="background:#5aa9ff"></i>تحت الإجراء<b>${pg}</b></li><li><i style="border:2px solid #f0bf5a"></i>قادمة<b>${nx}</b></li><li style="border-top:1px dashed rgba(255,255,255,.1);padding-top:5px">إجمالي المراحل<b>${T}</b></li></ul>`;
+  $('#ovSub').textContent=REQS.length+' طلب × '+STAGES.length+' مراحل';
+  // spotlight
+  let h='';
+  REQS.forEach(r=>{const x=info(r);x.prog.forEach(i=>{h+=`<div class="sp"><span class="no">${i+1}</span><div><b>${STAGES[i][0]}</b><span>لدى: ${STAGES[i][1]}</span><span>المخرج المطلوب لإغلاقها: <b style="display:inline;color:#8fc8ff;font-size:12px">${STAGES[i][2]}</b></span></div></div>`;});
+    const last=x.prog.length?Math.max(...x.prog):x.done-1, n=last+1;
+    if(n<STAGES.length&&(r.stages[n]||{}).st!=='prog') h+=`<div class="sp nx"><span class="no">${n+1}</span><div><b>التالي: ${STAGES[n][0]}</b><span>لدى: ${STAGES[n][1]} · المخرج: ${STAGES[n][2]}</span></div></div>`;});
+  $('#spot').innerHTML=h||'<div class="empty" style="padding:10px">لا توجد مراحل مفتوحة</div>';
+  // owners
+  const key=o=>o.split('—')[0].split('،')[0].replace(/^مكتب مها.*/,'مكتب مها').trim();
+  const OW={}; STAGES.forEach(s=>{OW[key(s[1])]=OW[key(s[1])]||0;});
+  REQS.forEach(r=>r.stages.forEach((t,i)=>{if(t.st==='prog')OW[key(STAGES[i][1])]++;}));
+  const mx=Math.max(1,...Object.values(OW));
+  $('#own').innerHTML=Object.entries(OW).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`<div class="ow ${v?'':'idle'}"><div class="t"><span>${k}</span><b>${v}</b></div><div class="b"><span style="width:${v?Math.max(8,v*100/mx):100}%"></span></div></div>`).join('');
+  // distribution
+  $('#dist').innerHTML=STAGES.map((s,i)=>{const p=REQS.filter(r=>(r.stages[i]||{}).st==='prog').length,d=REQS.filter(r=>(r.stages[i]||{}).st==='done').length;
+    return `<div class="ds ${p?'on':''}"><div class="i">${String(i+1).padStart(2,'0')}</div><div class="c" style="${p?'':'color:#64748b'}">${p}</div><div class="l">${s[0]}</div><div class="s">${d?`<span style="color:#7ee5aa;border-color:rgba(79,209,139,.4)">تم ${d}</span>`:''}${p?`<span style="color:#8fc8ff;border-color:rgba(90,169,255,.4)">جارٍ ${p}</span>`:''}${!d&&!p?`<span style="color:#94a3c4;border-color:rgba(148,163,184,.3)">قادمة</span>`:''}</div></div>`;}).join('');
+}
+overview();
 const tt=$('#toTop');addEventListener('scroll',()=>tt.classList.toggle('show',scrollY>400));tt.onclick=()=>scrollTo({top:0,behavior:'smooth'});
 </script>
 <style id="goldScroll">
@@ -279,5 +348,6 @@ html{scrollbar-color:#d4a853 #0a1430;scrollbar-width:auto}
 ::-webkit-scrollbar-thumb:hover{background:linear-gradient(180deg,#fff0c4,#e3b862) !important}
 ::-webkit-scrollbar-corner{background:#0a1430}
 </style>
+
 </body>
 </html>
