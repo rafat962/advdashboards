@@ -2052,6 +2052,7 @@ let _esriTok = null, _esriTokExp = 0;
 
 async function getEsriToken() {
   if (_esriTok && Date.now() < _esriTokExp) return _esriTok;
+  try { const c = JSON.parse(sessionStorage.getItem('esriTokMk') || 'null'); if (c && c.exp > Date.now()) { _esriTok = c.t; _esriTokExp = c.exp; return c.t; } } catch (e) {}
   const bases = location.protocol === 'file:' ? ['https://ads-dashboard.almahagroup.org'] : ['', 'https://ads-dashboard.almahagroup.org'];
   for (const b of bases) {
     try {
@@ -2062,6 +2063,7 @@ async function getEsriToken() {
       if (t) {
         _esriTok = t;
         _esriTokExp = Date.now() + ((d.expires_in ? d.expires_in - 300 : 3300) * 1000);
+        try { sessionStorage.setItem('esriTokMk', JSON.stringify({ t, exp: _esriTokExp })); } catch (e) {}
         return t;
       }
     } catch (e) {}
@@ -2385,14 +2387,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   syncText.textContent = 'جاري مزامنة وقراءة طبقة معالم ArcGIS الحية...';
 
   // Load live feature layer directly so all points load in a single unified stage!
-  restoreCachedSites();
-  await loadLiveFeatureLayer();
+  if (!restoreCachedSites()) applyFilters();
+  loadLiveFeatureLayer();
   loadContractSitesLayer();
-
-  // Fallback if live layer didn't render
-  if (!markerLayer.getLayers().length) {
-    applyFilters();
-  }
 
   // Search input
   const searchInput = document.getElementById('globalSearch');
