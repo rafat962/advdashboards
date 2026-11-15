@@ -72,7 +72,23 @@ input[type=search]{width:100%;padding:9px 11px;border:1px solid var(--hair);bord
 input[type=search]:focus{border-color:var(--gold)}
 .leaflet-popup-content-wrapper,.leaflet-popup-tip{background:#0a1a40;color:var(--ink);border:1px solid var(--line)}
 .leaflet-control-layers{background:#0a1a40!important;color:var(--ink)}
+.loader-ov{position:fixed;inset:0;z-index:5000;background:radial-gradient(800px 500px at 50% 35%,rgba(20,50,115,.45),rgba(3,9,21,.94));backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:20px;transition:opacity .28s ease}
+.loader-ov.hidden{opacity:0;pointer-events:none}
+.loader-card{background:linear-gradient(160deg,rgba(16,40,92,.85),rgba(6,17,41,.95));border:1px solid var(--line);border-radius:18px;padding:26px 32px;text-align:center;max-width:360px;width:100%;box-shadow:0 24px 60px rgba(0,0,0,.55);display:flex;flex-direction:column;align-items:center;gap:12px}
+.loader-ring{width:46px;height:46px;border-radius:50%;border:3.5px solid rgba(212,168,83,.2);border-top-color:var(--gl);animation:ahsaSpin .85s linear infinite}
+@keyframes ahsaSpin{to{transform:rotate(360deg)}}
+.loader-title{font-size:15px;font-weight:800;color:var(--gl)}
+.loader-sub{font-size:12.5px;color:var(--muted);line-height:1.6}
+.loader-retry{display:none;margin-top:4px;border:1px solid var(--gl);border-radius:10px;padding:7px 16px;font:700 13px Cairo,sans-serif;background:linear-gradient(180deg,var(--gl),var(--gold) 60%,var(--gd));color:#1c1405;cursor:pointer}
 </style></head><body>
+<div class="loader-ov" id="pageLoader" role="status" aria-live="polite">
+  <div class="loader-card">
+    <div class="loader-ring" id="loaderRing"></div>
+    <div class="loader-title" id="loaderTitle">جاري تحميل بيانات الأحساء...</div>
+    <div class="loader-sub" id="loaderSub">يتم جلب المواقع والتقييمات الحية من طبقة المعالم (Feature Layer)</div>
+    <button type="button" class="loader-retry" id="loaderRetry">🔄 إعادة المحاولة</button>
+  </div>
+</div>
 <header><div><h1>مواقع لوحات الإعلانات الخارجية – محافظة الأحساء</h1>
 <small>شركة واحة للتنمية والتطوير · متصل بـ Feature Layer</small></div>
 <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="syncPill" style="display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:999px;font-size:12px;font-weight:700;border:1px solid rgba(56,189,248,.4);background:rgba(6,17,41,.85);color:#c3cce0"><span id="syncDot" style="width:8px;height:8px;border-radius:50%;background:#38bdf8"></span><span id="syncText">جاري الاتصال بالطبقة...</span><button id="refreshBtn" type="button" title="تحديث من Feature Layer" style="background:none;border:0;color:#f0d48e;cursor:pointer;font:inherit;padding:0 3px">⟳</button></span><small id="shown"></small><a class="entrybtn" href="entry.html">📝 إدخال التقييم التجاري والملاحظات</a><a class="back" href="../index.html">← بوابة المشاريع</a></div></header>
@@ -185,8 +201,11 @@ offset+=batch.length;
 }
 return features;
 }
-async function loadLiveLayer(forceTok){
+function showLoader(msg,isErr){const ov=document.getElementById('pageLoader'),ring=document.getElementById('loaderRing'),t=document.getElementById('loaderTitle'),s=document.getElementById('loaderSub'),rb=document.getElementById('loaderRetry');if(!ov)return;ov.classList.remove('hidden');if(ring)ring.style.display=isErr?'none':'block';if(t)t.textContent=msg||'جاري تحميل بيانات الأحساء...';if(s)s.textContent=isErr?'تحقق من الاتصال بالإنترنت أو صلاحية التوكن ثم أعد المحاولة.':'يتم جلب المواقع والتقييمات الحية من طبقة المعالم (Feature Layer)';if(rb)rb.style.display=isErr?'inline-block':'none';}
+function hideLoader(){const ov=document.getElementById('pageLoader');if(ov)ov.classList.add('hidden');}
+async function loadLiveLayer(forceTok,blocking){
 const btn=document.getElementById('refreshBtn');if(btn)btn.disabled=true;
+if(blocking||!D.length)showLoader(forceTok?'جاري تحديث البيانات من الطبقة...':'جاري تحميل بيانات الأحساء...',false);
 setSync('loading','جاري القراءة من Feature Layer...');
 try{
 let token=await getEsriToken(forceTok);
@@ -198,15 +217,18 @@ return {oid:a.OBJECTID,seq:a.sq!=null?Number(a.sq):(idx+1),code:a.code||'',type:
 }).filter(r=>Number.isFinite(r.lat)&&Number.isFinite(r.lon));
 try{localStorage.setItem(CACHE_KEY,JSON.stringify({t:Date.now(),D}))}catch(e){}
 rebuildMeta();draw();
+hideLoader();
 setSync('ok',`متصل بالطبقة الحية (${D.length})`);
 }catch(err){
 console.error(err);
 setSync('err','تعذّر تحديث الطبقة الحية');
+if(!D.length)showLoader('تعذّر تحميل بيانات الأحساء',true);else hideLoader();
 }finally{if(btn)btn.disabled=false;}
 }
-try{const c=JSON.parse(localStorage.getItem(CACHE_KEY)||'null');if(c&&Array.isArray(c.D)&&c.D.length){D=c.D;rebuildMeta();draw();}}catch(e){}
-document.getElementById('refreshBtn').onclick=()=>loadLiveLayer(true);
-loadLiveLayer(false);
+try{const c=JSON.parse(localStorage.getItem(CACHE_KEY)||'null');if(c&&Array.isArray(c.D)&&c.D.length){D=c.D;rebuildMeta();draw();hideLoader();}}catch(e){}
+document.getElementById('refreshBtn').onclick=()=>loadLiveLayer(true,true);
+document.getElementById('loaderRetry').onclick=()=>loadLiveLayer(true,true);
+loadLiveLayer(false,false);
 </script><script>try{if(window.top!==window.self){document.querySelectorAll("a.back").forEach(function(e){e.style.display="none";});}}catch(e){document.querySelectorAll("a.back").forEach(function(x){x.style.display="none";});}</script>
 <style id="toTopCss">#toTop{position:fixed;left:24px;bottom:24px;z-index:9999;width:46px;height:46px;border-radius:14px;border:1px solid rgba(212,168,83,.45);background:rgba(6,17,41,.88);color:#f0d48e;display:grid;place-items:center;cursor:pointer;box-shadow:0 10px 26px rgba(0,0,0,.45);backdrop-filter:blur(8px);opacity:0;transform:translateY(14px);pointer-events:none;transition:opacity .25s,transform .25s,background .2s}#toTop.on{opacity:1;transform:none;pointer-events:auto}#toTop:hover{background:linear-gradient(180deg,#f0d48e,#d4a853);color:#1a1405}@media print{#toTop{display:none}}</style>
 <button id="toTop" type="button" title="العودة لأعلى الصفحة" aria-label="العودة لأعلى الصفحة"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>

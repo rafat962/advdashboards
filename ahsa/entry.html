@@ -215,6 +215,14 @@ textarea{resize:vertical;min-height:84px;line-height:1.6}
 </style>
 </head>
 <body>
+<div class="loader-ov" id="pageLoader" role="status" aria-live="polite">
+  <div class="loader-card">
+    <div class="loader-ring" id="loaderRing"></div>
+    <div class="loader-title" id="loaderTitle">جاري تحميل مواقع الأحساء...</div>
+    <div class="loader-sub" id="loaderSub">يتم جلب النقاط والتقييمات الحية من طبقة المعالم (Feature Layer)</div>
+    <button type="button" class="loader-retry" id="loaderRetry">🔄 إعادة المحاولة</button>
+  </div>
+</div>
 <header>
   <div>
     <h1>إدخال التقييم التجاري والملاحظات – محافظة الأحساء</h1>
@@ -514,9 +522,24 @@ async function esriPost(path, formBodyOrParams, retried = false) {
   return data;
 }
 
+function showLoader(msg, isErr = false) {
+  const ov = document.getElementById("pageLoader"), ring = document.getElementById("loaderRing"), t = document.getElementById("loaderTitle"), s = document.getElementById("loaderSub"), rb = document.getElementById("loaderRetry");
+  if (!ov) return;
+  ov.classList.remove("hidden");
+  if (ring) ring.style.display = isErr ? "none" : "block";
+  if (t) t.textContent = msg || "جاري تحميل مواقع الأحساء...";
+  if (s) s.textContent = isErr ? "تحقق من الاتصال بالإنترنت أو صلاحية التوكن ثم أعد المحاولة." : "يتم جلب النقاط والتقييمات الحية من طبقة المعالم (Feature Layer)";
+  if (rb) rb.style.display = isErr ? "inline-block" : "none";
+}
+function hideLoader() {
+  const ov = document.getElementById("pageLoader");
+  if (ov) ov.classList.add("hidden");
+}
+
 async function loadLayer(forceTok = false) {
   const btn = document.getElementById("refreshBtn");
   btn.disabled = true;
+  showLoader(forceTok ? "جاري تحديث بيانات المواقع..." : "جاري تحميل مواقع الأحساء...", false);
   setSync("loading", "جاري مزامنة الطبقة الحية...");
   try {
     const meta = await esriGet("", {}, forceTok);
@@ -571,10 +594,13 @@ async function loadLayer(forceTok = false) {
     }
 
     if (!didInitialFit && D.length) { didInitialFit = true; fitAll(); }
+    hideLoader();
     setSync("ok", `متصل بالطبقة الحية (${D.length} موقع)`);
   } catch (err) {
     console.error(err);
     setSync("err", "تعذّر الاتصال بطبقة ArcGIS");
+    if (!D.length) showLoader("تعذّر تحميل مواقع الأحساء", true);
+    else hideLoader();
   } finally {
     btn.disabled = false;
   }
@@ -1030,6 +1056,7 @@ document.getElementById("jumpFirstPending").onclick = () => {
 document.getElementById("btnSave").onclick = () => saveCurrentSite(false);
 document.getElementById("btnSaveNext").onclick = () => saveCurrentSite(true);
 document.getElementById("refreshBtn").onclick = () => loadLayer(true);
+document.getElementById("loaderRetry").onclick = () => loadLayer(true);
 
 const dz = document.getElementById("attDropzone");
 const attInput = document.getElementById("attInput");
