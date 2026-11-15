@@ -308,4 +308,13 @@ draw();
 }
 </style>
 <script>(function(){function f(){var h=document.querySelector('header');if(h)document.documentElement.style.setProperty('--hdrH',h.offsetHeight+'px');try{if(typeof map!=='undefined'&&map.invalidateSize)map.invalidateSize();}catch(e){}}window.addEventListener('load',function(){f();setTimeout(f,300)});window.addEventListener('resize',f);})();</script>
+<style id="goldScroll">
+html{scrollbar-color:#d4a853 #0a1430;scrollbar-width:auto}
+*{scrollbar-color:#d4a853 rgba(10,20,48,.6)}
+::-webkit-scrollbar{width:11px !important;height:11px !important}
+::-webkit-scrollbar-track{background:#0a1430 !important;border-left:1px solid rgba(212,168,83,.18)}
+::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#f0d48e,#d4a853 55%,#9f7430) !important;border-radius:10px !important;border:2px solid #0a1430}
+::-webkit-scrollbar-thumb:hover{background:linear-gradient(180deg,#fff0c4,#e3b862) !important}
+::-webkit-scrollbar-corner{background:#0a1430}
+</style>
 </body></html>

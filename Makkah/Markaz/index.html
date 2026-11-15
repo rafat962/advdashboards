@@ -289,7 +289,7 @@ const C = [
    impact:['الأثر المالي المستهدف لترحيل عقد الأراضي البيضاء',761250]}},
 
 {id:'makkah-markaz', region:'makkah', short:'سكافولدينج المركاز', no:'—', name:'لوحة سكافولدينج المركاز', party:'شركة البلد الأمين', status:['جاري العمل','wait'],
- info:[['تاريخ الاستلام','23/10/2024','20/04/1446هـ'],['المواقع حسب العقد','موقع واحد']], empty:'سيتم استكمال بيانات العقد والإجراءات فور توفرها.'},
+ info:[['تاريخ الاستلام','23/10/2024','20/04/1446هـ'],['المواقع حسب العقد','موقع واحد']], empty:'جاري العمل على استكمال بيانات العقد والإجراءات.'},
 
 /* ================= الأحساء ================= */
 {id:'ahsa-waha', region:'ahsa', short:'الإعلانات الخارجية — الأحساء', no:'—',
@@ -409,7 +409,7 @@ function contract(c){
     <h2>${c.short} ${chip(c.status[1],c.status[0])}</h2><p class="full">${c.name}</p>
     <div class="badges"><span class="badge">الجهة <b>${c.party}</b></span>${(c.info||[]).filter(x=>/^(قيمة العقد|الأجرة السنوية|تاريخ الاستلام)$/.test(x[0])).map(x=>`<span class="badge">${x[0]} <b>${x[1]}</b></span>`).join('')}</div></div>`;
   h+=`<div class="card"><h3>معلومات العقد الأساسية</h3><div class="pad">${infoGrid(c)}</div></div>`;
-  if(c.empty){ return h+`<div class="card"><div class="empty">📄 ${c.empty}</div></div>`; }
+  if(c.empty){ return h+`<div class="card"><div class="empty" style="display:flex;flex-direction:column;align-items:center;gap:10px"><span style="display:inline-flex;align-items:center;gap:8px;font-size:15px;font-weight:800;color:#f0bf5a;padding:6px 18px;border-radius:999px;border:1px solid rgba(240,191,90,.5);background:rgba(240,191,90,.10)"><i style="width:9px;height:9px;border-radius:50%;background:#f0bf5a;box-shadow:0 0 0 0 rgba(240,191,90,.6);animation:wipP 1.6s infinite"></i>جاري العمل</span><style>@keyframes wipP{0%{box-shadow:0 0 0 0 rgba(240,191,90,.6)}70%{box-shadow:0 0 0 10px rgba(240,191,90,0)}100%{box-shadow:0 0 0 0 rgba(240,191,90,0)}}</style>${c.empty}</div></div>`; }
   if(c.exec){
     const e=c.exec, p=Math.round(e.done*100/e.total), pt=e.target?Math.round(e.done*100/e.target):null, pa=e.avail?Math.round(e.done*100/e.avail):null;
     h+=`<div class="card"><h3>مؤشرات التنفيذ<small>${e.note}</small></h3><div class="pad prog">
@@ -484,5 +484,14 @@ go('makkah-markaz',true);
 <style id="toTopCss">#toTop{position:fixed;left:24px;bottom:24px;z-index:9999;width:46px;height:46px;border-radius:14px;border:1px solid rgba(212,168,83,.45);background:rgba(6,17,41,.88);color:#f0d48e;display:grid;place-items:center;cursor:pointer;box-shadow:0 10px 26px rgba(0,0,0,.45);backdrop-filter:blur(8px);opacity:0;transform:translateY(14px);pointer-events:none;transition:opacity .25s,transform .25s,background .2s}#toTop.on{opacity:1;transform:none;pointer-events:auto}#toTop:hover{background:linear-gradient(180deg,#f0d48e,#d4a853);color:#1a1405}@media print{#toTop{display:none}}</style>
 <button id="toTop" type="button" title="العودة لأعلى الصفحة" aria-label="العودة لأعلى الصفحة"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
 <script>(function(){var b=document.getElementById("toTop");function u(){b.classList.toggle("on",(window.scrollY||document.documentElement.scrollTop)>350)}window.addEventListener("scroll",u,{passive:true});u();b.onclick=function(){window.scrollTo({top:0,behavior:"smooth"})}})();</script>
+<style id="goldScroll">
+html{scrollbar-color:#d4a853 #0a1430;scrollbar-width:auto}
+*{scrollbar-color:#d4a853 rgba(10,20,48,.6)}
+::-webkit-scrollbar{width:11px !important;height:11px !important}
+::-webkit-scrollbar-track{background:#0a1430 !important;border-left:1px solid rgba(212,168,83,.18)}
+::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#f0d48e,#d4a853 55%,#9f7430) !important;border-radius:10px !important;border:2px solid #0a1430}
+::-webkit-scrollbar-thumb:hover{background:linear-gradient(180deg,#fff0c4,#e3b862) !important}
+::-webkit-scrollbar-corner{background:#0a1430}
+</style>
 </body>
 </html>

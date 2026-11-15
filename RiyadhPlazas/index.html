@@ -958,5 +958,14 @@ render();
 <style id="toTopCss">#toTop{position:fixed;left:24px;bottom:24px;z-index:9999;width:46px;height:46px;border-radius:14px;border:1px solid rgba(212,168,83,.45);background:rgba(6,17,41,.88);color:#f0d48e;display:grid;place-items:center;cursor:pointer;box-shadow:0 10px 26px rgba(0,0,0,.45);backdrop-filter:blur(8px);opacity:0;transform:translateY(14px);pointer-events:none;transition:opacity .25s,transform .25s,background .2s}#toTop.on{opacity:1;transform:none;pointer-events:auto}#toTop:hover{background:linear-gradient(180deg,#f0d48e,#d4a853);color:#1a1405}@media print{#toTop{display:none}}</style>
 <button id="toTop" type="button" title="العودة لأعلى الصفحة" aria-label="العودة لأعلى الصفحة"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
 <script>(function(){var b=document.getElementById("toTop");function u(){b.classList.toggle("on",(window.scrollY||document.documentElement.scrollTop)>350)}window.addEventListener("scroll",u,{passive:true});u();b.onclick=function(){window.scrollTo({top:0,behavior:"smooth"})}})();</script>
+<style id="goldScroll">
+html{scrollbar-color:#d4a853 #0a1430;scrollbar-width:auto}
+*{scrollbar-color:#d4a853 rgba(10,20,48,.6)}
+::-webkit-scrollbar{width:11px !important;height:11px !important}
+::-webkit-scrollbar-track{background:#0a1430 !important;border-left:1px solid rgba(212,168,83,.18)}
+::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#f0d48e,#d4a853 55%,#9f7430) !important;border-radius:10px !important;border:2px solid #0a1430}
+::-webkit-scrollbar-thumb:hover{background:linear-gradient(180deg,#fff0c4,#e3b862) !important}
+::-webkit-scrollbar-corner{background:#0a1430}
+</style>
 </body>
 </html>
