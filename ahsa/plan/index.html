@@ -42,7 +42,7 @@ h1{margin:6px 0 2px;font-size:28px;font-weight:900}
 .prog .lbl{display:flex;justify-content:space-between;font-size:12px;color:var(--muted)}
 /* milestones */
 .ms{position:relative;padding:34px 30px 18px}
-.ms .axis{position:relative;height:4px;border-radius:4px;background:rgba(255,255,255,.08);margin:44px 0 78px}
+.ms .axis{position:relative;height:4px;border-radius:4px;background:rgba(255,255,255,.08);margin:30px 0 40px}
 .ms .axis .fill{position:absolute;inset:0 0 0 auto;border-radius:4px;background:linear-gradient(270deg,var(--gold),rgba(212,168,83,.35))}
 .ms .pt{position:absolute;top:50%;transform:translate(50%,-50%);display:flex;flex-direction:column;align-items:center}
 .ms .dia{width:18px;height:18px;transform:rotate(45deg);border:2px solid var(--orange);background:#2a1606;box-shadow:0 0 0 4px rgba(255,159,74,.12);cursor:pointer;transition:.2s}
@@ -56,6 +56,18 @@ h1{margin:6px 0 2px;font-size:28px;font-weight:900}
 .ms .today span{position:absolute;top:-22px;transform:translateX(50%);right:50%;white-space:nowrap;font:800 11px 'Cairo';color:#04210f;background:var(--green);border-radius:999px;padding:1px 9px}
 .ms .far{display:flex;align-items:center;gap:10px;margin-top:4px;padding:10px 14px;border-radius:12px;border:1px dashed rgba(255,159,74,.45);background:rgba(255,159,74,.06);font-size:13px}
 .ms .far b{color:var(--orange)}
+.ms .dia span{display:block;transform:rotate(-45deg);font:800 10px 'JetBrains Mono';color:#ffd9b5;text-align:center;line-height:14px}
+.ms .pt.past .dia span{color:#2a1606}
+.ms .pt.hl .dia,.ms .pt:hover .dia{transform:rotate(45deg) scale(1.35);background:var(--orange)}.ms .pt.hl .dia span{color:#2a1606}
+.ms .tick{position:absolute;top:18px;white-space:nowrap;transform:translateX(50%);font:700 11px 'Cairo';color:var(--muted)}
+.mcards{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:10px;margin-bottom:14px}
+.mc{display:flex;gap:9px;align-items:flex-start;padding:10px;border-radius:12px;border:1px solid rgba(255,159,74,.28);background:rgba(255,159,74,.05);transition:.2s;cursor:default}
+.mc.hl{border-color:var(--orange);background:rgba(255,159,74,.14);transform:translateY(-2px)}
+.mc .mn{flex:none;width:24px;height:24px;border-radius:7px;display:grid;place-items:center;font:800 12px 'JetBrains Mono';background:#2a1606;color:var(--orange);border:1.5px solid var(--orange)}
+.mc.past .mn{background:var(--orange);color:#2a1606}
+.mc b{display:block;font-size:12px;color:var(--orange)}.mc p{margin:2px 0 3px;font-size:12px;line-height:1.55;color:var(--ink)}.mc small{font-size:11px;color:var(--muted)}
+@media(max-width:1200px){.mcards{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:640px){.mcards{grid-template-columns:repeat(2,minmax(0,1fr))}}
 /* gantt */
 .gtools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:10px 14px;border-bottom:1px solid var(--hair)}
 .gtools select{font:600 13px 'Cairo';color:var(--ink);background:rgba(3,9,21,.6);border:1px solid var(--hair);border-radius:10px;padding:6px 10px}
@@ -89,6 +101,11 @@ h1{margin:6px 0 2px;font-size:28px;font-weight:900}
 .todayL{position:absolute;top:0;bottom:0;width:2px;background:var(--green);z-index:2;pointer-events:none;box-shadow:0 0 10px rgba(79,209,139,.6)}
 .gwrap{position:relative}
 .st{display:inline-block;font:800 10.5px 'Cairo';border-radius:999px;padding:0 8px;border:1px solid;margin-inline-start:6px;vertical-align:middle}
+.row.key .tn,.row.key .tl{background:linear-gradient(270deg,rgba(255,107,94,.16),rgba(255,107,94,.04))}
+.row.key .tn{box-shadow:inset -3px 0 0 #ff6b5e}.row.key .tn .no{background:#ff6b5e;color:#2a0806}
+.row.key .gb{box-shadow:0 0 0 2px rgba(255,107,94,.9),0 0 14px rgba(255,107,94,.55)}
+.star{display:inline-block;font:800 10.5px 'Cairo';color:#2a0806;background:#ff6b5e;border-radius:999px;padding:0 8px;margin-inline-end:6px;vertical-align:middle}
+.tn .nm b{white-space:normal!important;line-height:1.45}
 /* owners */
 .own{display:flex;flex-direction:column;gap:9px}
 .own .r{display:grid;grid-template-columns:150px 1fr 26px;gap:10px;align-items:center;font-size:12.5px;cursor:pointer}
@@ -137,7 +154,7 @@ html{scrollbar-color:#d4a853 rgba(3,9,21,.85);scrollbar-width:thin}
  <div class="sech"><h2>١ · المعالم الرئيسية</h2><span>8 معالم · الخط الأخضر يمثل تاريخ اليوم</span></div>
  <div class="card"><div class="ms" id="ms"></div></div>
 
- <div class="sech"><h2>٢ · الجدول الزمني التفصيلي</h2><span>23 إجراءً في 5 مراحل + الإغلاق · اضغطي على أي إجراء لعرض مخرجاته</span></div>
+ <div class="sech"><h2>٢ · الجدول الزمني التفصيلي</h2><span>24 إجراءً في 5 مراحل + الإغلاق · اضغطي على أي إجراء لعرض مخرجاته</span></div>
  <div class="card">
   <div class="gtools">
    <select id="fOwner"><option value="">كل الجهات المسؤولة</option></select>
@@ -197,23 +214,24 @@ const T=[
  [5,2,'توقيع محضر استلام المواقع','المستثمر','2026-11-18','2026-11-22','محضر الاستلام (نموذج رقم 3) خلال مدة لا تتجاوز 5 أيام من توقيع العقد، مع إثبات الملاحظات',1],
  [6,2,'التحقق من جودة المواقع ومطابقتها لاشتراطات الوزارة','مكتب المها + المكتب الهندسي','2026-11-19','2026-12-06','زيارة الـ 350 موقعاً: الحالة الراهنة، الارتدادات، السلامة، المسافات، إمكانية إيصال الكهرباء، المطابقة لدليل اشتراطات اللوحات الدعائية والإعلانية',1],
  [7,2,'بدء إعداد بطاقات وصف المواقع','مكتب المها (GIS)','2026-11-22','2026-12-10','بطاقة وصف لكل موقع: الإحداثيات، الصور، نوع الوسيلة، حالة المطابقة، الملاحظات'],
- [8,2,'حصر المواقع غير المطابقة أو المتعارضة وطلب البدائل','مكتب المها','2026-12-07','2026-12-13','تقرير بالمواقع غير الصالحة، ومقترح بدائل من المواقع المقترحة (43 موقعاً)، ورفعه لشركة واحة'],
- [9,3,'إعداد ميثاق المشروع (Project Charter)','مكتب المها (PMO)','2026-11-18','2026-11-26','الأهداف، النطاق، المعالم الرئيسية، الأدوار والمسؤوليات، الافتراضات، المخاطر الأولية — بالتعاون مع الأمانة'],
- [10,3,'مراجعة واعتماد ميثاق المشروع','الأمانة + المستثمر','2026-11-27','2026-11-30','ميثاق معتمد وموقّع من الأطراف',1],
- [11,3,'تشكيل لجنة الحوكمة','المستثمر + مكتب المها','2026-11-24','2026-11-30','العضوية، الصلاحيات، دورية الاجتماعات، مصفوفة RACI، آلية التصعيد'],
- [12,3,'الاجتماع التأسيسي للجنة الحوكمة','لجنة الحوكمة','2026-12-01','2026-12-01','اعتماد الميثاق، ومناقشة الخطة العاجلة للتركيب، وجدول الاجتماعات',1],
- [13,3,'الخطة العاجلة للتركيب (Quick Wins)','مكتب المها + المستثمر','2026-11-23','2026-12-03','تحديد المواقع الجاهزة للتركيب الفوري (المطابقة والخالية من التعارضات)، والتصاميم والتراخيص اللازمة لها، وجدول تركيب أولي',1],
- [14,3,'إعداد خطة تنفيذ المشروع','مكتب المها (PMO)','2026-11-24','2026-12-11','المعالم الرئيسية، سجل أصحاب المصلحة، خطط النطاق والجدول الزمني والمخاطر والجودة والسلامة والتواصل، وهيكل لجنة الحوكمة'],
- [15,3,'اعتماد خطة تنفيذ المشروع','لجنة الحوكمة','2026-12-14','2026-12-15','خطة تنفيذ معتمدة',1],
- [16,4,'هيكلة شركة الغرض الخاص (SPV)','المستثمر','2026-11-23','2026-11-30','الشكل النظامي، الشركاء ونسب الملكية، رأس المال، الصلاحيات — مع المستشار القانوني'],
- [17,4,'تأسيس الـ SPV وإصدار السجل التجاري','المستثمر','2026-12-01','2026-12-15','عقد التأسيس، السجل التجاري، اشتراك الغرفة التجارية، الحساب البنكي',1],
- [18,4,'ترخيص نشاط الدعاية والإعلان وإسناد العقد للـ SPV (إن لزم)','المستثمر','2026-12-08','2026-12-15','ترخيص مزاولة النشاط، وموافقة شركة واحة على قيام الـ SPV بتنفيذ العقد إذا تطلب الأمر'],
- [19,5,'إعداد خطة المشتريات','مكتب المها','2026-11-24','2026-12-02','الاحتياجات، معايير التأهيل، نطاق عمل كل جهة، الميزانية التقديرية، الجدول الزمني للترسية'],
- [20,5,'تأهيل واعتماد الاستشاري','مكتب المها','2026-12-03','2026-12-15','طلب عروض، تقييم فني ومالي، توصية، اعتماد',1],
- [21,5,'تأهيل واعتماد المصمم','مكتب المها','2026-12-03','2026-12-15','طلب عروض، تقييم الأعمال السابقة، توصية، اعتماد',1],
- [22,5,'تأهيل واعتماد المكتب الهندسي','مكتب المها','2026-12-03','2026-12-15','طلب عروض، التحقق من التصنيف والاعتماد، توصية، اعتماد',1],
- [23,6,'اكتمال إجراءات مرحلة الإطلاق','لجنة الحوكمة','2026-12-15','2026-12-15','تقرير إغلاق المرحلة ورفعه للجنة الحوكمة'],
-].map(r=>({n:r[0],p:r[1],t:r[2],o:r[3],s:r[4],e:r[5],d:r[6],m:!!r[7]}));
+ [8,2,'دراسة المواقع مع القسم التجاري وتحديد المواقع المستهدفة والمجدية استثمارياً','مكتب المها + القسم التجاري','2026-11-22','2026-12-10','دراسة المواقع بالتوازي مع بطاقات الوصف، وتحديد المواقع المستهدفة والمجدية استثمارياً وترتيب أولوياتها، بما يدعم الخطة العاجلة للتركيب وطلب البدائل',0,1],
+ [9,2,'حصر المواقع غير المطابقة أو المتعارضة وطلب البدائل','مكتب المها','2026-12-07','2026-12-13','تقرير بالمواقع غير الصالحة، ومقترح بدائل من المواقع المقترحة (43 موقعاً)، ورفعه لشركة واحة'],
+ [10,3,'إعداد ميثاق المشروع (Project Charter)','مكتب المها (PMO)','2026-11-18','2026-11-26','الأهداف، النطاق، المعالم الرئيسية، الأدوار والمسؤوليات، الافتراضات، المخاطر الأولية — بالتعاون مع الأمانة'],
+ [11,3,'مراجعة واعتماد ميثاق المشروع','الأمانة + المستثمر','2026-11-27','2026-11-30','ميثاق معتمد وموقّع من الأطراف',1],
+ [12,3,'تشكيل لجنة الحوكمة','المستثمر + مكتب المها','2026-11-24','2026-11-30','العضوية، الصلاحيات، دورية الاجتماعات، مصفوفة RACI، آلية التصعيد'],
+ [13,3,'الاجتماع التأسيسي للجنة الحوكمة','لجنة الحوكمة','2026-12-01','2026-12-01','اعتماد الميثاق، ومناقشة الخطة العاجلة للتركيب، وجدول الاجتماعات',1],
+ [14,3,'الخطة العاجلة للتركيب (Quick Wins)','مكتب المها + المستثمر','2026-11-23','2026-12-03','تحديد المواقع الجاهزة للتركيب الفوري (المطابقة والخالية من التعارضات)، والتصاميم والتراخيص اللازمة لها، وجدول تركيب أولي',1],
+ [15,3,'إعداد خطة تنفيذ المشروع','مكتب المها (PMO)','2026-11-24','2026-12-11','المعالم الرئيسية، سجل أصحاب المصلحة، خطط النطاق والجدول الزمني والمخاطر والجودة والسلامة والتواصل، وهيكل لجنة الحوكمة'],
+ [16,3,'اعتماد خطة تنفيذ المشروع','لجنة الحوكمة','2026-12-14','2026-12-15','خطة تنفيذ معتمدة',1],
+ [17,4,'هيكلة شركة الغرض الخاص (SPV)','المستثمر','2026-11-23','2026-11-30','الشكل النظامي، الشركاء ونسب الملكية، رأس المال، الصلاحيات — مع المستشار القانوني'],
+ [18,4,'تأسيس الـ SPV وإصدار السجل التجاري','المستثمر','2026-12-01','2026-12-15','عقد التأسيس، السجل التجاري، اشتراك الغرفة التجارية، الحساب البنكي',1],
+ [19,4,'ترخيص نشاط الدعاية والإعلان وإسناد العقد للـ SPV (إن لزم)','المستثمر','2026-12-08','2026-12-15','ترخيص مزاولة النشاط، وموافقة شركة واحة على قيام الـ SPV بتنفيذ العقد إذا تطلب الأمر'],
+ [20,5,'إعداد خطة المشتريات','مكتب المها','2026-11-24','2026-12-02','الاحتياجات، معايير التأهيل، نطاق عمل كل جهة، الميزانية التقديرية، الجدول الزمني للترسية'],
+ [21,5,'تأهيل واعتماد الاستشاري','مكتب المها','2026-12-03','2026-12-15','طلب عروض، تقييم فني ومالي، توصية، اعتماد',1],
+ [22,5,'تأهيل واعتماد المصمم','مكتب المها','2026-12-03','2026-12-15','طلب عروض، تقييم الأعمال السابقة، توصية، اعتماد',1],
+ [23,5,'تأهيل واعتماد المكتب الهندسي','مكتب المها','2026-12-03','2026-12-15','طلب عروض، التحقق من التصنيف والاعتماد، توصية، اعتماد',1],
+ [24,6,'اكتمال إجراءات مرحلة الإطلاق','لجنة الحوكمة','2026-12-15','2026-12-15','تقرير إغلاق المرحلة ورفعه للجنة الحوكمة'],
+].map(r=>({n:r[0],p:r[1],t:r[2],o:r[3],s:r[4],e:r[5],d:r[6],m:!!r[7],k:!!r[8]}));
 const MS=[
  [1,'توقيع العقد وسداد أجرة السنة الأولى','2026-11-17'],[2,'توقيع محضر استلام المواقع','2026-11-22'],[3,'اعتماد ميثاق المشروع','2026-11-30'],
  [4,'الاجتماع التأسيسي للجنة الحوكمة','2026-12-01'],[5,'اعتماد الخطة العاجلة للتركيب','2026-12-03'],[6,'اكتمال التحقق الميداني من المواقع','2026-12-06'],
@@ -253,10 +271,15 @@ const phC=k=>PH.find(p=>p.k===k).c;
 (function(){
  const a=D('2026-11-14'),b=D('2026-12-18'),W=diff(a,b),pos=d=>diff(a,D(d))/W*100;
  const tp=Math.min(Math.max(diff(a,today)/W*100,0),100);
+ const left=m=>{const n=diff(today,D(m[2]));return n>0?'بعد '+n+' يوم':n===0?'اليوم':'مضى '+(-n)+' يوم'};
  $('#ms').innerHTML=`<div class="axis"><div class="fill" style="width:${tp}%"></div>
-  ${MS.map(m=>`<div class="pt${D(m[2])<today?' past':''}" style="right:${pos(m[2])}%"><div class="dia" title="${m[1]}"></div><div class="cap"><b>${fmt(m[2])}</b>${m[0]} · ${m[1]}</div></div>`).join('')}
-  ${today>=a&&today<=b?`<div class="today" style="right:${tp}%"><span>اليوم</span></div>`:''}</div>
+  ${MS.map(m=>`<div class="pt${D(m[2])<today?' past':''}" style="right:${pos(m[2])}%" data-m="${m[0]}"><div class="dia" title="${m[1]}"><span>${m[0]}</span></div></div>`).join('')}
+  ${today>=a&&today<=b?`<div class="today" style="right:${tp}%"><span>اليوم</span></div>`:''}
+  <div class="tick" style="right:${pos('2026-12-01')}%">1 ديسمبر</div></div>
+  <div class="mcards">${MS.map(m=>`<div class="mc${D(m[2])<today?' past':''}" data-m="${m[0]}"><span class="mn">${m[0]}</span><div><b class="mono">${fmt(m[2])}</b><p>${m[1]}</p><small>${left(m)}</small></div></div>`).join('')}</div>
   <div class="far"><span style="font-size:18px">◆</span><div><b>المعلم 8 · نهاية فترة التجهيز والإنشاء</b> — <span class="mono">17/05/2027</span> (6 أشهر من توقيع العقد) · متبقٍ ${diff(today,END)} يوماً</div></div>`;
+ const hl=(n,on)=>document.querySelectorAll(`#ms [data-m="${n}"]`).forEach(e=>e.classList.toggle('hl',on));
+ document.querySelectorAll('#ms [data-m]').forEach(e=>{e.onmouseenter=()=>hl(e.dataset.m,1);e.onmouseleave=()=>hl(e.dataset.m,0)});
 })();
 
 // gantt
@@ -278,7 +301,7 @@ function gantt(){
   h+=`<div class="ph" style="--c:${p.c}"><i></i>${p.t}<small style="color:var(--muted);font-weight:600">· ${ts.length} ${ts.length>2?'إجراءات':'إجراء'}</small></div>`;
   ts.forEach(t=>{const s=diff(G0,D(t.s)),len=diff(D(t.s),D(t.e))+1,single=len===1&&t.m,st=status(t),dim=fo&&t.o!==fo;
    const right=(s/ND*100),w=(len/ND*100);
-   h+=`<div class="row${t.m?' mile':''}${dim?' dim':''}" data-n="${t.n}"><div class="tn" data-n="${t.n}"><span class="no">${t.n}</span><span class="nm"><b title="${t.t}">${t.t}</b><small>${t.o} · <span class="st" style="color:${st[1]};border-color:${st[1]}66">${st[0]}</span></small></span></div>
+   h+=`<div class="row${t.m?' mile':''}${t.k?' key':''}${dim?' dim':''}" data-n="${t.n}"><div class="tn" data-n="${t.n}"><span class="no">${t.n}</span><span class="nm"><b title="${t.t}">${t.k?'<span class="star">★ أولوية قصوى</span>':''}${t.t}</b><small>${t.o} · <span class="st" style="color:${st[1]};border-color:${st[1]}66">${st[0]}</span></small></span></div>
     <div class="tl" data-n="${t.n}">${bg}<div class="gb${single?' ms1':''}" style="--c:${p.c};--i:${i++};right:${single?right+w/2:right}%;width:${w}%"><span class="lb">${len>1?len+' ي':fmt(t.s).slice(0,5)}</span></div></div></div>`;});
  });
  $('#gt').innerHTML=h;
@@ -289,7 +312,7 @@ function todayLine(){const tl=diff(G0,today);const old=document.querySelector('.
  if(tl<0||tl>=ND)return;const head=document.querySelector('.gt .gh:nth-child(2)');if(!head)return;const gw=document.querySelector('.gwrap'),r=head.getBoundingClientRect(),g=gw.getBoundingClientRect();
  const ln=document.createElement('div');ln.className='todayL';ln.style.left=(r.right-g.left-(tl+.5)/ND*r.width)+'px';gw.appendChild(ln);}
 function showPop(n,ev){const t=T.find(x=>x.n===n),p=PH.find(x=>x.k===t.p),st=status(t),len=diff(D(t.s),D(t.e))+1;
- const P=$('#pop');P.innerHTML=`<h4>${t.n} · ${t.t}${t.m?' <span class="st" style="color:var(--orange);border-color:rgba(255,159,74,.5)">معلم رئيسي</span>':''}</h4>
+ const P=$('#pop');P.innerHTML=`<h4>${t.n} · ${t.t}${t.k?' <span class="st" style="color:#ff6b5e;border-color:rgba(255,107,94,.55)">★ أولوية قصوى</span>':''}${t.m?' <span class="st" style="color:var(--orange);border-color:rgba(255,159,74,.5)">معلم رئيسي</span>':''}</h4>
   <div class="m"><span style="color:${p.c}">${p.t}</span><br>المسؤول: <b style="color:var(--ink)">${t.o}</b> · <span class="mono">${fmt(t.s)}</span> → <span class="mono">${fmt(t.e)}</span> (${len} ${len>2?'أيام':'يوم'}) · <span style="color:${st[1]}">${st[0]}</span></div><p><b style="color:var(--gl)">المخرجات:</b> ${t.d}</p>`;
  P.classList.add('on');const w=Math.min(360,innerWidth-20);let x=ev.clientX-w/2,y=ev.clientY+14;x=Math.max(10,Math.min(x,innerWidth-w-10));
  P.style.left=x+'px';P.style.top=y+'px';const r=P.getBoundingClientRect();if(r.bottom>innerHeight-8)P.style.top=(ev.clientY-r.height-14)+'px';}
