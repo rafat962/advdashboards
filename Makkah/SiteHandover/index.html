@@ -1142,12 +1142,13 @@ const colorOf = s => mode==='type' ? (TYPE_C[s.type]||'#94a3c4') : (DEC_C[s.dec]
 function popup(s){
   const rows=[['النوع',s.type],['البلدية',s.bal],['الحي',s.hay],['تاريخ الاستلام',s.date?s.date.split('-').reverse().join('/'):'—'],['قرار اللجنة',s.dec],['يوجد قاعدة',s.base||'—']];
   if(s.sw) rows.push(['عرض الرصيف',s.sw+' م']);
-  if(s.alt) rows.push(['موقع بديل مقترح',s.alt]);
+  if(s.alt) rows.push(['موقع بديل مقترح',s.alt==='نعم'&&s.altxy?`نعم — <span class="mono">${esc(s.altxy)}</span>`:s.alt]);
+  rows.push(['تصنيف الملاحظة', s.cat && s.cat!=='بدون ملاحظات' ? `<span style="color:${(typeof CAT_C!=='undefined'&&CAT_C[s.cat])||'#ffd88a'};font-weight:800">${esc(s.cat)}</span>` : '<span style="color:#7ee5aa">بدون ملاحظات</span>']);
   rows.push(['الإحداثي',`<span class="mono">${s.lat.toFixed(6)}, ${s.lon.toFixed(6)}</span>`]);
   let h=`<div class="pop"><b>${esc(s.code)} · ${esc(s.type)}</b>`+rows.map(r=>`<div><span class="k">${r[0]}</span><span>${r[1]==null||r[1]===''?'—':r[1]}</span></div>`).join('');
   if(s.link) h+=`<div><span class="k">محضر التسليم</span><a href="${s.link}" target="_blank" rel="noopener">فتح ↗</a></div>`;
   if(s.pics) h+=`<div><span class="k">صور الموقع</span><a href="${s.pics}" target="_blank" rel="noopener">فتح ↗</a></div>`;
-  if(s.note) h+=`<span class="warn">⚠ ${esc(s.note)}</span>`;
+  h+= s.note ? `<div class="warn"><b style="display:block;font-size:11px;color:#f0bf5a;margin-bottom:2px">⚠ الملاحظات / المعوقات</b>${esc(s.note)}</div>` : `<div class="warn" style="background:rgba(79,209,139,.10);border-color:rgba(79,209,139,.35);color:#9ff0c1">✓ لا توجد ملاحظات أو معوقات</div>`;
   return h+'</div>';
 }
 try{
@@ -1434,7 +1435,8 @@ async function loadFeatureLayerData() {
     if (!data.features || !data.features.length) return;
 
     const staticMap = new Map();
-    D.forEach(s => staticMap.set(s.code, s));
+    const nk = c => String(c||'').toUpperCase().replace(/\s+/g,'').replace(/-0+(\d)/,'-$1');
+    D.forEach(s => staticMap.set(nk(s.code), s));
 
     const prefixMap = {
       'يونيبول': 'UN-',
@@ -1448,7 +1450,7 @@ async function loadFeatureLayerData() {
       const a = f.attributes;
       const pref = prefixMap[a.AdvType] || 'ST-';
       const code = a.SiteNo ? (String(a.SiteNo).includes('-') ? a.SiteNo : pref + String(a.SiteNo).padStart(3, '0')) : (pref + String(a.OBJECTID).padStart(3, '0'));
-      const st = staticMap.get(code);
+      const st = staticMap.get(nk(code));
 
       const s = {
         n: a.SiteNo || a.OBJECTID || (idx + 1),

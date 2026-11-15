@@ -140,12 +140,34 @@ th{background:rgba(212,168,83,.08);color:var(--gl);font-weight:800;text-align:ri
 td{padding:9px 12px;border-top:1px solid var(--hair);color:var(--ink2);vertical-align:top}
 td:first-child{color:#fff;font-weight:700}
 .num{font-family:'JetBrains Mono',monospace;color:var(--gl);margin-inline-end:6px}
-.path{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;padding:16px 18px}
-.ps{border:1px solid var(--hair);border-radius:12px;padding:11px 13px;background:rgba(3,9,21,.35)}
-.ps .n{font:800 12px 'JetBrains Mono';color:var(--gold)}
+.path{padding:18px 18px 16px}
+.wf-row{display:grid;grid-template-columns:minmax(0,1fr) 54px minmax(0,1fr) 54px minmax(0,1fr) 54px minmax(0,1fr);align-items:stretch}
+.wf-row.r2{direction:ltr}.wf-row.r2>.ps{direction:rtl}
+.wf-down{display:grid;grid-template-columns:minmax(0,1fr) 54px minmax(0,1fr) 54px minmax(0,1fr) 54px minmax(0,1fr);height:46px}
+.wf-down .vd{grid-column:7;position:relative}
+.ps{position:relative;border:1px solid var(--hair);border-radius:12px;padding:11px 13px;background:rgba(3,9,21,.45);transition:transform .2s,border-color .2s}
+.ps:hover{transform:translateY(-2px);border-color:rgba(212,168,83,.5)}
+.ps .n{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50%;font:800 11.5px 'JetBrains Mono';color:var(--gold);border:1.5px solid rgba(212,168,83,.5);background:rgba(212,168,83,.08);margin-bottom:4px}
 .ps b{display:block;color:#fff;font-size:13.5px;margin:2px 0}
 .ps div{font-size:12px;color:var(--muted)}
 .ps .o{color:var(--ink2);margin-top:4px}
+.ps .stt{position:absolute;top:10px;left:10px;font-size:10.5px;font-weight:800;padding:1px 9px;border-radius:999px;border:1px solid}
+.ps.done{border-color:rgba(79,209,139,.45);background:linear-gradient(160deg,rgba(79,209,139,.10),rgba(3,9,21,.5))}
+.ps.done .n{color:#fff;background:#2b9e63;border-color:#4fd18b}
+.ps.prog{border-color:rgba(90,169,255,.6);background:linear-gradient(160deg,rgba(90,169,255,.14),rgba(3,9,21,.5));animation:psGlow 2.2s ease-in-out infinite}
+.ps.prog .n{color:#fff;background:#1f5fb0;border-color:#5aa9ff}
+@keyframes psGlow{0%,100%{box-shadow:0 0 0 0 rgba(90,169,255,.0)}50%{box-shadow:0 0 0 5px rgba(90,169,255,.16),0 0 22px rgba(90,169,255,.25)}}
+.arr{position:relative;display:flex;align-items:center;justify-content:center}
+.arr svg{width:100%;height:24px;overflow:visible}
+.arr .ln{stroke:rgba(212,168,83,.35);stroke-width:2.5;fill:none}
+.arr .fl{stroke:#f0d48e;stroke-width:2.5;fill:none;stroke-dasharray:6 8;animation:flow 1s linear infinite}
+.arr .hd{fill:#f0d48e}
+.arr.done .fl{stroke:#4fd18b}.arr.done .hd{fill:#4fd18b}
+.arr.prog .fl{stroke:#8fc8ff}.arr.prog .hd{fill:#8fc8ff}
+.vd svg{position:absolute;left:50%;top:0;width:24px;height:100%;transform:translateX(-50%);overflow:visible}
+@keyframes flow{to{stroke-dashoffset:-14}}
+@media(prefers-reduced-motion:reduce){.arr .fl,.ps.prog{animation:none}}
+@media(max-width:1000px){.wf-row,.wf-row.r2,.wf-down{display:flex;flex-direction:column;direction:rtl}.wf-row .arr{height:40px}.wf-row .arr svg{width:24px;height:40px;transform:rotate(90deg)}.wf-row.r1 .arr svg{transform:rotate(-90deg)}.wf-down{height:40px;align-items:center}.wf-down .vd{width:24px;height:40px}}
 .lg{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--muted);padding:0 18px 14px}
 .lg i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-inline-end:6px;vertical-align:-1px}
 .empty{padding:30px;text-align:center;color:var(--muted)}
@@ -170,7 +192,7 @@ td:first-child{color:#fff;font-weight:700}
   <div class="flt seg" id="flt" style="width:max-content"><button data-f="all" class="on">كل الطلبات</button><button data-f="open">مفتوحة</button><button data-f="late">متأخرة</button><button data-f="closed">مُرسّاة</button></div>
   <div class="card"><h3>الطلبات<small id="rcount"></small></h3><div id="reqs"></div>
     <div class="lg"><span><i style="background:#4fd18b"></i>تم الانتهاء</span><span><i style="background:#5aa9ff"></i>تحت الإجراء</span><span><i style="border:2px solid #f0bf5a"></i>مرحلة قادمة</span></div></div>
-  <div class="card"><h3>المسار المعتمد للشراء<small>8 مراحل — من إعداد الوصف حتى قرار الترسية</small></h3><div class="path" id="path"></div></div>
+  <div class="card"><h3>مسار الشراء المعتمد (Workflow)<small>8 مراحل — من إعداد الوصف حتى قرار الترسية · الحالة حسب الطلبات المرفوعة حالياً</small></h3><div class="path" id="path"></div></div>
 </div>
 <footer style="text-align:center;color:var(--muted);font-size:12.5px;padding:0 0 26px">إعداد: <b style="color:var(--gl)">مكتب المها للاستشارات</b></footer>
 <button id="toTop" aria-label="العودة لأعلى">▲</button>
@@ -232,7 +254,18 @@ function reqs(){
      </tbody></table></div></details></div>`;
   }).join(''):'<div class="empty">لا توجد طلبات ضمن هذا التصنيف</div>';
 }
-$('#path').innerHTML=STAGES.map((s,i)=>`<div class="ps"><span class="n">${String(i+1).padStart(2,'0')}</span><b>${s[0]}</b><div>${s[1]}</div><div class="o">المخرج: ${s[2]}</div></div>`).join('');
+(function(){
+  const st=(REQS[0]&&REQS[0].stages)||[];
+  const S=i=>(st[i]&&st[i].st)||'next', L={done:['تم','p-done'],prog:['جارٍ','p-prog'],next:['قادمة','p-next']};
+  const card=i=>{const s=STAGES[i],k=S(i);return `<div class="ps ${k}"><span class="stt ${L[k][1]}">${L[k][0]}</span><span class="n">${k==='done'?'✓':i+1}</span><b>${s[0]}</b><div>${s[1]}</div><div class="o">المخرج: ${s[2]}</div></div>`;};
+  const ac=i=>{const a=S(i),b=S(i+1);return a==='done'&&b==='done'?'done':(a!=='next'&&b==='prog')?'prog':'';};
+  const arrH=i=>`<div class="arr ${ac(i)}"><svg viewBox="0 0 54 24" preserveAspectRatio="none"><line class="ln" x1="50" y1="12" x2="8" y2="12"/><line class="fl" x1="50" y1="12" x2="8" y2="12"/><path class="hd" d="M2 12 L12 6 L12 18 Z"/></svg></div>`;
+  const arrR=i=>`<div class="arr ${ac(i)}"><svg viewBox="0 0 54 24" preserveAspectRatio="none"><line class="ln" x1="4" y1="12" x2="46" y2="12"/><line class="fl" x1="4" y1="12" x2="46" y2="12"/><path class="hd" d="M52 12 L42 6 L42 18 Z"/></svg></div>`;
+  const r1=[0,1,2,3].map(i=>card(i)+(i<3?arrH(i):'')).join('');
+  const r2=[4,5,6,7].map(i=>card(i)+(i<7?arrR(i):'')).join('');
+  const dn=`<div class="wf-down"><div class="vd arr ${ac(3)}"><svg viewBox="0 0 24 46" preserveAspectRatio="none"><line class="ln" x1="12" y1="2" x2="12" y2="36"/><line class="fl" x1="12" y1="2" x2="12" y2="36"/><path class="hd" d="M12 44 L6 34 L18 34 Z"/></svg></div></div>`;
+  $('#path').innerHTML=`<div class="wf-row r1">${r1}</div>${dn}<div class="wf-row r2">${r2}</div>`;
+})();
 $('#flt').querySelectorAll('button').forEach(b=>b.onclick=()=>{F=b.dataset.f;$('#flt').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));reqs();});
 kpis();reqs();
 const tt=$('#toTop');addEventListener('scroll',()=>tt.classList.toggle('show',scrollY>400));tt.onclick=()=>scrollTo({top:0,behavior:'smooth'});
