@@ -1,24 +1,6 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<style id="themeVars">
-html[data-theme="emerald"],html[data-theme="emerald"] .ccx{--n0:#02130f;--n1:#05211a;--n2:#0a3328;--n3:#0f4535;--glass:linear-gradient(160deg,rgba(14,72,54,.55),rgba(4,26,20,.82));--bg:#02130f;--bg2:#05211a;--card-bg:rgba(8,38,30,.92);--card-hover:rgba(12,52,40,.98);--card-border:rgba(52,211,153,.22);--card:rgba(8,38,30,.92)}
-html[data-theme="emerald"] body{background:radial-gradient(1000px 600px at 80% -10%,rgba(30,160,110,.17),transparent 65%),linear-gradient(180deg,#05211a,#02130f 60%) fixed !important;background-color:#02130f !important}
-html[data-theme="emerald"] header{background-color:#02130fe6}
-html[data-theme="graphite"],html[data-theme="graphite"] .ccx{--n0:#0a0b0e;--n1:#14161b;--n2:#1e2128;--n3:#2b2f39;--glass:linear-gradient(160deg,rgba(64,70,84,.45),rgba(16,18,23,.86));--bg:#0a0b0e;--bg2:#14161b;--card-bg:rgba(24,26,32,.94);--card-hover:rgba(34,37,45,.98);--card-border:rgba(160,166,180,.22);--card:rgba(24,26,32,.94)}
-html[data-theme="graphite"] body{background:radial-gradient(1000px 600px at 80% -10%,rgba(170,175,195,.08),transparent 65%),linear-gradient(180deg,#14161b,#0a0b0e 60%) fixed !important;background-color:#0a0b0e !important}
-html[data-theme="graphite"] header{background-color:#0a0b0ee6}
-html[data-theme="burgundy"],html[data-theme="burgundy"] .ccx{--n0:#12040a;--n1:#1f0912;--n2:#30101d;--n3:#45172a;--glass:linear-gradient(160deg,rgba(112,30,62,.45),rgba(28,8,16,.86));--bg:#12040a;--bg2:#1f0912;--card-bg:rgba(40,12,24,.93);--card-hover:rgba(56,16,33,.98);--card-border:rgba(244,114,182,.22);--card:rgba(40,12,24,.93)}
-html[data-theme="burgundy"] body{background:radial-gradient(1000px 600px at 80% -10%,rgba(200,60,100,.16),transparent 65%),linear-gradient(180deg,#1f0912,#12040a 60%) fixed !important;background-color:#12040a !important}
-html[data-theme="burgundy"] header{background-color:#12040ae6}
-html[data-theme="royal"],html[data-theme="royal"] .ccx{--n0:#040a1c;--n1:#0a1636;--n2:#13245a;--n3:#1c3480;--glass:linear-gradient(160deg,rgba(40,72,170,.45),rgba(8,18,46,.84));--bg:#040a1c;--bg2:#0a1636;--card-bg:rgba(16,30,72,.92);--card-hover:rgba(24,42,96,.98);--card-border:rgba(96,165,250,.3);--card:rgba(16,30,72,.92)}
-html[data-theme="royal"] body{background:radial-gradient(1000px 600px at 80% -10%,rgba(90,140,255,.22),transparent 65%),linear-gradient(180deg,#0a1636,#040a1c 60%) fixed !important;background-color:#040a1c !important}
-html[data-theme="royal"] header{background-color:#040a1ce6}
-html[data-theme="light"]{filter:invert(1) hue-rotate(180deg)}
-html[data-theme="light"] :is(img,video,picture,iframe,embed,object,.leaflet-tile-pane,.noinv){filter:invert(1) hue-rotate(180deg)}
-html[data-theme="light"] :is(img,video,iframe,.leaflet-tile-pane) :is(img,video,iframe,.leaflet-tile-pane){filter:none}
-html{transition:background-color .3s}</style>
-<script id="themeBoot">(function(){var K="portalTheme",V=["navy","light","emerald","graphite","burgundy","royal"];function g(){try{var q=new URLSearchParams(location.search).get("theme");if(q&&V.indexOf(q)>-1)return q;return localStorage.getItem(K)||"navy"}catch(e){return"navy"}}function a(t){var d=document.documentElement;if(!t||t==="navy")d.removeAttribute("data-theme");else d.setAttribute("data-theme",t)}a(g());window.__applyTheme=a;window.addEventListener("storage",function(e){if(e.key===K)a(e.newValue)});window.addEventListener("message",function(e){if(e.data&&e.data.portalTheme)a(e.data.portalTheme)})})();</script>
 
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -272,7 +254,7 @@ td:first-child{color:#fff;font-weight:700}
 const STAGES=[
  ['إعداد وصف الطلب','مكتب مها — إدارة البرامج، القسم الهندسي','وصف فني ومواصفات وكميات'],
  ['رفع الطلب إلى لجنة المشتريات','مكتب مها — إدارة البرامج','طلب مسجل لدى اللجنة'],
- ['المراجعة التشغيلية للوصف','إدارة التشغيل والصيانة — التحالف','وصف مراجع تشغيلياً'],
+ ['المراجعة التشغيلية للوصف','إدارة التشغيل والصيانة — الشركة الحديثة','وصف مراجع تشغيلياً'],
  ['اعتماد الوصف وتأهيل المقاولين والموردين','لجنة المشتريات','قائمة مؤهلين محليين'],
  ['اعتماد المؤهلين','مكتب مها، ثم لجنة الحوكمة والمشاريع بإشراق أو البلد الأمين','قائمة معتمدة'],
  ['طلب الأسعار واستلام العروض','إدارة المشتريات','عروض مستلمة'],
