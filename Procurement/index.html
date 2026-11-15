@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
+
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>متابعة طلبات الشراء — بوابة متابعة المشاريع</title>
@@ -140,12 +141,76 @@ th{background:rgba(212,168,83,.08);color:var(--gl);font-weight:800;text-align:ri
 td{padding:9px 12px;border-top:1px solid var(--hair);color:var(--ink2);vertical-align:top}
 td:first-child{color:#fff;font-weight:700}
 .num{font-family:'JetBrains Mono',monospace;color:var(--gl);margin-inline-end:6px}
-.path{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;padding:16px 18px}
-.ps{border:1px solid var(--hair);border-radius:12px;padding:11px 13px;background:rgba(3,9,21,.35)}
-.ps .n{font:800 12px 'JetBrains Mono';color:var(--gold)}
+.path{padding:18px 18px 16px}
+.wf-row{display:grid;grid-template-columns:minmax(0,1fr) 54px minmax(0,1fr) 54px minmax(0,1fr) 54px minmax(0,1fr);align-items:stretch}
+.wf-row.r2{direction:ltr}.wf-row.r2>.ps{direction:rtl}
+.wf-down{display:grid;grid-template-columns:minmax(0,1fr) 54px minmax(0,1fr) 54px minmax(0,1fr) 54px minmax(0,1fr);height:46px}
+.wf-down .vd{grid-column:7;position:relative}
+.ps{position:relative;border:1px solid var(--hair);border-radius:12px;padding:11px 13px;background:rgba(3,9,21,.45);transition:transform .2s,border-color .2s}
+.ps:hover{transform:translateY(-2px);border-color:rgba(212,168,83,.5)}
+.ps .n{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50%;font:800 11.5px 'JetBrains Mono';color:var(--gold);border:1.5px solid rgba(212,168,83,.5);background:rgba(212,168,83,.08);margin-bottom:4px}
 .ps b{display:block;color:#fff;font-size:13.5px;margin:2px 0}
 .ps div{font-size:12px;color:var(--muted)}
 .ps .o{color:var(--ink2);margin-top:4px}
+.ps .stt{position:absolute;top:10px;left:10px;white-space:nowrap;font-size:10.5px;font-weight:800;padding:1px 9px;border-radius:999px;border:1px solid}
+.ps.done{border-color:rgba(79,209,139,.45);background:linear-gradient(160deg,rgba(79,209,139,.10),rgba(3,9,21,.5))}
+.ps.done .n{color:#fff;background:#2b9e63;border-color:#4fd18b}
+.ps.prog{border-color:rgba(90,169,255,.6);background:linear-gradient(160deg,rgba(90,169,255,.14),rgba(3,9,21,.5));animation:psGlow 2.2s ease-in-out infinite}
+.ps.prog .n{color:#fff;background:#1f5fb0;border-color:#5aa9ff}
+@keyframes psGlow{0%,100%{box-shadow:0 0 0 0 rgba(90,169,255,.0)}50%{box-shadow:0 0 0 5px rgba(90,169,255,.16),0 0 22px rgba(90,169,255,.25)}}
+.arr{position:relative;display:flex;align-items:center;justify-content:center}
+.arr svg{width:100%;height:24px;overflow:visible}
+.arr .ln{stroke:rgba(212,168,83,.35);stroke-width:2.5;fill:none}
+.arr .fl{stroke:#f0d48e;stroke-width:2.5;fill:none;stroke-dasharray:6 8;animation:flow 1s linear infinite}
+.arr .hd{fill:#f0d48e}
+.arr.done .fl{stroke:#4fd18b}.arr.done .hd{fill:#4fd18b}
+.arr.prog .fl{stroke:#8fc8ff}.arr.prog .hd{fill:#8fc8ff}
+.vd svg{position:absolute;left:50%;top:0;width:24px;height:100%;transform:translateX(-50%);overflow:visible}
+@keyframes flow{to{stroke-dashoffset:-14}}
+@media(prefers-reduced-motion:reduce){.arr .fl,.ps.prog{animation:none}}
+@media(max-width:1000px){.wf-row,.wf-row.r2,.wf-down{display:flex;flex-direction:column;direction:rtl}.wf-row .arr{height:40px}.wf-row .arr svg{width:24px;height:40px;transform:rotate(90deg)}.wf-row.r1 .arr svg{transform:rotate(-90deg)}.wf-down{height:40px;align-items:center}.wf-down .vd{width:24px;height:40px}}
+.sech{display:flex;align-items:baseline;gap:12px;margin:26px 2px 10px;padding-bottom:8px;border-bottom:1px solid rgba(212,168,83,.25)}
+.sech span{font-size:18px;font-weight:900;color:#f0d48e}.sech small{font-size:12.5px;color:var(--muted)}
+.wrap>.card:first-of-type{margin-top:0}
+.ov{display:grid;grid-template-columns:300px minmax(0,1.25fr) minmax(0,1fr);gap:14px;margin-bottom:14px}
+.ovc{background:var(--glass);border:1px solid var(--hair);border-radius:var(--r);padding:14px 16px;position:relative;overflow:hidden}
+.ovc h4{margin:0 0 10px;font-size:14px;font-weight:800;color:#fff;display:flex;justify-content:space-between;align-items:center}
+.ovc h4 small{font-size:11.5px;color:var(--muted);font-weight:600}
+.ring{display:flex;align-items:center;gap:16px}
+.ring svg{flex:none}
+.ring .rv{font:900 26px 'Cairo';fill:#fff}.ring .rl{font:700 10px 'Cairo';fill:#94a3c4}
+.ring ul{list-style:none;margin:0;padding:0;font-size:12.5px;color:var(--ink2)}
+.ring li{display:flex;align-items:center;gap:7px;margin:4px 0}.ring li i{width:9px;height:9px;border-radius:50%}
+.ring li b{color:#fff;margin-inline-start:auto;padding-inline-start:10px;font-family:'JetBrains Mono'}
+.spot{display:flex;flex-direction:column;gap:8px}
+.sp{display:flex;gap:10px;align-items:flex-start;padding:9px 11px;border-radius:12px;border:1px solid rgba(90,169,255,.35);background:rgba(90,169,255,.07)}
+.sp .no{flex:none;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font:800 12px 'JetBrains Mono';color:#fff;background:#1f5fb0;border:1.5px solid #5aa9ff;animation:psGlow 2.2s infinite}
+.sp b{display:block;color:#fff;font-size:13.5px}.sp span{display:block;font-size:12px;color:var(--ink2)}
+.sp .dd{flex:none;font:800 12px 'JetBrains Mono';color:#8fc8ff;background:rgba(90,169,255,.12);border:1px solid rgba(90,169,255,.35);border-radius:8px;padding:2px 8px;align-self:center;white-space:nowrap}.sp .dd small{color:var(--muted)}
+.sp.lt{border-color:rgba(255,107,94,.5);background:rgba(255,107,94,.08)}.sp .dd.late{color:#ffb3ab;background:rgba(255,107,94,.14);border-color:rgba(255,107,94,.5)}
+.sp.nx{border-color:rgba(240,191,90,.35);background:rgba(240,191,90,.06)}.sp.nx .no{background:transparent;color:#f0bf5a;border-color:#f0bf5a;animation:none}
+.own{display:flex;flex-direction:column;gap:9px}
+.ow .t{display:flex;justify-content:space-between;font-size:12.5px;color:var(--ink2);margin-bottom:4px}.ow .t b{color:#fff;font-family:'JetBrains Mono'}
+.ow .b{height:7px;border-radius:5px;background:rgba(255,255,255,.07);overflow:hidden}.ow .b span{display:block;height:100%;border-radius:5px;background:linear-gradient(90deg,#5aa9ff,#8fc8ff)}
+.ow.idle .b span{background:rgba(148,163,184,.35)}
+.dist{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:8px;padding:16px 18px}
+.ds{text-align:center;border-radius:12px;padding:10px 6px 9px;border:1px solid var(--hair);background:rgba(3,9,21,.4)}
+.ds .c{font:900 22px 'Cairo';color:#fff;line-height:1.1}.ds .l{font-size:11px;color:var(--ink2);margin-top:4px;line-height:1.35;min-height:30px}
+.ds .s{display:flex;gap:4px;justify-content:center;margin-top:6px;font-size:10.5px}
+.ds .s span{padding:0 6px;border-radius:999px;border:1px solid}
+.ds.on{border-color:rgba(90,169,255,.55);background:linear-gradient(180deg,rgba(90,169,255,.16),rgba(3,9,21,.4))}
+.ds .i{font:800 10.5px 'JetBrains Mono';color:var(--gold)}
+.rprog{display:flex;align-items:center;gap:10px;margin-top:10px}
+.rprog .b{flex:1;height:8px;border-radius:6px;background:rgba(255,255,255,.07);overflow:hidden;display:flex}
+.rprog .b span{height:100%}
+.rprog b{font:800 13px 'JetBrains Mono';color:#f0d48e;min-width:44px;text-align:left}
+.dl{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:10px}
+.dl div{display:flex;gap:8px;align-items:center;font-size:12px;color:var(--ink2);padding:7px 9px;border-radius:10px;border:1px solid var(--hair);background:rgba(3,9,21,.35)}
+.dl div i{flex:none;width:20px;height:20px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-size:11px;font-weight:800}
+.dl .done i{background:#2b9e63;color:#fff}.dl .prog i{background:#1f5fb0;color:#fff}.dl .next i{border:1.5px solid rgba(240,191,90,.6);color:#f0bf5a}
+.dl .done{border-color:rgba(79,209,139,.3)}.dl .prog{border-color:rgba(90,169,255,.4)}
+@media(max-width:1200px){.ov{grid-template-columns:1fr 1fr}.ov .ovc:first-child{grid-column:1/-1}.dist{grid-template-columns:repeat(4,minmax(0,1fr))}.dl{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:760px){.ov{grid-template-columns:1fr}}
 .lg{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--muted);padding:0 18px 14px}
 .lg i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-inline-end:6px;vertical-align:-1px}
 .empty{padding:30px;text-align:center;color:var(--muted)}
@@ -162,15 +227,24 @@ td:first-child{color:#fff;font-weight:700}
 </div></header>
 
 <div class="wrap">
-  <div role="note" style="display:flex;gap:14px;align-items:center;margin:0 0 18px;padding:14px 20px;border-radius:14px;border:1px solid rgba(255,107,94,.55);background:linear-gradient(90deg,rgba(255,107,94,.16),rgba(240,191,90,.08))">
-    <div style="flex:none;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:rgba(255,107,94,.18);border:1px solid rgba(255,107,94,.6);color:#ff9d93;font-size:20px;font-weight:800">!</div>
-    <div><div style="color:#ffc2bb;font-size:17px;font-weight:800;margin-bottom:2px">تنبيه: هذه نسخة تجريبية قيد التطوير</div><div style="color:#e8ecf5;font-size:14px">الصفحة لعرض فكرة متابعة مسار الشراء، وستُستكمل بيانات الطلبات وتواريخ المراحل تباعاً.</div></div>
-  </div>
   <section class="kpis" id="kpis"></section>
-  <div class="flt seg" id="flt" style="width:max-content"><button data-f="all" class="on">كل الطلبات</button><button data-f="open">مفتوحة</button><button data-f="late">متأخرة</button><button data-f="closed">مُرسّاة</button></div>
+  <div role="note" style="display:flex;gap:14px;align-items:center;margin:14px 0 0;padding:10px 16px;border-radius:14px;border:1px solid rgba(255,107,94,.55);background:linear-gradient(90deg,rgba(255,107,94,.16),rgba(240,191,90,.08))">
+    <div style="flex:none;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:rgba(255,107,94,.18);border:1px solid rgba(255,107,94,.6);color:#ff9d93;font-size:20px;font-weight:800">!</div>
+    <div><div style="color:#ffc2bb;font-size:15px;font-weight:800;margin-bottom:1px">تنبيه: هذه نسخة تجريبية قيد التطوير</div><div style="color:#e8ecf5;font-size:13px">الصفحة لعرض فكرة متابعة مسار الشراء، وستُستكمل بيانات الطلبات وتواريخ المراحل تباعاً.</div></div>
+  </div>
+  <div class="sech"><span>١ · المسار المعتمد</span><small>كيف يمر أي طلب من إعداد الوصف حتى قرار الترسية</small></div>
+  <div class="card"><h3>مسار الشراء المعتمد (Workflow)<small>8 مراحل — من إعداد الوصف حتى قرار الترسية · على كل مرحلة عدد الطلبات الواقفة فيها الآن</small></h3><div class="path" id="path"></div></div>
+  <div class="sech"><span>٢ · الموقف الحالي</span><small>أين تقف الطلبات الآن، وعند مَن</small></div>
+  <section class="ov">
+    <div class="ovc"><h4>نسبة الإنجاز في المسار<small id="ovSub"></small></h4><div class="ring" id="ring"></div></div>
+    <div class="ovc"><h4>المراحل الجارية الآن<small>الأقدم أولاً · الأيام / المدة المستهدفة</small></h4><div class="spot" id="spot"></div></div>
+    <div class="ovc"><h4>عند مَن الطلبات الآن<small>المراحل المفتوحة حسب الجهة</small></h4><div class="own" id="own"></div></div>
+  </section>
+  <div class="card"><h3>توزيع المراحل<small>عدد الطلبات في كل مرحلة من مراحل المسار</small></h3><div class="dist" id="dist"></div></div>
+  <div class="sech"><span>٣ · تفاصيل الطلبات</span><small>كل طلب ومراحله ومخرجاته</small></div>
+  <div class="flt seg" id="flt" style="width:max-content"><button data-f="all" class="on">كل الطلبات</button><button data-f="open">مفتوحة</button><button data-f="late">متأخرة</button><button data-f="closed">تمت الترسية</button></div>
   <div class="card"><h3>الطلبات<small id="rcount"></small></h3><div id="reqs"></div>
     <div class="lg"><span><i style="background:#4fd18b"></i>تم الانتهاء</span><span><i style="background:#5aa9ff"></i>تحت الإجراء</span><span><i style="border:2px solid #f0bf5a"></i>مرحلة قادمة</span></div></div>
-  <div class="card"><h3>المسار المعتمد للشراء<small>8 مراحل — من إعداد الوصف حتى قرار الترسية</small></h3><div class="path" id="path"></div></div>
 </div>
 <footer style="text-align:center;color:var(--muted);font-size:12.5px;padding:0 0 26px">إعداد: <b style="color:var(--gl)">مكتب المها للاستشارات</b></footer>
 <button id="toTop" aria-label="العودة لأعلى">▲</button>
@@ -180,7 +254,7 @@ td:first-child{color:#fff;font-weight:700}
 const STAGES=[
  ['إعداد وصف الطلب','مكتب مها — إدارة البرامج، القسم الهندسي','وصف فني ومواصفات وكميات'],
  ['رفع الطلب إلى لجنة المشتريات','مكتب مها — إدارة البرامج','طلب مسجل لدى اللجنة'],
- ['المراجعة التشغيلية للوصف','إدارة التشغيل والصيانة — الشركة الحديثة','وصف مراجع تشغيلياً'],
+ ['المراجعة التشغيلية للوصف','إدارة التشغيل والصيانة — التحالف','وصف مراجع تشغيلياً'],
  ['اعتماد الوصف وتأهيل المقاولين والموردين','لجنة المشتريات','قائمة مؤهلين محليين'],
  ['اعتماد المؤهلين','مكتب مها، ثم لجنة الحوكمة والمشاريع بإشراق أو البلد الأمين','قائمة معتمدة'],
  ['طلب الأسعار واستلام العروض','إدارة المشتريات','عروض مستلمة'],
@@ -192,9 +266,22 @@ const STAGES=[
    اختياري لكل مرحلة: from/to (YYYY-MM-DD)، note، sla (أيام)
    لإضافة طلب: انسخ عنصراً وعدّل الحقول. */
 const UPDATED='2026-11-14';
+const SLA=[7,3,7,10,7,14,10,5]; // المدة المستهدفة لكل مرحلة (أيام) — تُعدَّل حسب المعتمد
+/* بناء مراحل طلب من تواريخ إغلاق المراحل: ends = تواريخ انتهاء المراحل المنجزة، start = بداية المرحلة الأولى، cur = عدد المراحل الجارية بالتوازي */
+function mk(start, ends, cur){ const st=[]; let f=start; for(let i=0;i<8;i++){ if(i<ends.length){ st.push({st:'done',from:f,to:ends[i],sla:SLA[i]}); f=ends[i]; } else if(i<ends.length+(cur||1)&&ends.length<8){ st.push({st:'prog',from:f,sla:SLA[i]}); } else st.push({st:'next',sla:SLA[i]}); } return st; }
 const REQS=[
  {id:'PR-01', title:'الطلبات المرفوعة حالياً', scope:'تأهيل المقاولين والموردين المحليين', contract:'', link:'',
-  stages:[{st:'done'},{st:'done'},{st:'prog'},{st:'prog'},{st:'next'},{st:'next'},{st:'next'},{st:'next'}]}
+  stages:[{st:'done'},{st:'done'},{st:'prog'},{st:'prog'},{st:'next'},{st:'next'},{st:'next'},{st:'next'}]},
+ {id:'PR-02', demo:1, title:'مقاول تركيب شاشات المباني — الرياض', scope:'تركيب وتشغيل شاشات الواجهات', contract:'ريمات الرياض — العقد الثالث', link:'../Riyadh/BuildingScreens/index.html?c=866304',
+  stages:mk('2026-10-12',['2026-10-18','2026-10-20','2026-10-28','2026-11-06','2026-11-11'])},
+ {id:'PR-03', demo:1, title:'استشاري إشراف هندسي — الأراضي البيضاء مكة', scope:'إشراف على التصميم والتركيب', contract:'PROJ-30326', link:'../Makkah/WhiteLands/index.html',
+  stages:mk('2026-10-20',['2026-10-27','2026-10-29'])},
+ {id:'PR-04', demo:1, title:'مقاول صيانة لوحات اليونيبول — جدة', scope:'صيانة دورية ووقائية', contract:'CN-135274', link:'../Jeddah/Unipole/index.html',
+  stages:mk('2026-09-28',['2026-10-05','2026-10-08','2026-10-14'])},
+ {id:'PR-05', demo:1, title:'مورد شاشات LED — شاشات المنطقة الشرقية', scope:'توريد شاشات ومستلزمات تشغيل', contract:'CN-37100 / CN-48868', link:'../EasternRegion/Screens-CN37100/index.html',
+  stages:mk('2026-10-25',['2026-11-02'])},
+ {id:'PR-06', demo:1, title:'مقاول أعمال كهربائية وتأريض — الدمام', scope:'تمديدات وتوصيل التيار الدائم', contract:'CN46-41', link:'../EasternRegion/index.html',
+  stages:mk('2026-08-20',['2026-08-26','2026-08-28','2026-09-04','2026-09-13','2026-09-20','2026-10-03','2026-10-12','2026-10-16'])}
 ];
 
 const $=s=>document.querySelector(s), TODAY=new Date(UPDATED);
@@ -224,18 +311,67 @@ function reqs(){
   $('#reqs').innerHTML=L.length?L.map(r=>{
     const x=info(r), cur=x.prog.length?x.prog:[];
     const badge=x.closed?'<span class="pill p-done">تمت الترسية</span>':`<span class="pill ${x.late?'p-late':'p-prog'}">${x.done} من ${STAGES.length} مراحل منتهية${x.late?' · متأخر':''}</span>`;
-    return `<div class="req"><div class="rh"><div><b>${r.title}</b><div class="sub"><span class="mono">${r.id}</span>${r.scope?' · '+r.scope:''}${r.contract?' · العقد: '+(r.link?`<a href="${r.link}" style="color:var(--gl)">${r.contract}</a>`:r.contract):''}</div></div>${badge}</div>
+    return `<div class="req"><div class="rh"><div><b>${r.title}</b>${r.demo?'<span style="font-size:10.5px;font-weight:800;color:#ffb3ab;border:1px solid rgba(255,107,94,.5);border-radius:999px;padding:0 8px;margin-inline-start:8px;vertical-align:2px">بيان تجريبي</span>':''}<div class="sub"><span class="mono">${r.id}</span>${r.scope?' · '+r.scope:''}${r.contract?' · العقد: '+(r.link?`<a href="${r.link}" style="color:var(--gl)">${r.contract}</a>`:r.contract):''}</div></div>${badge}</div>
      <div class="track">${STAGES.map((s,i)=>{const t=r.stages[i]||{st:'next'};return `<div class="stp ${t.st}"><div class="dot">${t.st==='done'?'✓':i+1}</div><div class="lb">${s[0]}</div></div>`}).join('')}</div>
+     <div class="rprog"><div class="b">${r.stages.map(t=>`<span style="width:${100/STAGES.length}%;background:${t.st==='done'?'#4fd18b':t.st==='prog'?'#5aa9ff':'transparent'};border-inline-start:1px solid rgba(3,9,21,.6)"></span>`).join('')}</div><b>${Math.round(x.done*100/STAGES.length)}%</b></div>
      ${cur.length?`<div class="now">${cur.map(i=>{const t=r.stages[i];return `<span>الآن: <b>${STAGES[i][0]}</b> — لدى ${STAGES[i][1]}${t.from?` · منذ ${days(t.from)} يوماً`:''} · المخرج المطلوب: ${STAGES[i][2]}</span>`}).join('')}</div>`:''}
-     <details class="dt"><summary>تفاصيل المراحل <span class="ar">▾</span></summary><div class="tw"><table><thead><tr><th>المرحلة</th><th>الجهة المسؤولة</th><th>المخرج</th><th>الحالة</th><th>من</th><th>إلى</th><th>المدة</th><th>ملاحظات</th></tr></thead><tbody>
+     <details class="dt"><summary>المخرجات وتفاصيل المراحل <span class="ar">▾</span></summary>
+     <div class="dl">${STAGES.map((s,i)=>{const t=(r.stages[i]||{st:'next'}).st;return `<div class="${t}" title="${s[0]}"><i>${t==='done'?'✓':t==='prog'?'…':i+1}</i>${s[2]}</div>`}).join('')}</div><div class="tw"><table><thead><tr><th>المرحلة</th><th>الجهة المسؤولة</th><th>المخرج</th><th>الحالة</th><th>من</th><th>إلى</th><th>المدة</th><th>ملاحظات</th></tr></thead><tbody>
      ${STAGES.map((s,i)=>{const t=r.stages[i]||{st:'next'};return `<tr><td><span class="num">${i+1}</span>${s[0]}</td><td>${s[1]}</td><td>${s[2]}</td><td><span class="pill ${SL[t.st][1]}">${SL[t.st][0]}</span></td><td class="mono">${fd(t.from)}</td><td class="mono">${fd(t.to)}</td><td>${t.from&&t.st!=='next'?days(t.from,t.to)+' يوماً':'—'}${t.sla?` <small style="color:var(--muted)">/ ${t.sla}</small>`:''}</td><td>${t.note||'—'}</td></tr>`}).join('')}
      </tbody></table></div></details></div>`;
   }).join(''):'<div class="empty">لا توجد طلبات ضمن هذا التصنيف</div>';
 }
-$('#path').innerHTML=STAGES.map((s,i)=>`<div class="ps"><span class="n">${String(i+1).padStart(2,'0')}</span><b>${s[0]}</b><div>${s[1]}</div><div class="o">المخرج: ${s[2]}</div></div>`).join('');
+(function(){
+  const cnt=(i,k)=>REQS.filter(r=>((r.stages[i]||{}).st||'next')===k).length;
+  const S=i=>cnt(i,'prog')?'prog':cnt(i,'done')===REQS.length?'done':'next';
+  const L={done:['تم','p-done'],prog:['جارٍ','p-prog'],next:['قادمة','p-next']};
+  const lab=i=>{const p=cnt(i,'prog'),d=cnt(i,'done');return p?`جارٍ · ${p} طلب`:d?`أُنجزت لـ ${d} طلب`:'لا طلبات بعد';};
+  const card=i=>{const s=STAGES[i],k=S(i);return `<div class="ps ${k}"><span class="stt ${L[k][1]}">${lab(i)}</span><span class="n">${k==='done'?'✓':i+1}</span><b>${s[0]}</b><div>${s[1]}</div><div class="o">المخرج: ${s[2]}</div></div>`;};
+  const ac=i=>{const a=S(i),b=S(i+1);return a==='done'&&b==='done'?'done':(a!=='next'&&b==='prog')?'prog':'';};
+  const arrH=i=>`<div class="arr ${ac(i)}"><svg viewBox="0 0 54 24" preserveAspectRatio="none"><line class="ln" x1="50" y1="12" x2="8" y2="12"/><line class="fl" x1="50" y1="12" x2="8" y2="12"/><path class="hd" d="M2 12 L12 6 L12 18 Z"/></svg></div>`;
+  const arrR=i=>`<div class="arr ${ac(i)}"><svg viewBox="0 0 54 24" preserveAspectRatio="none"><line class="ln" x1="4" y1="12" x2="46" y2="12"/><line class="fl" x1="4" y1="12" x2="46" y2="12"/><path class="hd" d="M52 12 L42 6 L42 18 Z"/></svg></div>`;
+  const r1=[0,1,2,3].map(i=>card(i)+(i<3?arrH(i):'')).join('');
+  const r2=[4,5,6,7].map(i=>card(i)+(i<7?arrR(i):'')).join('');
+  const dn=`<div class="wf-down"><div class="vd arr ${ac(3)}"><svg viewBox="0 0 24 46" preserveAspectRatio="none"><line class="ln" x1="12" y1="2" x2="12" y2="36"/><line class="fl" x1="12" y1="2" x2="12" y2="36"/><path class="hd" d="M12 44 L6 34 L18 34 Z"/></svg></div></div>`;
+  $('#path').innerHTML=`<div class="wf-row r1">${r1}</div>${dn}<div class="wf-row r2">${r2}</div>`;
+})();
 $('#flt').querySelectorAll('button').forEach(b=>b.onclick=()=>{F=b.dataset.f;$('#flt').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));reqs();});
 kpis();reqs();
+function overview(){
+  const I=REQS.map(info), T=REQS.length*STAGES.length;
+  const dn=REQS.reduce((a,r)=>a+r.stages.filter(s=>s.st==='done').length,0), pg=REQS.reduce((a,r)=>a+r.stages.filter(s=>s.st==='prog').length,0), nx=T-dn-pg;
+  const pct=T?Math.round(dn*100/T):0, C=2*Math.PI*48, seg=(v,o,c)=>`<circle cx="60" cy="60" r="48" fill="none" stroke="${c}" stroke-width="11" stroke-dasharray="${C*v/T} ${C}" stroke-dashoffset="${-C*o/T}" transform="rotate(-90 60 60)" stroke-linecap="butt"/>`;
+  $('#ring').innerHTML=`<svg width="128" height="128" viewBox="0 0 120 120"><circle cx="60" cy="60" r="48" fill="none" stroke="rgba(255,255,255,.07)" stroke-width="11"/>${seg(dn,0,'#4fd18b')}${seg(pg,dn,'#5aa9ff')}<text x="60" y="62" text-anchor="middle" class="rv">${pct}%</text><text x="60" y="80" text-anchor="middle" class="rl">مراحل منجزة</text></svg>
+   <ul><li><i style="background:#4fd18b"></i>تم الانتهاء<b>${dn}</b></li><li><i style="background:#5aa9ff"></i>تحت الإجراء<b>${pg}</b></li><li><i style="border:2px solid #f0bf5a"></i>قادمة<b>${nx}</b></li><li style="border-top:1px dashed rgba(255,255,255,.1);padding-top:5px">إجمالي المراحل<b>${T}</b></li></ul>`;
+  $('#ovSub').textContent=REQS.length+' طلب × '+STAGES.length+' مراحل';
+  // spotlight — أقدم المراحل الجارية أولاً
+  const open=[]; REQS.forEach(r=>r.stages.forEach((t,i)=>{ if(t.st==='prog') open.push({r,i,t,d:t.from?days(t.from):null}); }));
+  open.sort((a,b)=>(b.d??-1)-(a.d??-1));
+  let h=open.slice(0,4).map(o=>{const late=o.t.sla&&o.d!=null&&o.d>o.t.sla;return `<div class="sp${late?' lt':''}"><span class="no">${o.i+1}</span><div style="flex:1;min-width:0"><b>${STAGES[o.i][0]}<small style="color:var(--muted);font-weight:600;margin-inline-start:6px">${o.r.id}</small></b><span>${o.r.title}</span><span>لدى: ${STAGES[o.i][1]} · المخرج: <b style="display:inline;color:#8fc8ff;font-size:12px">${STAGES[o.i][2]}</b></span></div>${o.d!=null?`<span class="dd ${late?'late':''}">${o.d} يوم<small>${o.t.sla?' / '+o.t.sla:''}</small></span>`:''}</div>`;}).join('');
+  if(open.length>4) h+=`<div style="font-size:12px;color:var(--muted);text-align:center">و${open.length-4} مراحل جارية أخرى — انظر قائمة الطلبات</div>`;
+  $('#spot').innerHTML=h||'<div class="empty" style="padding:10px">لا توجد مراحل مفتوحة</div>';
+  // owners
+  const key=o=>o.split('—')[0].split('،')[0].replace(/^مكتب مها.*/,'مكتب مها').trim();
+  const OW={}; STAGES.forEach(s=>{OW[key(s[1])]=OW[key(s[1])]||0;});
+  REQS.forEach(r=>r.stages.forEach((t,i)=>{if(t.st==='prog')OW[key(STAGES[i][1])]++;}));
+  const mx=Math.max(1,...Object.values(OW));
+  $('#own').innerHTML=Object.entries(OW).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`<div class="ow ${v?'':'idle'}"><div class="t"><span>${k}</span><b>${v}</b></div><div class="b"><span style="width:${v?Math.max(8,v*100/mx):100}%"></span></div></div>`).join('');
+  // distribution
+  $('#dist').innerHTML=STAGES.map((s,i)=>{const p=REQS.filter(r=>(r.stages[i]||{}).st==='prog').length,d=REQS.filter(r=>(r.stages[i]||{}).st==='done').length;
+    return `<div class="ds ${p?'on':''}"><div class="i">${String(i+1).padStart(2,'0')}</div><div class="c" style="${p?'':'color:#64748b'}">${p}</div><div class="l">${s[0]}</div><div class="s">${d?`<span style="color:#7ee5aa;border-color:rgba(79,209,139,.4)">تم ${d}</span>`:''}${p?`<span style="color:#8fc8ff;border-color:rgba(90,169,255,.4)">جارٍ ${p}</span>`:''}${!d&&!p?`<span style="color:#94a3c4;border-color:rgba(148,163,184,.3)">قادمة</span>`:''}</div></div>`;}).join('');
+}
+overview();
 const tt=$('#toTop');addEventListener('scroll',()=>tt.classList.toggle('show',scrollY>400));tt.onclick=()=>scrollTo({top:0,behavior:'smooth'});
 </script>
+<style id="goldScroll">
+html{scrollbar-color:#d4a853 #0a1430;scrollbar-width:auto}
+*{scrollbar-color:#d4a853 rgba(10,20,48,.6)}
+::-webkit-scrollbar{width:11px !important;height:11px !important}
+::-webkit-scrollbar-track{background:#0a1430 !important;border-left:1px solid rgba(212,168,83,.18)}
+::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#f0d48e,#d4a853 55%,#9f7430) !important;border-radius:10px !important;border:2px solid #0a1430}
+::-webkit-scrollbar-thumb:hover{background:linear-gradient(180deg,#fff0c4,#e3b862) !important}
+::-webkit-scrollbar-corner{background:#0a1430}
+</style>
+
 </body>
 </html>
