@@ -366,7 +366,7 @@ const SCREENS = {
    ['حفظ الطلب لدى الأمانة','تم التنسيق مع أمانة المنطقة الشرقية لإيقاف الإجراءات وحفظ الطلب.','done'],
    ['متابعة الفاتورتين المعلّقتين','استكمال متابعة وضع الفاتورتين المفعّلتين على نظام سداد.','prog'],
    ['التحقق من مستندات السنة المجانية','التحقق من المستندات المتعلقة بالسنة المجانية وإفادة الإدارة بالنتيجة.','prog']]},
- next:'متابعة وضع الفاتورتين والتحقق من مستندات السنة المجانية، وإفادة الإدارة بالنتيجة.'
+ next:['متابعة وضع الفاتورتين والتحقق من مستندات السنة المجانية، وإفادة الإدارة بالنتيجة.','إلغاء واحد من عقدي شاشات الدمام حسب توصية مجلس الإدارة (العقد الأقل في التكلفة).']
 };
 
 const PORT = {
@@ -432,7 +432,7 @@ function contract(c){
   }
   if(now) h+=`<div class="card"><h3>الموقف الحالي</h3><ul class="bl">${now.map(x=>`<li>${x}</li>`).join('')}</ul></div>`;
   if(steps) h+=stepsCard(steps);
-  if(next) h+=`<div class="card"><h3>الخطوة القادمة</h3><div class="next" style="margin-top:14px"><b>← التالي:</b><span>${next}</span></div></div>`;
+  if(next) h+=`<div class="card"><h3>الخطوة القادمة</h3><div style="height:14px"></div>${[].concat(next).map(x=>`<div class="next"><b>← التالي:</b><span>${x}</span></div>`).join('')}</div>`;
   if(c.types) h+=`<div class="card"><h3>ملخص خطة التركيب والحفر حسب النوع</h3>${table(c.types)}<div class="tnote">ملاحظة: ${c.types.note}</div></div>`;
   if(c.plan){
     let cum=c.plan.base;

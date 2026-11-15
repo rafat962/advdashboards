@@ -145,6 +145,57 @@ body.single .layout{grid-template-columns:1fr;max-width:1300px}
   <main id="main"></main>
 </div>
 <footer>إعداد: <b>مكتب المها للاستشارات</b> · المصادر: عرض مجلس الإدارة (10 نوفمبر 2026) وخطاب التوضيحات بشأن الاستحقاقات وجداول العقود المعتمدة</footer>
+<div id="fmModal"><div class="fmbox"><div class="fmh"><b class="fmt"></b><button type="button" class="fmx" aria-label="إغلاق">✕</button></div><div class="fmp"></div></div></div>
+<style id="wfCss">
+.wfcard .wfsec{padding:16px 18px 18px}.wfcard .wfsec+.wfsec{border-top:1px dashed rgba(212,168,83,.25)}
+.wfh{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px}.wfh b{font-size:15px;color:#fff}.wfh small{color:var(--muted);font-size:12px}
+.wfdot{width:10px;height:10px;border-radius:50%;box-shadow:0 0 0 4px rgba(212,168,83,.12)}
+.wfrow{display:grid;grid-template-columns:repeat(4,minmax(0,1fr) 34px);grid-auto-flow:row;align-items:stretch;row-gap:14px}
+.wfrow.c2{grid-template-columns:repeat(3,minmax(0,1fr) 34px)}
+.wfs{position:relative;display:flex;gap:10px;padding:12px;border-radius:13px;border:1px solid rgba(212,168,83,.28);background:linear-gradient(160deg,rgba(16,40,92,.5),rgba(6,17,41,.75));opacity:0;animation:wfIn .5s ease forwards;animation-delay:calc(var(--i)*.09s)}
+.wfrow.c2 .wfs{border-color:rgba(63,193,201,.32)}
+.wfs.dec{border-style:dashed;border-color:rgba(240,191,90,.6);background:linear-gradient(160deg,rgba(240,191,90,.10),rgba(6,17,41,.75))}
+.wfs.end{border-color:rgba(79,209,139,.6);background:linear-gradient(160deg,rgba(79,209,139,.13),rgba(6,17,41,.75))}
+@keyframes wfIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.wfn{flex:none;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font:800 13px 'JetBrains Mono',monospace;color:#1a1405;background:linear-gradient(180deg,#f0d48e,#d4a853)}
+.wfrow.c2 .wfn{background:linear-gradient(180deg,#8be4e9,#3fc1c9)}.wfs.end .wfn{background:#4fd18b;color:#04210f}.wfs.dec .wfn{background:#f0bf5a}
+.wfb{min-width:0}.wfb b{display:block;font-size:13.5px;line-height:1.45;color:#fff}.wfb p{margin:4px 0 8px;font-size:12px;line-height:1.65;color:var(--ink2,#c3cce0)}
+.wft{display:flex;gap:6px;flex-wrap:wrap}
+.wff{font:700 11.5px inherit;font-family:inherit;color:#f0d48e;background:rgba(212,168,83,.1);border:1px solid rgba(212,168,83,.45);border-radius:999px;padding:2px 10px;cursor:pointer}
+.wff:hover{background:rgba(212,168,83,.22)}
+.wfr,.wfo{font-size:11px;border-radius:999px;padding:2px 9px;border:1px solid rgba(255,255,255,.12);color:var(--muted)}
+.wfr.warn{color:#f0bf5a;border-color:rgba(240,191,90,.45)}.wfo{color:#9fd8ff;border-color:rgba(90,169,255,.35)}
+.wfa{display:flex;align-items:center;justify-content:center}
+.wfa i{position:relative;display:block;width:100%;height:3px;border-radius:3px;background:repeating-linear-gradient(270deg,rgba(212,168,83,.95) 0 7px,transparent 7px 13px);background-size:26px 3px;animation:wfFlow 1s linear infinite}
+.wfrow.c2 .wfa i{background-image:repeating-linear-gradient(270deg,rgba(63,193,201,.95) 0 7px,transparent 7px 13px)}
+.wfa i::after{content:"";position:absolute;left:-4px;top:50%;transform:translateY(-50%);border:6px solid transparent;border-right:8px solid #d4a853;border-left:0}
+.wfrow.c2 .wfa i::after{border-right-color:#3fc1c9}
+@keyframes wfFlow{to{background-position:-26px 0}}
+.wfrow>.wfa:nth-child(8n){visibility:hidden}.wfrow.c2>.wfa:nth-child(8n){visibility:visible}.wfrow.c2>.wfa:nth-child(6n){visibility:hidden}
+.wfst{margin-top:14px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:12px;color:var(--muted)}
+.wfst span{font-weight:700;color:var(--ink2,#c3cce0);margin-inline-end:4px}.wfst i{font-style:normal;color:rgba(212,168,83,.7)}
+.wfst em{font-style:normal;font-weight:700;padding:3px 10px;border-radius:999px;color:hsl(var(--h) 80% 72%);background:hsl(var(--h) 70% 50% / .13);border:1px solid hsl(var(--h) 70% 55% / .45)}
+.wfnote{margin-top:10px;font-size:12.5px;color:#f6d38a;background:rgba(240,191,90,.08);border:1px solid rgba(240,191,90,.3);border-radius:10px;padding:7px 12px}
+@media(max-width:1100px){.wfrow,.wfrow.c2{grid-template-columns:repeat(2,minmax(0,1fr) 34px)}.wfrow>.wfa{visibility:visible!important}.wfrow>.wfa:nth-child(4n){visibility:hidden!important}}
+@media(max-width:640px){.wfrow,.wfrow.c2{grid-template-columns:1fr}.wfa{height:22px}.wfa i{width:3px;height:100%;background:repeating-linear-gradient(180deg,rgba(212,168,83,.95) 0 7px,transparent 7px 13px)}.wfa i::after{display:none}.wfrow>.wfa{visibility:visible!important}}
+@media (prefers-reduced-motion:reduce){.wfa i{animation:none}.wfs{animation:none;opacity:1}}
+</style>
+<style id="formsCss">
+.fmg{color:var(--gl);font-weight:800;font-size:14px;margin:6px 2px 10px}.fmg:not(:first-child){margin-top:18px}
+.fml{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.fmb{display:flex;gap:12px;align-items:center;text-align:right;padding:10px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.03);color:var(--ink);font:inherit;cursor:pointer;transition:.2s}
+.fmb:hover{border-color:var(--gold);background:rgba(212,168,83,.08);transform:translateY(-2px)}
+.fmb img{flex:none;width:62px;height:84px;object-fit:cover;object-position:top;border-radius:6px;background:#fff;box-shadow:0 4px 14px rgba(0,0,0,.35)}
+.fmb span{display:flex;flex-direction:column;gap:3px;min-width:0}.fmb b{font-size:14px;line-height:1.45}.fmb small{color:var(--muted);font-size:12px}.fmb em{font-style:normal;color:var(--gl);font-size:11.5px}
+#fmModal{position:fixed;inset:0;z-index:10000;background:rgba(2,6,15,.82);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;padding:20px}
+#fmModal.on{display:flex}
+.fmbox{width:min(920px,100%);max-height:100%;display:flex;flex-direction:column;background:#071330;border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.fmh{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px;border-bottom:1px solid var(--line);color:var(--gl)}
+.fmx{width:34px;height:34px;border-radius:9px;border:1px solid var(--line);background:none;color:#fff;cursor:pointer;font-size:15px}
+.fmx:hover{border-color:var(--gold)}
+.fmp{overflow:auto;padding:18px;display:flex;flex-direction:column;align-items:center;gap:16px}
+.fmp img{width:100%;max-width:850px;background:#fff;border-radius:6px;box-shadow:0 6px 26px rgba(0,0,0,.5);user-select:none;-webkit-user-drag:none}
+</style>
 <script>
 const SRC_DECK = 'عرض مجلس الإدارة — 10 نوفمبر 2026';
 const SRC_LET  = 'خطاب التوضيحات بشأن استحقاقات العقود وخطة السداد';
@@ -271,6 +322,13 @@ const C = [
  name:'مشروع الإعلان على الأراضي البيضاء والمباني تحت الإنشاء والترميم بمدينة مكة المكرمة — الحزمة الثالثة (العقد الأول)', party:'شركة البلد الأمين للتنمية والتطوير العمراني', status:['مرحلة التأسيس','plan'],
  info:[['تاريخ العقد','20/05/2026','03/12/1447هـ'],['تاريخ الاستلام','18/08/2026','05/03/1448هـ'],['قيمة العقد','15,225,000 ريال','غير شاملة ضريبة القيمة المضافة'],['الأجرة السنوية','3,045,000 ريال'],['مدة العقد','5 سنوات'],['فترة التجهيز','6 أشهر (10%)'],['عدد اللوحات','حتى 10 لوحات'],['المساحة الإعلانية','7,500 م²'],['الرسوم الإعلانية','400 ريال / م² سنوياً'],['رقم العطاء','EBID-887005'],['إشعار الترسية','22/04/2026','05/11/1447هـ'],['نطاق المواقع','من الدائري الثالث حتى حدود النطاق العمراني']],
  exec:{done:0,total:10,label:'لوحة منفَّذة', note:'تركيب حتى 10 لوحات بمساحة 7,500 م² بعد اعتماد المواقع'},
+ forms:[
+  {g:'محاضر التسليم',t:'محضر استلام الأراضي البيضاء — الحزمة الثالثة (المعدّل)',d:'بتاريخ 1448/03/05هـ الموافق 2026/08/18م',k:'rec',n:2},
+  {g:'محاضر التسليم',t:'محضر تسليم المشروع — النسخة السابقة',d:'بتاريخ 1448/01/28هـ',k:'old',n:2},
+  {g:'نماذج المتابعة',t:'نموذج (1) — بيانات الموقع',d:'بيانات الموقع ومعايير اختيار الأرض',k:'f1',n:2},
+  {g:'نماذج المتابعة',t:'نموذج (2) — إجراءات الترخيص',d:'وفق العقد رقم PROJ-30326',k:'f2',n:2},
+  {g:'نماذج المتابعة',t:'نموذج (3) — للاستعمال الميداني',d:'قائمة التحقق أثناء المعاينة',k:'f3',n:3},
+  {g:'نماذج المتابعة',t:'نموذج (4) — متطلبات محضر الاستلام',d:'للمتابعة',k:'f4',n:2}],
  alert:{t:'إلى الآن لم يتم تقديم أي أرض',d:'أُرسلت الاشتراطات اللازمة إلى الأقسام المختصة، وبانتظار تحديد المواقع لاستكمال الإجراءات.'},
  now:['عُدِّل محضر استلام الحزمة الثالثة – العقد الأول من 20/05/2026 إلى 18/08/2026 (قرابة 3 أشهر)، ليصبح 18/08/2026 بداية احتساب الالتزامات المالية للعقد.','وُجِّهت الإدارة المالية (19/08/2026) لتجهيز الالتزامات المالية للعقد.','أُرسلت الاشتراطات اللازمة إلى الأقسام المختصة، وبانتظار تحديد المواقع لاستكمال الإجراءات.'],
  steps:{title:'الإجراءات والالتزامات حسب محضر التسليم', items:[
@@ -404,6 +462,36 @@ function stepsCard(s){
 function table(t){
   return `<div style="overflow:auto"><table><thead><tr>${t.h.map(x=>`<th>${x}</th>`).join('')}</tr></thead><tbody>${t.r.map(r=>`<tr>${r.map((x,i)=>`<td>${i?(typeof x==='number'?fmt(x):x):'<b style="color:#fff">'+x+'</b>'}</td>`).join('')}</tr>`).join('')}</tbody>${t.f?`<tfoot><tr>${t.f.map(x=>`<td>${typeof x==='number'?fmt(x):x}</td>`).join('')}</tr></tfoot>`:''}</table></div>`;
 }
+const WF={
+ site:{title:'مسار الموقع الواحد — من المعاينة حتى الجاهزية للتنفيذ',sub:'يُطبَّق على كل أرض تُقدَّم · النماذج (1) و(3) و(2)',steps:[
+  {n:1,t:'المعاينة واختيار الأرض',d:'نطاق العقد، المخطط الإعلاني، طريق رئيسي/شرياني بعرض 40م فأكثر، الارتدادات، البعد 25م عن المداخل و5م عن الإشارة، كود الطرق SHC 307',f:['f1','f3'],fl:'نموذج 1 · 3',o:'فريق المعاينة'},
+  {n:2,t:'حالة الأرض والكهرباء',d:'أرض فضاء أو مسوّرة أو بها إنشاءات، خلوّها من العوائق وإمكانية الوصول، توفر مصدر كهرباء أو عداد أو نقطة تغذية قريبة تستوعب الأحمال',f:['f3'],fl:'نموذج 3',o:'فريق المعاينة'},
+  {n:3,t:'قرار اختيار الأرض',d:'مستوفية للشروط · تحتاج مراجعة · تحتاج استثناء لبنود محددة — مع صور الموقع من عدة اتجاهات وخريطة جوجل',f:['f1'],fl:'نموذج 1',o:'الإدارة',dec:1},
+  {n:4,t:'تجهيز ملف الترخيص',d:'موافقة مالك الموقع، صورة الصك، مخطط موقع اللوحة، التصميم والمقاسات، شهادة مكتب هندسي معتمد لتحمّل العوامل الجوية',f:['f2'],fl:'نموذج 2 · بنود 2–6',o:'مستشار التطوير والعقود'},
+  {n:5,t:'تقديم طلب الترخيص',d:'تقديم الطلب إلى شركة البلد الأمين مع جميع المستندات والمخططات والموافقات',f:['f2'],fl:'نموذج 2 · بنود 7–8',o:'مستشار التطوير والعقود'},
+  {n:6,t:'الملاحظات والموافقات',d:'معالجة ملاحظات الجهة المختصة وفق العقد، والحصول على موافقات الجهات ذات العلاقة',f:['f2'],fl:'نموذج 2 · بنود 9–10',o:'مستشار التطوير والعقود'},
+  {n:7,t:'إصدار الترخيص',d:'استكمال إصدار ترخيص اللوحة وتسجيل رقمه وتاريخ إصداره',f:['f2'],fl:'نموذج 2 · بند 11',o:'شركة البلد الأمين'},
+  {n:8,t:'جاهز للتنفيذ',d:'لا يبدأ التركيب قبل اكتمال الترخيص والموافقات المطلوبة',f:['f2'],fl:'نموذج 2 · بند 12',o:'المقاول',end:1}],
+  status:['مناسب للاختيار','يحتاج استكمال بيانات','تحت إجراءات الترخيص','الترخيص صادر','جاهز للتنفيذ']},
+ contract:{title:'متطلبات محضر الاستلام — على مستوى العقد',sub:'18 متطلباً · متابعة أسبوعية · نموذج (4) · المسؤول: مستشار عام التطوير والعقود',steps:[
+  {n:1,t:'البرنامج الزمني',d:'برنامج لمراحل التصميم والإنشاء والتركيب والتشغيل والصيانة، يُقدَّم خلال 30 يوماً من استلام المشروع',r:'1–2',k:30},
+  {n:2,t:'التصميم الابتدائي واعتماده',d:'تصميم إبداعي يوضح الشكل والأبعاد والإطار عبر مكتب هندسي معتمد، وموافقة استديو الأمانة، مع مراعاة الهوية والمخطط الإعلاني والاشتراطات وكود الطرق',r:'3–6'},
+  {n:3,t:'النموذج التجريبي',d:'تنفيذ نموذج للتصميم وتركيبه بأحد المواقع، ثم الاعتماد الخطي من شركة البلد الأمين قبل البدء بالتنفيذ',r:'7–8'},
+  {n:4,t:'الضمان البنكي',d:'ضمان حسن تنفيذ بنسبة 5% من قيمة العقد لمدة خمس سنوات وفق شروط المحضر',r:'9'},
+  {n:5,t:'المقاول والإشراف',d:'إسناد التنفيذ لمقاول متخصص مع إثبات تأهيله، والإشراف لمكتب هندسي مسجّل بهيئة المهندسين يراجع الأعمال ويوثّق الملاحظات ويبلغ البلد الأمين',r:'10–14'},
+  {n:6,t:'التنفيذ والالتزام',d:'الالتزام بكراسة الشروط والمواصفات، واستكمال تراخيص الأمانة والجهات ذات العلاقة، والموافقة الخطية على أي تغيير',r:'15–18',end:1}]}
+};
+function wfCard(c){
+  const S=WF.site,K=WF.contract;
+  const step=(x,i,arr,form)=>`<div class="wfs${x.dec?' dec':''}${x.end?' end':''}" style="--i:${i}"><div class="wfn">${x.end?'✓':x.n}</div><div class="wfb"><b>${x.t}</b><p>${x.d}</p><div class="wft">${form&&x.f?`<button type="button" class="wff" data-k="${x.f[0]}">📄 ${x.fl}</button>`:''}${x.r?`<span class="wfr">بنود ${x.r}</span>`:''}${x.k?`<span class="wfr warn">⏱ خلال ${x.k} يوماً</span>`:''}${x.o?`<span class="wfo">${x.o}</span>`:''}</div></div></div>${i<arr.length-1?'<div class="wfa" aria-hidden="true"><i></i></div>':''}`;
+  return `<div class="card wfcard"><h3>مسار الإجراءات وفق النماذج<small>مسارين متوازيين</small></h3>
+   <div class="wfsec"><div class="wfh"><span class="wfdot" style="background:var(--gold)"></span><b>${S.title}</b><small>${S.sub}</small></div>
+    <div class="wfrow">${S.steps.map((x,i,a)=>step(x,i,a,1)).join('')}</div>
+    <div class="wfst"><span>حالات الموقع (للإدارة العليا):</span>${S.status.map((t,i)=>`<em style="--h:${[200,38,45,150,140][i]}">${t}</em>`).join('<i>←</i>')}</div>
+    <div class="wfnote">لم تُقدَّم أي أرض حتى الآن — المسار جاهز للتطبيق على أول موقع يُقدَّم.</div></div>
+   <div class="wfsec"><div class="wfh"><span class="wfdot" style="background:var(--teal)"></span><b>${K.title}</b><small>${K.sub}</small><button type="button" class="wff" data-k="f4" style="margin-inline-start:auto">📄 فتح نموذج (4)</button></div>
+    <div class="wfrow c2">${K.steps.map((x,i,a)=>step(x,i,a,0)).join('')}</div></div></div>`;
+}
 function contract(c){
   const scr=c.screens?SCREENS:null;
   const now=c.now||(scr&&scr.now), steps=c.steps||(scr&&scr.steps), next=scr&&scr.next;
@@ -451,6 +539,9 @@ function contract(c){
       ${f.impact?`<div class="imp"><div class="v">${fmt(f.impact[1])}</div><div class="k">ريال · ${f.impact[0]}</div></div>`:'<div style="height:12px"></div>'}
     </div>`;
   }
+  if(c.forms) h+=wfCard(c);
+  if(c.forms){const G=[...new Set(c.forms.map(x=>x.g))];
+    h+=`<div class="card"><h3>النماذج والمحاضر<small>${c.forms.length} مستندات · للعرض فقط</small></h3><div class="pad">`+G.map(g=>`<div class="fmg">${g}</div><div class="fml">`+c.forms.filter(x=>x.g===g).map(x=>`<button type="button" class="fmb" data-k="${x.k}"><img src="forms/t/${x.k}.jpg" alt="" loading="lazy" decoding="async" width="62" height="84"><span><b>${x.t}</b><small>${x.d}</small><em>${x.n} ${x.n>2?'صفحات':'صفحتان'}</em></span></button>`).join('')+`</div>`).join('')+`</div></div>`;}
   if(c.dash&&!inIframe) h+=`<div class="card"><h3>لوحات المعلومات المرتبطة</h3><div class="links">${c.dash.map((d,i)=>`<a class="${i?'sec':''}" href="${d[1]}" target="${/^https?:/.test(d[1])?'_blank':'_self'}">${d[0]} ↗</a>`).join('')}</div></div>`;
   return h;
 }
@@ -481,9 +572,18 @@ function go(id,noPush){
   const m=$('#main'); m.style.animation='none'; void m.offsetWidth; m.style.animation='';
   m.innerHTML = id==='portfolio'?portfolio():contract(C.find(c=>c.id===id));
   m.querySelectorAll('tr.go').forEach(r=>r.onclick=()=>go(r.dataset.id));
+  m.querySelectorAll('.fmb').forEach(b=>b.onclick=()=>openForm(C.find(c=>c.id===id),b.dataset.k));
+  m.querySelectorAll('.wff').forEach(b=>b.onclick=()=>openForm(C.find(c=>c.id===id),b.dataset.k));
   
   window.scrollTo({top:0,behavior:'smooth'});
 }
+function openForm(c,k){const f=c.forms.find(x=>x.k===k);const M=document.getElementById('fmModal');
+  M.querySelector('.fmt').textContent=f.t;M.querySelector('.fmp').innerHTML=Array.from({length:f.n},(_,i)=>`<img src="forms/${k}-${i+1}.jpg" alt="صفحة ${i+1}" draggable="false" decoding="async"${i?' loading="lazy"':''}>`).join('');
+  M.classList.add('on');document.body.style.overflow='hidden';M.querySelector('.fmp').scrollTop=0;}
+function closeForm(){document.getElementById('fmModal').classList.remove('on');document.body.style.overflow='';}
+document.getElementById('fmModal').onclick=e=>{if(e.target.id==='fmModal'||e.target.closest('.fmx'))closeForm()};
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeForm()});
+document.getElementById('fmModal').addEventListener('contextmenu',e=>e.preventDefault());
 go('PROJ-30326',true);
 </script>
 <style id="toTopCss">#toTop{position:fixed;left:24px;bottom:24px;z-index:9999;width:46px;height:46px;border-radius:14px;border:1px solid rgba(212,168,83,.45);background:rgba(6,17,41,.88);color:#f0d48e;display:grid;place-items:center;cursor:pointer;box-shadow:0 10px 26px rgba(0,0,0,.45);backdrop-filter:blur(8px);opacity:0;transform:translateY(14px);pointer-events:none;transition:opacity .25s,transform .25s,background .2s}#toTop.on{opacity:1;transform:none;pointer-events:auto}#toTop:hover{background:linear-gradient(180deg,#f0d48e,#d4a853);color:#1a1405}@media print{#toTop{display:none}}</style>
