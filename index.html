@@ -4231,7 +4231,8 @@ html{scrollbar-color:#d4a853 #0a1430;scrollbar-width:auto}
                 live: '<circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/>',
                 wait: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
             };
-            const NCON = Object.values(CONTRACTS).reduce((a, v) => a + v.length, 0);
+            const UCON = (l) => new Set((l || []).map((c) => (c.no && c.no !== "—" ? c.no : "i:" + (c.info || c.t)))).size;
+            const NCON = Object.values(CONTRACTS).reduce((a, v) => a + UCON(v), 0);
 
 
             /* ---------- Saudi Signs (Al-Haditha) projects under development ---------- */
@@ -4586,7 +4587,7 @@ html{scrollbar-color:#d4a853 #0a1430;scrollbar-width:auto}
       <div class="cbody">
         ${
             n
-                ? `<div class="lbl"><span>لوحات المتابعة</span>${(CONTRACTS[p.id]||[]).length?`<span class="ccount">${((n)=>n==1?"عقد واحد":n==2?"عقدان":n+" عقود")((CONTRACTS[p.id]||[]).length)}</span>`:""}</div><ul class="dl">${list
+                ? `<div class="lbl"><span>لوحات المتابعة</span>${(CONTRACTS[p.id]||[]).length?`<span class="ccount">${((n)=>n==1?"عقد واحد":n==2?"عقدان":n+" عقود")(UCON(CONTRACTS[p.id]))}</span>`:""}</div><ul class="dl">${list
                       .slice(0, 2)
                       .map((d) => row(d))
                       .join("")}</ul>`
