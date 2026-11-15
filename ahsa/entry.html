@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>إدخال التقييم التجاري والملاحظات – محافظة الأحساء</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --n0:#030915;--n1:#061129;--n2:#0a1a3f;
+  --gold:#d4a853;--gl:#f0d48e;--gd:#9f7430;
+  --ink:#eef2fa;--ink2:#c3cce0;--muted:#8796b8;
+  --hair:rgba(255,255,255,.08);--line:rgba(212,168,83,.28);
+  --o:#ff8a2a;--o2:rgba(255,138,42,.14);
+  --g:#4fd18b;--g2:rgba(79,209,139,.14);
+  --r:#ff6b5e;--r2:rgba(255,107,94,.14);
+  --b:#5aa9ff;--b2:rgba(90,169,255,.14);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;font-family:Cairo,Tahoma,sans-serif;color:var(--ink);
+  background:radial-gradient(1000px 600px at 75% 0%,rgba(36,84,196,.18),transparent 65%),linear-gradient(180deg,var(--n1),var(--n0) 55%);
+  display:flex;flex-direction:column;overflow:hidden;
+}
+a{color:var(--gl)}
+header{
+  flex:0 0 auto;position:relative;z-index:1000;
+  background:rgba(3,9,21,.88);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--hair);padding:8px 14px;
+  display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;
+}
+header::after{content:"";position:absolute;inset:auto 0 -1px 0;height:1px;background:linear-gradient(90deg,transparent 5%,rgba(240,212,142,.7) 50%,transparent 95%)}
+header h1{margin:0;font-size:19px;font-weight:800;background:linear-gradient(180deg,#fff0c4,var(--gold) 60%,var(--gd));-webkit-background-clip:text;background-clip:text;color:transparent}
+header small{color:var(--muted);font-size:11.5px}
+.hactions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.back{border:1px solid var(--line);border-radius:10px;padding:6px 12px;font-size:12.5px;font-weight:700;text-decoration:none;background:rgba(212,168,83,.07);color:var(--gl);transition:.15s}
+.back:hover{background:linear-gradient(180deg,var(--gl),var(--gold) 60%,var(--gd));color:#1c1405}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:999px;font-size:12px;font-weight:700;border:1px solid var(--b2);background:rgba(6,17,41,.9);color:var(--ink2)}
+.pill .dot{width:8px;height:8px;border-radius:50%;background:var(--b)}
+.pill button{background:none;border:0;color:var(--gl);cursor:pointer;font:inherit;padding:0 3px}
+
+.wrap{flex:1;min-height:0;padding:8px 10px 10px;display:grid;grid-template-rows:auto auto minmax(0,1fr);gap:8px}
+.glass,.k,.panel{
+  background:linear-gradient(160deg,rgba(16,40,92,.55),rgba(6,17,41,.78));
+  border:1px solid var(--hair);border-radius:14px;box-shadow:0 18px 42px rgba(0,0,0,.35);
+}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.k{padding:7px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.k span{color:var(--muted);font-size:12px;font-weight:600}
+.k b{font-size:22px;font-weight:800;color:#fff;line-height:1.15}
+.k.ok{border-color:rgba(79,209,139,.38);background:linear-gradient(160deg,rgba(79,209,139,.13),rgba(6,17,41,.82))}.k.ok b{color:var(--g)}
+.k.wait{border-color:rgba(255,138,42,.38);background:linear-gradient(160deg,rgba(255,138,42,.13),rgba(6,17,41,.82))}.k.wait b{color:var(--o)}
+.k.sess{border-color:var(--line);background:linear-gradient(160deg,rgba(212,168,83,.14),rgba(6,17,41,.82))}.k.sess b{color:var(--gl)}
+.pbar{height:5px;border-radius:99px;background:rgba(255,255,255,.08);overflow:hidden;margin-top:4px;min-width:90px}
+.pbar>span{display:block;height:100%;background:linear-gradient(90deg,var(--g),#86efac);width:0%;transition:width .35s ease}
+
+.session-bar{
+  display:none;align-items:center;gap:8px;padding:6px 12px;border-radius:12px;
+  background:rgba(79,209,139,.08);border:1px solid rgba(79,209,139,.3);
+  font-size:12px;color:var(--ink2);overflow-x:auto;white-space:nowrap;
+}
+.session-bar.show{display:flex}
+.s-chip{
+  display:inline-flex;align-items:center;gap:5px;padding:2px 9px;border-radius:999px;
+  background:rgba(6,17,41,.85);border:1px solid rgba(79,209,139,.4);color:#c7f9de;
+  cursor:pointer;font:700 11.5px Cairo,sans-serif;transition:.15s;
+}
+.s-chip:hover{background:var(--g);color:#042112}
+
+.workspace{display:grid;grid-template-columns:320px 1fr 370px;gap:8px;min-height:0}
+.panel{padding:10px;display:flex;flex-direction:column;gap:8px;min-height:0;overflow:hidden}
+.panel-scroll{flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:6px;padding-left:2px}
+h3{margin:0;font-size:13.5px;color:var(--gl);font-weight:800}
+
+.seg{display:flex;gap:4px;padding:3px;border-radius:10px;background:rgba(3,9,21,.65);border:1px solid var(--hair)}
+.seg button{flex:1;border:0;background:transparent;color:var(--ink2);padding:6px 4px;font:700 12px Cairo,sans-serif;cursor:pointer;border-radius:7px;transition:.15s}
+.seg button.on{background:rgba(212,168,83,.2);color:#fff;box-shadow:inset 0 0 0 1px rgba(212,168,83,.5)}
+.seg button.on.ok{background:var(--g2);color:var(--g);box-shadow:inset 0 0 0 1px var(--g)}
+.seg button.on.wait{background:var(--o2);color:var(--o);box-shadow:inset 0 0 0 1px var(--o)}
+
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+select,input[type=search],input[type=text],textarea{
+  width:100%;padding:8px 10px;border:1px solid var(--hair);border-radius:10px;
+  font:600 12.5px Cairo,sans-serif;background:rgba(3,9,21,.7);color:var(--ink);outline:none;transition:border-color .15s;
+}
+select:focus,input:focus,textarea:focus{border-color:var(--gold)}
+textarea{resize:vertical;min-height:84px;line-height:1.6}
+
+.site-card{
+  padding:8px 10px;border-radius:11px;border:1px solid var(--hair);
+  background:rgba(3,9,21,.48);cursor:pointer;transition:.14s;display:flex;flex-direction:column;gap:4px;
+}
+.site-card:hover{border-color:rgba(212,168,83,.45);background:rgba(16,40,92,.42)}
+.site-card.active{border-color:var(--gl);background:rgba(212,168,83,.14);box-shadow:inset 0 0 0 1px rgba(240,212,142,.45)}
+.site-card.prop{border-right:3px solid var(--o)}
+.sc-top{display:flex;align-items:center;justify-content:space-between;gap:6px}
+.sc-code{font-weight:800;font-size:13px;color:#fff;display:flex;align-items:center;gap:6px}
+.sc-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.sc-meta{font-size:11.5px;color:var(--muted);display:flex;justify-content:space-between;gap:6px}
+.sc-preview{font-size:11.5px;color:#c7f9de;background:rgba(79,209,139,.08);border:1px solid rgba(79,209,139,.25);border-radius:7px;padding:3px 7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+.badge{display:inline-flex;align-items:center;gap:4px;padding:1px 8px;border-radius:999px;font-size:11px;font-weight:700;white-space:nowrap}
+.b-ok{background:var(--g2);color:var(--g);border:1px solid rgba(79,209,139,.35)}
+.b-wait{background:rgba(255,255,255,.06);color:var(--muted);border:1px solid var(--hair)}
+.b-prop{background:var(--o2);color:var(--o);border:1px dashed var(--o)}
+.b-base{background:var(--b2);color:var(--b);border:1px solid rgba(90,169,255,.35)}
+.b-sess{background:rgba(212,168,83,.2);color:var(--gl);border:1px solid var(--line)}
+
+.mapwrap{position:relative;min-height:0;border-radius:14px;overflow:hidden;border:1px solid var(--line)}
+#map{position:absolute;inset:0;background:var(--n0)}
+.pinm{background:none;border:0}
+.pinm svg{filter:drop-shadow(0 3px 4px rgba(0,0,0,.65));transition:transform .16s;transform-origin:50% 100%}
+.pinm:hover svg{transform:scale(1.22)}
+.pinm.sel svg{transform:scale(1.36);filter:drop-shadow(0 0 9px rgba(240,212,142,.95))}
+.leaflet-tooltip.tt{background:rgba(3,9,21,.94);color:#fff;border:1px solid var(--line);font:600 12px Cairo,sans-serif;box-shadow:none}
+.leaflet-tooltip.tt:before{display:none}
+.leaflet-popup-content-wrapper,.leaflet-popup-tip{background:#0a1a40;color:var(--ink);border:1px solid var(--line)}
+.leaflet-control-layers{background:#0a1a40!important;color:var(--ink)}
+.fitbtn{background:rgba(3,9,21,.9)!important;color:var(--gl)!important;border:1px solid var(--line)!important;font:700 12px Cairo,sans-serif;padding:6px 11px;border-radius:9px;cursor:pointer}
+.fitbtn:hover{background:linear-gradient(180deg,var(--gl),var(--gold))!important;color:#1c1405!important}
+.legend{background:rgba(3,9,21,.9);color:var(--ink2);padding:8px 11px;border-radius:10px;font:11.5px Cairo,sans-serif;line-height:1.85;border:1px solid var(--line)}
+.legend .lr{display:flex;align-items:center;gap:7px}
+
+/* Form Panel */
+.form-empty{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;color:var(--muted);padding:20px;gap:12px;
+}
+.site-header-box{
+  padding:10px 12px;border-radius:12px;background:rgba(3,9,21,.6);border:1px solid var(--line);
+  display:flex;flex-direction:column;gap:6px;
+}
+.sh-title{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.sh-title b{font-size:17px;color:#fff}
+.sh-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px 10px;font-size:12px;color:var(--ink2)}
+.sh-grid span b{color:#fff}
+.nav-btns{display:flex;gap:6px;flex-wrap:wrap}
+.btn-sm{
+  flex:1;border:1px solid var(--hair);background:rgba(255,255,255,.04);color:var(--ink2);
+  border-radius:9px;padding:6px 8px;font:700 12px Cairo,sans-serif;cursor:pointer;transition:.15s;text-align:center;text-decoration:none;
+}
+.btn-sm:hover:not(:disabled){border-color:var(--line);color:var(--gl);background:rgba(212,168,83,.09)}
+.btn-sm:disabled{opacity:.4;cursor:not-allowed}
+
+.field-group{display:flex;flex-direction:column;gap:5px}
+.field-head{display:flex;justify-content:space-between;align-items:center;font-size:12.5px;font-weight:700;color:var(--gl)}
+.field-head small{color:var(--muted);font-weight:600}
+.clear-link{background:none;border:0;color:var(--muted);cursor:pointer;font:600 11.5px Cairo,sans-serif}
+.clear-link:hover{color:var(--r)}
+
+.presets{display:flex;flex-wrap:wrap;gap:5px}
+.preset{
+  border:1px solid var(--hair);background:rgba(3,9,21,.65);color:var(--ink2);
+  border-radius:999px;padding:4px 10px;font:700 11.5px Cairo,sans-serif;cursor:pointer;transition:.14s;
+}
+.preset:hover{border-color:var(--line);color:var(--gl)}
+.preset.on{background:rgba(212,168,83,.22);border-color:var(--gold);color:#fff}
+
+.att-box{
+  padding:9px 11px;border-radius:11px;border:1px dashed var(--line);
+  background:rgba(3,9,21,.45);display:flex;flex-direction:column;gap:7px;font-size:12px;
+}
+.att-warn{
+  padding:8px 10px;border-radius:9px;background:rgba(240,191,90,.09);
+  border:1px solid rgba(240,191,90,.35);color:#ffe2a8;font-size:11.5px;line-height:1.6;
+}
+.att-item{
+  display:flex;align-items:center;justify-content:space-between;gap:6px;
+  padding:5px 8px;border-radius:8px;background:rgba(255,255,255,.04);border:1px solid var(--hair);
+}
+.att-item a{text-decoration:none;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.att-del{background:none;border:1px solid rgba(255,107,94,.35);color:var(--r);border-radius:6px;padding:1px 7px;cursor:pointer;font:700 11px Cairo,sans-serif}
+.dropzone{
+  border:1px dashed rgba(90,169,255,.45);border-radius:9px;padding:10px;text-align:center;
+  color:var(--ink2);cursor:pointer;background:rgba(90,169,255,.05);transition:.15s;
+}
+.dropzone:hover,.dropzone.drag{border-color:var(--gl);background:rgba(212,168,83,.09)}
+
+.actions{display:flex;flex-direction:column;gap:6px;margin-top:4px}
+.btn-primary{
+  width:100%;border:0;border-radius:11px;padding:10px 14px;cursor:pointer;
+  font:800 13.5px Cairo,sans-serif;color:#1a1405;
+  background:linear-gradient(180deg,var(--gl),var(--gold) 65%,var(--gd));
+  box-shadow:0 8px 20px rgba(212,168,83,.25);transition:.15s;
+}
+.btn-primary:hover:not(:disabled){filter:brightness(1.06)}
+.btn-primary:disabled{opacity:.5;cursor:not-allowed}
+.btn-secondary{
+  width:100%;border:1px solid rgba(79,209,139,.45);border-radius:11px;padding:9px 12px;cursor:pointer;
+  font:800 13px Cairo,sans-serif;color:var(--g);background:rgba(79,209,139,.1);transition:.15s;
+}
+.btn-secondary:hover:not(:disabled){background:rgba(79,209,139,.2)}
+.btn-secondary:disabled{opacity:.5;cursor:not-allowed}
+
+.feedback{display:none;padding:9px 11px;border-radius:10px;font-size:12px;font-weight:700;line-height:1.55}
+.feedback.ok{display:block;background:var(--g2);border:1px solid rgba(79,209,139,.45);color:#ccfbe1}
+.feedback.err{display:block;background:var(--r2);border:1px solid rgba(255,107,94,.45);color:#ffd2cd}
+.dirty-note{display:none;font-size:11.5px;color:#ffd88a;font-weight:700}
+.dirty-note.show{display:block}
+
+::-webkit-scrollbar{width:7px;height:7px}
+::-webkit-scrollbar-thumb{background:rgba(212,168,83,.3);border-radius:99px}
+
+@media(max-width:1100px){
+  body{overflow:auto;display:block;height:auto}
+  .wrap{display:flex;flex-direction:column}
+  .kpis{grid-template-columns:repeat(2,1fr)}
+  .workspace{grid-template-columns:1fr}
+  .mapwrap{height:48vh;min-height:340px}
+  .panel{max-height:70vh}
+}
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>إدخال التقييم التجاري والملاحظات – محافظة الأحساء</h1>
+    <small>تعديل بيانات النقاط القائمة مباشرة على طبقة المعالم (Feature Layer) بدون إضافة نقاط جديدة</small>
+  </div>
+  <div class="hactions">
+    <span class="pill" id="syncPill"><span class="dot" id="syncDot"></span><span id="syncText">جاري تحميل الطبقة...</span><button type="button" id="refreshBtn" title="إعادة تحميل البيانات من السيرفر">⟳</button></span>
+    <a class="back" href="index.html">📊 لوحة الأحساء</a>
+    <a class="back" href="../index.html">← بوابة المشاريع</a>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="kpis">
+    <div class="k"><div><span>إجمالي المواقع</span></div><b id="kTotal">—</b></div>
+    <div class="k ok">
+      <div>
+        <span>تم إدخال بياناتها</span>
+        <div class="pbar"><span id="kPctBar"></span></div>
+      </div>
+      <div style="text-align:left"><b id="kFilled">—</b><small id="kPct" style="color:var(--g);font-weight:700;display:block;font-size:11px">0%</small></div>
+    </div>
+    <div class="k wait"><span>بانتظار الإدخال</span><b id="kPending">—</b></div>
+    <div class="k sess"><span>أُضيف في جلستك الآن</span><b id="kSession">0</b></div>
+  </div>
+
+  <div class="session-bar" id="sessionBar">
+    <strong style="color:var(--g)">✓ تعديلات جلستك:</strong>
+    <div id="sessionChips" style="display:inline-flex;gap:6px;align-items:center"></div>
+  </div>
+
+  <div class="workspace">
+    <!-- Right Column: Filters + Sites List -->
+    <aside class="panel">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <h3>المواقع (<span id="listCount">0</span>)</h3>
+        <button type="button" class="clear-link" id="resetFilters">إعادة ضبط الفلاتر</button>
+      </div>
+
+      <div class="seg" id="statusSeg">
+        <button data-v="all" class="on">الكل (<span id="cAll">0</span>)</button>
+        <button data-v="pending" class="wait">متبقي (<span id="cWait">0</span>)</button>
+        <button data-v="filled" class="ok">تم إدخاله (<span id="cOk">0</span>)</button>
+      </div>
+
+      <div class="seg" id="catSeg">
+        <button data-v="all" class="on">كل التصنيفات</button>
+        <button data-v="0">أساسي</button>
+        <button data-v="1">مقترح (-P)</button>
+      </div>
+
+      <div class="frow">
+        <select id="fType"><option value="">كل أنواع الوسائل</option></select>
+        <select id="fRating"><option value="">كل التقييمات</option></select>
+      </div>
+
+      <input type="search" id="fSearch" placeholder="بحث بالكود أو التقييم أو الملاحظات...">
+
+      <div class="panel-scroll" id="siteList"></div>
+    </aside>
+
+    <!-- Center: Map -->
+    <section class="mapwrap">
+      <div id="map"></div>
+    </section>
+
+    <!-- Left Column: Data Entry Form -->
+    <aside class="panel">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <h3>نموذج التقييم والملاحظات</h3>
+        <span class="dirty-note" id="dirtyNote">● تعديلات لم تُحفظ</span>
+      </div>
+
+      <div class="form-empty" id="formEmpty">
+        <div style="font-size:34px">📍</div>
+        <div>اختر أي موقع من <b>الخريطة</b> أو من <b>القائمة</b> لإدخال تقييم القسم التجاري والملاحظات.</div>
+        <button type="button" class="btn-secondary" id="jumpFirstPending" style="max-width:250px">الانتقال لأول موقع بانتظار الإدخال ⏭</button>
+      </div>
+
+      <form id="entryForm" class="panel-scroll" style="display:none" onsubmit="return false">
+        <div class="site-header-box">
+          <div class="sh-title">
+            <b id="sCode">—</b>
+            <div style="display:flex;gap:5px;flex-wrap:wrap">
+              <span class="badge" id="sClassBadge">—</span>
+              <span class="badge" id="sStatusBadge">—</span>
+            </div>
+          </div>
+          <div class="sh-grid">
+            <span>النوع: <b id="sType">—</b></span>
+            <span>رقم ضمن النوع: <b id="sNo">—</b></span>
+            <span>الترتيب: <b id="sSeq">—</b></span>
+            <span>الإحداثي: <b id="sCoord" style="direction:ltr;display:inline-block">—</b></span>
+          </div>
+          <div class="nav-btns">
+            <button type="button" class="btn-sm" id="btnPrev">⏮ السابق</button>
+            <button type="button" class="btn-sm" id="btnNext">التالي ⏭</button>
+            <button type="button" class="btn-sm" id="btnNextPending">التالي المتبقي ⏭</button>
+            <a class="btn-sm" id="sGmaps" target="_blank" rel="noopener">خرائط جوجل ↗</a>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <div class="field-head">
+            <label for="inRating">تقييم القسم التجاري <small>(commercial_rating)</small></label>
+            <button type="button" class="clear-link" id="clearRating">✕ مسح</button>
+          </div>
+          <div class="presets" id="ratingPresets"></div>
+          <input type="text" id="inRating" maxlength="255" placeholder="اختر من التقييمات أعلاه أو اكتب التقييم...">
+        </div>
+
+        <div class="field-group">
+          <div class="field-head">
+            <label for="inNotes">ملاحظات <small>(Notes)</small></label>
+            <span style="display:flex;gap:8px;align-items:center">
+              <small id="notesCounter">0 / 255</small>
+              <button type="button" class="clear-link" id="clearNotes">✕ مسح</button>
+            </span>
+          </div>
+          <textarea id="inNotes" maxlength="255" placeholder="اكتب ملاحظات القسم التجاري حول الموقع..."></textarea>
+        </div>
+
+        <div class="field-group">
+          <div class="field-head">
+            <span>المرفقات <small id="attSupportBadge">(جاري الفحص...)</small></span>
+          </div>
+          <div class="att-box" id="attBox">
+            <div class="att-warn" id="attWarn" style="display:none"></div>
+            <div id="attExisting" style="display:flex;flex-direction:column;gap:5px"></div>
+            <label class="dropzone" id="attDropzone" style="display:none">
+              <input type="file" id="attInput" multiple accept="image/*,.pdf,.doc,.docx,.xls,.xlsx" style="display:none">
+              📎 اضغط لاختيار ملفات أو اسحبها هنا لإرفاقها بالموقع
+            </label>
+            <div id="attQueue" style="display:flex;flex-direction:column;gap:4px"></div>
+          </div>
+        </div>
+
+        <div class="feedback" id="feedbackBox"></div>
+
+        <div class="actions">
+          <button type="button" class="btn-primary" id="btnSave">💾 حفظ البيانات في الطبقة</button>
+          <button type="button" class="btn-secondary" id="btnSaveNext">💾⏭ حفظ والانتقال للموقع التالي المتبقي</button>
+        </div>
+      </form>
+    </aside>
+  </div>
+</div>
+
+<script>
+const LAYER_URL = "https://services-ap1.arcgis.com/HRZVvitYCIwFb7oA/arcgis/rest/services/Ahsa/FeatureServer/0";
+const COL = {"أعمدة إنارة":"#2a7fba","لوحات موبي":"#0f6e5c","لوحات ميجاكوم":"#8e44ad","يوني بول":"#c0392b","شاشة إلكترونية":"#d4a017","جسور":"#34495e"};
+const GLY = {
+  "أعمدة إنارة":'<path d="M12 5v14M9 19h6M12 5h4" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/><circle cx="16.5" cy="7" r="1.6" fill="#fff"/>',
+  "لوحات موبي":'<rect x="8.5" y="5" width="7" height="11" rx="1" fill="#fff"/><path d="M12 16v3" stroke="#fff" stroke-width="1.8"/>',
+  "لوحات ميجاكوم":'<rect x="6" y="5.5" width="12" height="8" rx="1" fill="#fff"/><path d="M10 13.5v5M14 13.5v5" stroke="#fff" stroke-width="1.6"/>',
+  "يوني بول":'<rect x="6" y="4.5" width="12" height="6.5" rx="1" fill="#fff"/><path d="M12 11v8" stroke="#fff" stroke-width="2"/>',
+  "شاشة إلكترونية":'<rect x="6" y="6" width="12" height="9" rx="1.5" fill="none" stroke="#fff" stroke-width="1.8"/><path d="M9 9h6M9 12h4" stroke="#fff" stroke-width="1.4"/><path d="M12 15v3" stroke="#fff" stroke-width="1.8"/>',
+  "جسور":'<path d="M5 16c2-5 12-5 14 0" stroke="#fff" stroke-width="1.8" fill="none"/><path d="M4 12h16M8 12v4M16 12v4" stroke="#fff" stroke-width="1.5"/>'
+};
+const PRESET_RATINGS = ["ممتاز", "جيد جداً", "جيد", "مقبول", "ضعيف", "يحتاج معاينة", "غير مناسب"];
+
+const esc = v => v == null || v === "" ? "" : String(v).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const hasEntry = s => Boolean((s.commercial_rating && s.commercial_rating.trim()) || (s.notes && s.notes.trim()));
+
+let D = [];
+let FILTERED = [];
+let selectedOid = null;
+let hasAttachments = false;
+let queuedFiles = [];
+let sessionEdits = []; // [{oid, code, rating, notes}]
+let didInitialFit = false;
+let isDirty = false;
+let _tok = null, _tokExp = 0;
+
+const F = { status: "all", cat: "all", type: "", rating: "", q: "" };
+
+/* ---------- Map ---------- */
+const map = L.map("map", { zoomSnap: 0.25, zoomDelta: 0.5 }).setView([25.40, 49.60], 12);
+const osm = L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", { maxZoom: 19, attribution: "© OpenStreetMap © CARTO" });
+const sat = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", { maxZoom: 19, attribution: "Esri" });
+const lbl = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}", { maxZoom: 19, attribution: "Esri" });
+sat.addTo(map); lbl.addTo(map);
+L.control.layers({ "قمر صناعي": sat, "خريطة داكنة": osm }, { "أسماء الأماكن": lbl }).addTo(map);
+
+const markersLayer = L.layerGroup().addTo(map);
+const markerByOid = new Map();
+
+function pinSvg(t, p, w, done, sel) {
+  const c = COL[t] || "#5aa9ff";
+  const h = Math.round(w * 1.3);
+  const stroke = sel ? "#f0d48e" : (p ? "#ff8a2a" : "#fff");
+  const sw = sel ? "2.4" : (p ? "1.8" : "1.3");
+  const dash = p && !sel ? 'stroke-dasharray="2.6 1.8"' : "";
+  const body = `<path d="M12 1.5C6.8 1.5 3 5.4 3 10.4c0 6.4 9 15.9 9 15.9s9-9.5 9-15.9C21 5.4 17.2 1.5 12 1.5z" fill="${c}" fill-opacity="${p ? ".38" : "1"}" stroke="${stroke}" stroke-width="${sw}" ${dash}/>`;
+  const check = done ? `<circle cx="19" cy="5.5" r="4.3" fill="#4fd18b" stroke="#030915" stroke-width="1.2"/><path d="M17.1 5.6l1.3 1.3 2.5-2.6" stroke="#030915" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>` : "";
+  return `<svg width="${w}" height="${h}" viewBox="0 0 24 28">${body}<g transform="translate(3.6 1.2) scale(.7)" opacity="${p ? .9 : 1}">${GLY[t] || ""}</g>${check}</svg>`;
+}
+
+function pinIcon(s) {
+  const sel = s.oid === selectedOid;
+  const done = hasEntry(s);
+  const w = sel ? 26 : (s.p ? 23 : 19);
+  return L.divIcon({
+    className: "pinm" + (sel ? " sel" : ""),
+    html: pinSvg(s.type, s.p, w, done, sel),
+    iconSize: [w, Math.round(w * 1.3)],
+    iconAnchor: [w / 2, Math.round(w * 1.3) - 1],
+    tooltipAnchor: [0, -Math.round(w * 1.1)]
+  });
+}
+
+const lg = L.control({ position: "bottomleft" });
+lg.onAdd = () => {
+  const d = L.DomUtil.create("div", "legend");
+  d.innerHTML = `<b style="color:var(--gl)">🗺️ مفتاح الخريطة</b><br>`
+    + Object.keys(COL).map(t => `<div class="lr">${pinSvg(t, 0, 15, false, false)} ${t}</div>`).join("")
+    + `<hr style="margin:5px 0;border:0;border-top:1px solid rgba(255,255,255,.15)">`
+    + `<div class="lr">${pinSvg("أعمدة إنارة", 1, 16, false, false)} <span style="color:#ff8a2a">مقترح بديل/إضافي</span></div>`
+    + `<div class="lr">${pinSvg("أعمدة إنارة", 0, 16, true, false)} <span style="color:#4fd18b">تم إدخال بياناته ✓</span></div>`;
+  return d;
+};
+lg.addTo(map);
+
+const fb = L.control({ position: "topleft" });
+fb.onAdd = () => {
+  const b = L.DomUtil.create("button", "fitbtn");
+  b.textContent = "⤢ عرض الكل";
+  L.DomEvent.disableClickPropagation(b);
+  b.onclick = () => fitAll();
+  return b;
+};
+fb.addTo(map);
+
+try { new ResizeObserver(() => map.invalidateSize()).observe(document.querySelector(".mapwrap")); } catch (e) {}
+
+function fitAll() {
+  const pts = FILTERED.length ? FILTERED : D;
+  if (!pts.length) return;
+  map.fitBounds(pts.map(s => [s.lat, s.lon]), { padding: [24, 24], maxZoom: 16 });
+}
+
+/* ---------- Token & ArcGIS REST ---------- */
+function setSync(state, msg) {
+  const pill = document.getElementById("syncPill"), dot = document.getElementById("syncDot"), txt = document.getElementById("syncText");
+  txt.textContent = msg;
+  if (state === "ok") { pill.style.borderColor = "rgba(79,209,139,.45)"; dot.style.background = "#4fd18b"; }
+  else if (state === "err") { pill.style.borderColor = "rgba(255,107,94,.45)"; dot.style.background = "#ff6b5e"; }
+  else { pill.style.borderColor = "rgba(90,169,255,.45)"; dot.style.background = "#5aa9ff"; }
+}
+
+async function getEsriToken(force) {
+  if (!force && _tok && Date.now() < _tokExp) return _tok;
+  const urls = location.protocol === "file:" ? ["https://ads-dashboard.almahagroup.org/api/esri-token"] : ["/api/esri-token", "https://ads-dashboard.almahagroup.org/api/esri-token"];
+  for (const u of urls) {
+    try {
+      const r = await fetch(u, { cache: "no-store" });
+      if (r.ok) {
+        const j = await r.json();
+        const t = j.access_token || j.token;
+        if (t) { _tok = t; _tokExp = Date.now() + ((j.expires_in || 3600) - 120) * 1000; return _tok; }
+      }
+    } catch (e) {}
+  }
+  return null;
+}
+
+async function esriGet(path, params = {}, retried = false) {
+  const token = await getEsriToken(retried);
+  const qs = new URLSearchParams({ f: "json", _ts: String(Date.now()), ...params });
+  if (token) qs.set("token", token);
+  const res = await fetch(`${LAYER_URL}${path}?${qs}`, { cache: "no-store" });
+  const data = await res.json();
+  if (data.error && (data.error.code === 498 || data.error.code === 499) && !retried) {
+    return esriGet(path, params, true);
+  }
+  if (data.error) throw new Error(data.error.message || "ArcGIS error");
+  return data;
+}
+
+async function esriPost(path, formBodyOrParams, retried = false) {
+  const token = await getEsriToken(retried);
+  let body;
+  if (formBodyOrParams instanceof FormData) {
+    body = formBodyOrParams;
+    body.set("f", "json");
+    if (token) body.set("token", token);
+  } else {
+    body = new URLSearchParams({ f: "json", ...formBodyOrParams });
+    if (token) body.set("token", token);
+  }
+  const res = await fetch(`${LAYER_URL}${path}`, { method: "POST", body });
+  const data = await res.json();
+  if (data.error && (data.error.code === 498 || data.error.code === 499) && !retried) {
+    return esriPost(path, formBodyOrParams, true);
+  }
+  if (data.error) throw new Error(data.error.message || "ArcGIS write error");
+  return data;
+}
+
+async function loadLayer(forceTok = false) {
+  const btn = document.getElementById("refreshBtn");
+  btn.disabled = true;
+  setSync("loading", "جاري مزامنة الطبقة الحية...");
+  try {
+    const meta = await esriGet("", {}, forceTok);
+    hasAttachments = Boolean(meta.hasAttachments);
+    updateAttachmentModeUI();
+
+    let offset = 0, features = [];
+    while (true) {
+      const data = await esriGet("/query", {
+        where: "1=1",
+        outFields: "*",
+        outSR: "4326",
+        orderByFields: "sq ASC, OBJECTID ASC",
+        resultOffset: String(offset),
+        resultRecordCount: "1000"
+      }, false);
+      const batch = data.features || [];
+      features = features.concat(batch);
+      if (!data.exceededTransferLimit || !batch.length) break;
+      offset += batch.length;
+    }
+
+    D = features.map((f, idx) => {
+      const a = f.attributes || {}, g = f.geometry || {};
+      const pVal = Number(a.pp || 0) ? 1 : 0;
+      return {
+        oid: a.OBJECTID,
+        seq: a.sq != null ? Number(a.sq) : (idx + 1),
+        code: a.code || "",
+        type: a.type || "",
+        no: a.no_ != null ? Number(a.no_) : "",
+        p: pVal,
+        classification: a.Classification || (pVal ? "مقترح بديل/إضافي" : "أساسي"),
+        lat: (typeof g.y === "number" && !Number.isNaN(g.y)) ? g.y : Number(a.Y),
+        lon: (typeof g.x === "number" && !Number.isNaN(g.x)) ? g.x : Number(a.X),
+        gmaps: a.GoogleMaps || "",
+        commercial_rating: a.commercial_rating || "",
+        notes: a.Notes || ""
+      };
+    }).filter(s => Number.isFinite(s.lat) && Number.isFinite(s.lon));
+
+    populateFilterOptions();
+    applyFilters();
+
+    const qpCode = new URLSearchParams(location.search).get("code");
+    if (!selectedOid && qpCode) {
+      const match = D.find(s => s.code.toUpperCase() === qpCode.trim().toUpperCase());
+      if (match) selectSite(match.oid, true);
+    } else if (selectedOid) {
+      const still = D.find(s => s.oid === selectedOid);
+      if (still) renderSelectedForm(still, false);
+    }
+
+    if (!didInitialFit && D.length) { didInitialFit = true; fitAll(); }
+    setSync("ok", `متصل بالطبقة الحية (${D.length} موقع)`);
+  } catch (err) {
+    console.error(err);
+    setSync("err", "تعذّر الاتصال بطبقة ArcGIS");
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+/* ---------- Filters & UI Updates ---------- */
+function populateFilterOptions() {
+  const prevT = document.getElementById("fType").value;
+  const types = [...new Set([...Object.keys(COL), ...D.map(s => s.type).filter(Boolean)])];
+  const fType = document.getElementById("fType");
+  fType.innerHTML = `<option value="">كل أنواع الوسائل (${D.length})</option>`
+    + types.map(t => {
+      const cnt = D.filter(s => s.type === t).length;
+      return cnt ? `<option value="${esc(t)}">${esc(t)} (${cnt})</option>` : "";
+    }).join("");
+  if (prevT && types.includes(prevT)) fType.value = prevT;
+
+  refreshRatingFilter();
+}
+
+function refreshRatingFilter() {
+  const fRating = document.getElementById("fRating");
+  const prevR = fRating.value;
+  const ratings = [...new Set(D.map(s => (s.commercial_rating || "").trim()).filter(Boolean))].sort((a, b) => a.localeCompare(b, "ar"));
+  fRating.innerHTML = `<option value="">كل التقييمات</option>`
+    + ratings.map(r => `<option value="${esc(r)}">${esc(r)} (${D.filter(s => (s.commercial_rating || "").trim() === r).length})</option>`).join("");
+  if (prevR && ratings.includes(prevR)) fRating.value = prevR;
+  else F.rating = "";
+}
+
+function updateStats() {
+  const total = D.length;
+  const filled = D.filter(hasEntry).length;
+  const pending = total - filled;
+  const pct = total ? Math.round((filled * 100) / total) : 0;
+
+  document.getElementById("kTotal").textContent = total;
+  document.getElementById("kFilled").textContent = filled;
+  document.getElementById("kPending").textContent = pending;
+  document.getElementById("kPct").textContent = `${pct}%`;
+  document.getElementById("kPctBar").style.width = `${pct}%`;
+  document.getElementById("kSession").textContent = sessionEdits.length;
+
+  document.getElementById("cAll").textContent = total;
+  document.getElementById("cWait").textContent = pending;
+  document.getElementById("cOk").textContent = filled;
+
+  const sBar = document.getElementById("sessionBar");
+  const sChips = document.getElementById("sessionChips");
+  if (sessionEdits.length) {
+    sBar.classList.add("show");
+    sChips.innerHTML = sessionEdits.slice().reverse().map(e =>
+      `<button type="button" class="s-chip" data-oid="${e.oid}" title="${esc(e.notes || '')}">${esc(e.code)}${e.rating ? ` · ${esc(e.rating)}` : ""}</button>`
+    ).join("");
+    sChips.querySelectorAll(".s-chip").forEach(b => b.onclick = () => selectSite(Number(b.dataset.oid), true));
+  } else {
+    sBar.classList.remove("show");
+  }
+}
+
+function applyFilters() {
+  updateStats();
+  const q = F.q.toLowerCase();
+  FILTERED = D.filter(s => {
+    const done = hasEntry(s);
+    if (F.status === "filled" && !done) return false;
+    if (F.status === "pending" && done) return false;
+    if (F.cat !== "all" && String(s.p) !== F.cat) return false;
+    if (F.type && s.type !== F.type) return false;
+    if (F.rating && (s.commercial_rating || "").trim() !== F.rating) return false;
+    if (q) {
+      const hay = [s.code, s.type, s.commercial_rating, s.notes, String(s.seq)].join(" ").toLowerCase();
+      if (!hay.includes(q)) return false;
+    }
+    return true;
+  });
+
+  document.getElementById("listCount").textContent = FILTERED.length;
+  renderList();
+  renderMapMarkers();
+  updateNavButtons();
+}
+
+function renderList() {
+  const el = document.getElementById("siteList");
+  if (!FILTERED.length) {
+    el.innerHTML = `<div style="text-align:center;color:var(--muted);padding:24px 10px;font-size:12.5px">لا توجد مواقع مطابقة للتصفية الحالية.</div>`;
+    return;
+  }
+  const sessionSet = new Set(sessionEdits.map(x => x.oid));
+  el.innerHTML = FILTERED.map(s => {
+    const done = hasEntry(s);
+    const active = s.oid === selectedOid ? " active" : "";
+    const prop = s.p ? " prop" : "";
+    const sessBadge = sessionSet.has(s.oid) ? `<span class="badge b-sess">★ جلستك</span>` : "";
+    const statusBadge = done ? `<span class="badge b-ok">✓ تم الإدخال</span>` : `<span class="badge b-wait">○ متبقي</span>`;
+    const previewText = [s.commercial_rating, s.notes].filter(Boolean).join(" · ");
+    return `
+      <div class="site-card${active}${prop}" data-oid="${s.oid}">
+        <div class="sc-top">
+          <div class="sc-code"><span class="sc-dot" style="background:${COL[s.type] || "#5aa9ff"}"></span>${esc(s.code)}</div>
+          <div style="display:flex;gap:4px;align-items:center">${sessBadge}${statusBadge}</div>
+        </div>
+        <div class="sc-meta">
+          <span>${esc(s.type)} (#${esc(s.seq)})</span>
+          <span>${s.p ? '<span style="color:var(--o)">مقترح</span>' : "أساسي"}</span>
+        </div>
+        ${previewText ? `<div class="sc-preview">${esc(previewText)}</div>` : ""}
+      </div>`;
+  }).join("");
+
+  el.querySelectorAll(".site-card").forEach(card => {
+    card.onclick = () => selectSite(Number(card.dataset.oid), true);
+  });
+}
+
+function renderMapMarkers() {
+  markersLayer.clearLayers();
+  markerByOid.clear();
+  FILTERED.slice().sort((a, b) => a.p - b.p).forEach(s => {
+    const sel = s.oid === selectedOid;
+    const m = L.marker([s.lat, s.lon], {
+      icon: pinIcon(s),
+      zIndexOffset: sel ? 3000 : (s.p ? 1000 : 0),
+      riseOnHover: true
+    });
+    const tip = `${esc(s.code)} · ${esc(s.type)}${s.commercial_rating ? ` · ${esc(s.commercial_rating)}` : " · بانتظار التقييم"}`;
+    m.bindTooltip(tip, { className: "tt", direction: "top" });
+    m.on("click", () => selectSite(s.oid, false));
+    m.addTo(markersLayer);
+    markerByOid.set(s.oid, m);
+  });
+}
+
+/* ---------- Selection & Entry Form ---------- */
+function setDirty(v) {
+  isDirty = v;
+  document.getElementById("dirtyNote").classList.toggle("show", v);
+}
+
+function selectSite(oid, fly = true) {
+  if (isDirty && selectedOid !== oid) {
+    if (!confirm("لديك تعديلات لم يتم حفظها للموقع الحالي. هل تريد الانتقال بدون حفظ؟")) return;
+  }
+  const s = D.find(x => x.oid === oid);
+  if (!s) return;
+  selectedOid = oid;
+  queuedFiles = [];
+  setDirty(false);
+  hideFeedback();
+
+  renderSelectedForm(s, true);
+  renderList();
+  renderMapMarkers();
+  updateNavButtons();
+
+  const activeCard = document.querySelector(`.site-card[data-oid="${oid}"]`);
+  if (activeCard) activeCard.scrollIntoView({ block: "nearest", behavior: "smooth" });
+
+  if (fly) {
+    map.flyTo([s.lat, s.lon], Math.max(map.getZoom(), 16), { duration: 0.55 });
+  }
+}
+
+function renderSelectedForm(s, loadAtts) {
+  document.getElementById("formEmpty").style.display = "none";
+  document.getElementById("entryForm").style.display = "flex";
+
+  document.getElementById("sCode").textContent = s.code;
+  document.getElementById("sType").textContent = s.type;
+  document.getElementById("sNo").textContent = s.no;
+  document.getElementById("sSeq").textContent = s.seq;
+  document.getElementById("sCoord").textContent = `${s.lat.toFixed(5)}, ${s.lon.toFixed(5)}`;
+
+  const gm = s.gmaps && /^https?:/i.test(s.gmaps) ? s.gmaps : `https://maps.google.com/?q=${s.lat},${s.lon}`;
+  document.getElementById("sGmaps").href = gm;
+
+  const cb = document.getElementById("sClassBadge");
+  cb.textContent = s.p ? "مقترح (-P)" : "أساسي";
+  cb.className = "badge " + (s.p ? "b-prop" : "b-base");
+
+  const sb = document.getElementById("sStatusBadge");
+  const done = hasEntry(s);
+  sb.textContent = done ? "✓ تم الإدخال" : "○ متبقي";
+  sb.className = "badge " + (done ? "b-ok" : "b-wait");
+
+  document.getElementById("inRating").value = s.commercial_rating || "";
+  document.getElementById("inNotes").value = s.notes || "";
+  updateNotesCounter();
+  renderRatingPresets();
+  renderQueuedFiles();
+
+  if (loadAtts) loadAttachmentsForSite(s.oid);
+}
+
+function renderRatingPresets() {
+  const existing = [...new Set(D.map(s => (s.commercial_rating || "").trim()).filter(Boolean))];
+  const allPresets = [...new Set([...PRESET_RATINGS, ...existing])];
+  const cur = document.getElementById("inRating").value.trim();
+  const box = document.getElementById("ratingPresets");
+  box.innerHTML = allPresets.map(r => `<button type="button" class="preset${cur === r ? " on" : ""}" data-v="${esc(r)}">${esc(r)}</button>`).join("");
+  box.querySelectorAll(".preset").forEach(b => {
+    b.onclick = () => {
+      const inp = document.getElementById("inRating");
+      inp.value = inp.value.trim() === b.dataset.v ? "" : b.dataset.v;
+      setDirty(true);
+      renderRatingPresets();
+    };
+  });
+}
+
+function updateNotesCounter() {
+  const len = document.getElementById("inNotes").value.length;
+  document.getElementById("notesCounter").textContent = `${len} / 255`;
+}
+
+function updateNavButtons() {
+  const idx = FILTERED.findIndex(s => s.oid === selectedOid);
+  document.getElementById("btnPrev").disabled = idx <= 0;
+  document.getElementById("btnNext").disabled = idx < 0 || idx >= FILTERED.length - 1;
+  const nextPend = findNextPendingOid(selectedOid);
+  document.getElementById("btnNextPending").disabled = !nextPend;
+}
+
+function findNextPendingOid(afterOid) {
+  const pool = FILTERED.length ? FILTERED : D;
+  const pending = pool.filter(s => !hasEntry(s) && s.oid !== afterOid);
+  if (!pending.length) return null;
+  if (afterOid == null) return pending[0].oid;
+  const curIdx = pool.findIndex(s => s.oid === afterOid);
+  const after = pool.slice(curIdx + 1).find(s => !hasEntry(s));
+  return (after || pending[0]).oid;
+}
+
+/* ---------- Attachments ---------- */
+function updateAttachmentModeUI() {
+  const badge = document.getElementById("attSupportBadge");
+  const warn = document.getElementById("attWarn");
+  const drop = document.getElementById("attDropzone");
+  if (hasAttachments) {
+    badge.textContent = "(مفعّل على الطبقة ✓)";
+    badge.style.color = "var(--g)";
+    warn.style.display = "none";
+    drop.style.display = "block";
+  } else {
+    badge.textContent = "(غير مفعّل في ArcGIS)";
+    badge.style.color = "#f0bf5a";
+    warn.style.display = "block";
+    warn.innerHTML = `خاصية المرفقات (<b>Attachments</b>) غير مفعّلة حالياً على هذه الطبقة في ArcGIS Online. فعّل خيار <b>Enable Attachments</b> من إعدادات الطبقة ليتفعل الرفع والعرض هنا تلقائياً بدون أي تعديل.`;
+    drop.style.display = "none";
+  }
+}
+
+async function loadAttachmentsForSite(oid) {
+  const box = document.getElementById("attExisting");
+  box.innerHTML = "";
+  if (!hasAttachments || !oid) return;
+  box.innerHTML = `<span style="color:var(--muted)">جاري جلب المرفقات...</span>`;
+  try {
+    const data = await esriGet("/queryAttachments", { objectIds: String(oid) });
+    const infos = (data.attachmentGroups && data.attachmentGroups[0] && data.attachmentGroups[0].attachmentInfos) || [];
+    if (!infos.length) {
+      box.innerHTML = `<span style="color:var(--muted)">لا توجد مرفقات محفوظة لهذا الموقع.</span>`;
+      return;
+    }
+    const token = await getEsriToken(false);
+    box.innerHTML = infos.map(a => {
+      const url = `${LAYER_URL}/${oid}/attachments/${a.id}${token ? `?token=${encodeURIComponent(token)}` : ""}`;
+      return `<div class="att-item">
+        <a href="${esc(url)}" target="_blank" rel="noopener">📎 ${esc(a.name || `مرفق #${a.id}`)}</a>
+        <button type="button" class="att-del" data-aid="${a.id}">حذف</button>
+      </div>`;
+    }).join("");
+    box.querySelectorAll(".att-del").forEach(btn => {
+      btn.onclick = async () => {
+        if (!confirm("هل تريد حذف هذا المرفق من الطبقة؟")) return;
+        btn.disabled = true;
+        try {
+          await esriPost(`/${oid}/deleteAttachments`, { attachmentIds: btn.dataset.aid });
+          await loadAttachmentsForSite(oid);
+        } catch (err) {
+          showFeedback("err", `تعذّر حذف المرفق: ${err.message}`);
+        }
+      };
+    });
+  } catch (err) {
+    box.innerHTML = `<span style="color:var(--r)">تعذّر تحميل المرفقات: ${esc(err.message)}</span>`;
+  }
+}
+
+function renderQueuedFiles() {
+  const q = document.getElementById("attQueue");
+  if (!queuedFiles.length) { q.innerHTML = ""; return; }
+  q.innerHTML = queuedFiles.map((f, i) => `
+    <div class="att-item">
+      <span>📤 ${esc(f.name)} (${Math.round(f.size / 1024)} KB)</span>
+      <button type="button" class="att-del" data-idx="${i}">إزالة</button>
+    </div>
+  `).join("");
+  q.querySelectorAll(".att-del").forEach(b => {
+    b.onclick = () => { queuedFiles.splice(Number(b.dataset.idx), 1); renderQueuedFiles(); };
+  });
+}
+
+/* ---------- Save ---------- */
+function showFeedback(type, html) {
+  const el = document.getElementById("feedbackBox");
+  el.className = "feedback " + type;
+  el.innerHTML = html;
+}
+function hideFeedback() {
+  const el = document.getElementById("feedbackBox");
+  el.className = "feedback";
+  el.innerHTML = "";
+}
+
+async function saveCurrentSite(moveToNextPending = false) {
+  const s = D.find(x => x.oid === selectedOid);
+  if (!s) return;
+
+  const rating = document.getElementById("inRating").value.trim();
+  const notes = document.getElementById("inNotes").value.trim();
+
+  if (rating.length > 255 || notes.length > 255) {
+    showFeedback("err", "الحد الأقصى لكل حقل هو 255 حرفاً.");
+    return;
+  }
+
+  const b1 = document.getElementById("btnSave"), b2 = document.getElementById("btnSaveNext");
+  b1.disabled = true; b2.disabled = true;
+  b1.textContent = "⏳ جاري الحفظ في الطبقة...";
+  hideFeedback();
+
+  try {
+    const payload = [{
+      attributes: {
+        OBJECTID: s.oid,
+        commercial_rating: rating || null,
+        Notes: notes || null
+      }
+    }];
+    const res = await esriPost("/updateFeatures", { features: JSON.stringify(payload) });
+    const item = res.updateResults && res.updateResults[0];
+    if (!item || !item.success) {
+      throw new Error((item && item.error && item.error.description) || "فشل تحديث السجل في ArcGIS");
+    }
+
+    let uploadedCount = 0;
+    if (hasAttachments && queuedFiles.length) {
+      for (const file of queuedFiles) {
+        const fd = new FormData();
+        fd.append("attachment", file, file.name);
+        const attRes = await esriPost(`/${s.oid}/addAttachment`, fd);
+        if (!attRes.addAttachmentResult || !attRes.addAttachmentResult.success) {
+          throw new Error("تم حفظ الحقول لكن فشل رفع أحد المرفقات");
+        }
+        uploadedCount++;
+      }
+      queuedFiles = [];
+      renderQueuedFiles();
+    }
+
+    // Update local state immediately
+    s.commercial_rating = rating;
+    s.notes = notes;
+    setDirty(false);
+
+    const idxSess = sessionEdits.findIndex(x => x.oid === s.oid);
+    const entryRec = { oid: s.oid, code: s.code, rating, notes };
+    if (idxSess >= 0) sessionEdits[idxSess] = entryRec;
+    else sessionEdits.push(entryRec);
+
+    refreshRatingFilter();
+    applyFilters();
+    renderSelectedForm(s, hasAttachments);
+
+    const msgParts = [];
+    if (rating) msgParts.push(`التقييم: "<b>${esc(rating)}</b>"`);
+    if (notes) msgParts.push(`ملاحظات محفوظة`);
+    if (!rating && !notes) msgParts.push(`تم مسح الحقول`);
+    if (uploadedCount) msgParts.push(`رُفع ${uploadedCount} مرفق`);
+
+    showFeedback("ok", `✓ تم حفظ الموقع <b>${esc(s.code)}</b> (${msgParts.join(" · ")}) — إجمالي تعديلات جلستك: <b>${sessionEdits.length}</b>`);
+
+    if (moveToNextPending) {
+      const nextOid = findNextPendingOid(s.oid);
+      if (nextOid) {
+        selectSite(nextOid, true);
+        showFeedback("ok", `✓ تم حفظ <b>${esc(s.code)}</b> والانتقال للموقع التالي المتبقي.`);
+        document.getElementById("inRating").focus();
+      } else {
+        showFeedback("ok", `✓ تم حفظ <b>${esc(s.code)}</b> — أحسنت! لا توجد مواقع أخرى متبقية ضمن الفلتر الحالي.`);
+      }
+    }
+  } catch (err) {
+    console.error(err);
+    showFeedback("err", `تعذّر الحفظ: ${esc(err.message)}`);
+  } finally {
+    b1.disabled = false; b2.disabled = false;
+    b1.textContent = "💾 حفظ البيانات في الطبقة";
+  }
+}
+
+/* ---------- Events ---------- */
+document.querySelectorAll("#statusSeg button").forEach(b => b.onclick = () => {
+  document.querySelectorAll("#statusSeg button").forEach(x => x.classList.remove("on"));
+  b.classList.add("on");
+  F.status = b.dataset.v;
+  applyFilters();
+});
+document.querySelectorAll("#catSeg button").forEach(b => b.onclick = () => {
+  document.querySelectorAll("#catSeg button").forEach(x => x.classList.remove("on"));
+  b.classList.add("on");
+  F.cat = b.dataset.v;
+  applyFilters();
+});
+document.getElementById("fType").onchange = e => { F.type = e.target.value; applyFilters(); };
+document.getElementById("fRating").onchange = e => { F.rating = e.target.value; applyFilters(); };
+document.getElementById("fSearch").oninput = e => { F.q = e.target.value.trim(); applyFilters(); };
+document.getElementById("resetFilters").onclick = () => {
+  F.status = "all"; F.cat = "all"; F.type = ""; F.rating = ""; F.q = "";
+  document.querySelectorAll("#statusSeg button").forEach((x, i) => x.classList.toggle("on", i === 0));
+  document.querySelectorAll("#catSeg button").forEach((x, i) => x.classList.toggle("on", i === 0));
+  document.getElementById("fType").value = "";
+  document.getElementById("fRating").value = "";
+  document.getElementById("fSearch").value = "";
+  applyFilters();
+};
+
+document.getElementById("inRating").oninput = () => { setDirty(true); renderRatingPresets(); };
+document.getElementById("inNotes").oninput = () => { setDirty(true); updateNotesCounter(); };
+document.getElementById("clearRating").onclick = () => { document.getElementById("inRating").value = ""; setDirty(true); renderRatingPresets(); };
+document.getElementById("clearNotes").onclick = () => { document.getElementById("inNotes").value = ""; setDirty(true); updateNotesCounter(); };
+
+document.getElementById("btnPrev").onclick = () => {
+  const i = FILTERED.findIndex(s => s.oid === selectedOid);
+  if (i > 0) selectSite(FILTERED[i - 1].oid, true);
+};
+document.getElementById("btnNext").onclick = () => {
+  const i = FILTERED.findIndex(s => s.oid === selectedOid);
+  if (i >= 0 && i < FILTERED.length - 1) selectSite(FILTERED[i + 1].oid, true);
+};
+document.getElementById("btnNextPending").onclick = () => {
+  const nextOid = findNextPendingOid(selectedOid);
+  if (nextOid) selectSite(nextOid, true);
+};
+document.getElementById("jumpFirstPending").onclick = () => {
+  const nextOid = findNextPendingOid(null);
+  if (nextOid) selectSite(nextOid, true);
+  else if (FILTERED.length) selectSite(FILTERED[0].oid, true);
+};
+
+document.getElementById("btnSave").onclick = () => saveCurrentSite(false);
+document.getElementById("btnSaveNext").onclick = () => saveCurrentSite(true);
+document.getElementById("refreshBtn").onclick = () => loadLayer(true);
+
+const dz = document.getElementById("attDropzone");
+const attInput = document.getElementById("attInput");
+attInput.onchange = e => {
+  queuedFiles = queuedFiles.concat([...e.target.files]);
+  attInput.value = "";
+  renderQueuedFiles();
+  setDirty(true);
+};
+dz.ondragover = e => { e.preventDefault(); dz.classList.add("drag"); };
+dz.ondragleave = () => dz.classList.remove("drag");
+dz.ondrop = e => {
+  e.preventDefault(); dz.classList.remove("drag");
+  if (e.dataTransfer.files.length) {
+    queuedFiles = queuedFiles.concat([...e.dataTransfer.files]);
+    renderQueuedFiles();
+    setDirty(true);
+  }
+};
+
+document.getElementById("entryForm").addEventListener("keydown", e => {
+  if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
+    e.preventDefault();
+    saveCurrentSite(false);
+  }
+});
+
+loadLayer(false);
+</script>
+</body>
+</html>
+
