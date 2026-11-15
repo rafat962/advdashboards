@@ -1453,7 +1453,7 @@ async function loadFeatureLayerData() {
       const st = staticMap.get(nk(code));
 
       const s = {
-        n: a.SiteNo || a.OBJECTID || (idx + 1),
+        n: idx + 1,
         code: code,
         type: a.AdvType || 'يونيبول',
         lat: a.Lat || (f.geometry ? f.geometry.y : (st ? st.lat : 26.4)),
@@ -1500,7 +1500,7 @@ async function loadFeatureLayerData() {
       for (const k in markers) delete markers[k];
       D.forEach(s => {
         if (s.lat && s.lon) {
-          markers[s.code] = L.marker([s.lat, s.lon], { icon: pinIcon(colorOf(s), TYPE_R[s.type] || 5), riseOnHover: true }).bindPopup(() => popup(s));
+          markers[s.n] = L.marker([s.lat, s.lon], { icon: pinIcon(colorOf(s), TYPE_R[s.type] || 5), riseOnHover: true }).bindPopup(() => popup(s));
         }
       });
       const validCoords = D.filter(s => s.lat && s.lon).map(s => [s.lat, s.lon]);
