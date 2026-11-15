@@ -53,7 +53,9 @@ header small{color:var(--muted);font-size:11.5px}
 .k b{font-size:22px;font-weight:800;color:#fff;line-height:1.15}
 .k.ok{border-color:rgba(79,209,139,.38);background:linear-gradient(160deg,rgba(79,209,139,.13),rgba(6,17,41,.82))}.k.ok b{color:var(--g)}
 .k.wait{border-color:rgba(255,138,42,.38);background:linear-gradient(160deg,rgba(255,138,42,.13),rgba(6,17,41,.82))}.k.wait b{color:var(--o)}
-.k.sess{border-color:var(--line);background:linear-gradient(160deg,rgba(212,168,83,.14),rgba(6,17,41,.82))}.k.sess b{color:var(--gl)}
+.k.sess{border-color:var(--line);background:linear-gradient(160deg,rgba(212,168,83,.14),rgba(6,17,41,.82));cursor:pointer;transition:.15s}.k.sess b{color:var(--gl)}
+.k.sess:hover{border-color:var(--gl)}
+.k.sess.on{box-shadow:inset 0 0 0 1.5px var(--gl);background:linear-gradient(160deg,rgba(212,168,83,.26),rgba(6,17,41,.88))}
 .pbar{height:5px;border-radius:99px;background:rgba(255,255,255,.08);overflow:hidden;margin-top:4px;min-width:90px}
 .pbar>span{display:block;height:100%;background:linear-gradient(90deg,var(--g),#86efac);width:0%;transition:width .35s ease}
 
@@ -74,6 +76,7 @@ select,input[type=search],input[type=text],textarea{
   font:600 12.5px Cairo,sans-serif;background:rgba(3,9,21,.7);color:var(--ink);outline:none;transition:border-color .15s;
 }
 select:focus,input:focus,textarea:focus{border-color:var(--gold)}
+select option{background:#0a1a3f;color:#eef2fa}
 textarea{resize:vertical;min-height:84px;line-height:1.6}
 
 .site-card{
@@ -144,8 +147,8 @@ textarea{resize:vertical;min-height:84px;line-height:1.6}
   background:rgba(3,9,21,.45);display:flex;flex-direction:column;gap:7px;font-size:12px;
 }
 .att-warn{
-  padding:8px 10px;border-radius:9px;background:rgba(240,191,90,.09);
-  border:1px solid rgba(240,191,90,.35);color:#ffe2a8;font-size:11.5px;line-height:1.6;
+  padding:6px 9px;border-radius:8px;background:rgba(240,191,90,.08);
+  border:1px solid rgba(240,191,90,.28);color:#ffe2a8;font-size:11px;line-height:1.5;
 }
 .att-item{
   display:flex;align-items:center;justify-content:space-between;gap:6px;
@@ -234,7 +237,7 @@ textarea{resize:vertical;min-height:84px;line-height:1.6}
       <div style="text-align:left"><b id="kFilled">—</b><small id="kPct" style="color:var(--g);font-weight:700;display:block;font-size:11px">0%</small></div>
     </div>
     <div class="k wait"><span>بانتظار الإدخال</span><b id="kPending">—</b></div>
-    <div class="k sess"><span>أُضيف في جلستك الآن</span><b id="kSession">0</b></div>
+    <div class="k sess" id="kSessionCard" title="اضغط لتصفية المواقع المعدّلة في جلستك"><div><span>أُضيف في جلستك الآن</span><small id="kSessionHint" style="display:block;font-size:10.5px;color:var(--muted)">اضغط للمراجعة</small></div><b id="kSession">0</b></div>
   </div>
 
   <div class="workspace">
@@ -363,6 +366,7 @@ const PRESET_RATINGS = ["ممتاز", "جيد جداً", "جيد", "مقبول",
 
 const esc = v => v == null || v === "" ? "" : String(v).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const hasEntry = s => Boolean((s.commercial_rating && s.commercial_rating.trim()) || (s.notes && s.notes.trim()));
+const normAr = s => String(s || "").toLowerCase().replace(/[\u064B-\u065F\u0670]/g, "").replace(/[أإآ]/g, "ا").replace(/ة/g, "ه").replace(/ى/g, "ي");
 
 let D = [];
 let FILTERED = [];
@@ -374,7 +378,7 @@ let didInitialFit = false;
 let isDirty = false;
 let _tok = null, _tokExp = 0;
 
-const F = { status: "all", cat: "all", type: "", rating: "", q: "" };
+const F = { status: "all", cat: "all", type: "", rating: "", q: "", sessionOnly: false };
 
 /* ---------- Map ---------- */
 const map = L.map("map", { zoomSnap: 0.25, zoomDelta: 0.5 }).setView([25.40, 49.60], 12);
@@ -434,10 +438,15 @@ fb.addTo(map);
 
 try { new ResizeObserver(() => map.invalidateSize()).observe(document.querySelector(".mapwrap")); } catch (e) {}
 
+function med(a) { const s = [...a].sort((x, y) => x - y); return s[Math.floor(s.length / 2)]; }
 function fitAll() {
   const pts = FILTERED.length ? FILTERED : D;
   if (!pts.length) return;
-  map.fitBounds(pts.map(s => [s.lat, s.lon]), { padding: [24, 24], maxZoom: 16 });
+  const ll = pts.map(s => [s.lat, s.lon]);
+  map.fitBounds(ll, { padding: [24, 24], maxZoom: 16, animate: false });
+  if (ll.length > 5) {
+    map.setView([med(ll.map(p => p[0])), med(ll.map(p => p[1]))], Math.min(map.getZoom() + 1.25, 16));
+  }
 }
 
 /* ---------- Token & ArcGIS REST ---------- */
@@ -465,12 +474,20 @@ async function getEsriToken(force) {
   return null;
 }
 
+async function parseArcgisResponse(res) {
+  let data;
+  try { data = await res.json(); }
+  catch (e) { throw new Error(`استجابة غير صالحة من الخادم (${res.status})`); }
+  return data;
+}
+
 async function esriGet(path, params = {}, retried = false) {
   const token = await getEsriToken(retried);
+  if (!token) throw new Error("تعذّر الحصول على تصريح الاتصال بخدمة ArcGIS");
   const qs = new URLSearchParams({ f: "json", _ts: String(Date.now()), ...params });
-  if (token) qs.set("token", token);
+  qs.set("token", token);
   const res = await fetch(`${LAYER_URL}${path}?${qs}`, { cache: "no-store" });
-  const data = await res.json();
+  const data = await parseArcgisResponse(res);
   if (data.error && (data.error.code === 498 || data.error.code === 499) && !retried) {
     return esriGet(path, params, true);
   }
@@ -480,17 +497,18 @@ async function esriGet(path, params = {}, retried = false) {
 
 async function esriPost(path, formBodyOrParams, retried = false) {
   const token = await getEsriToken(retried);
+  if (!token) throw new Error("تعذّر الحصول على تصريح الحفظ في ArcGIS");
   let body;
   if (formBodyOrParams instanceof FormData) {
     body = formBodyOrParams;
     body.set("f", "json");
-    if (token) body.set("token", token);
+    body.set("token", token);
   } else {
     body = new URLSearchParams({ f: "json", ...formBodyOrParams });
-    if (token) body.set("token", token);
+    body.set("token", token);
   }
   const res = await fetch(`${LAYER_URL}${path}`, { method: "POST", body });
-  const data = await res.json();
+  const data = await parseArcgisResponse(res);
   if (data.error && (data.error.code === 498 || data.error.code === 499) && !retried) {
     return esriPost(path, formBodyOrParams, true);
   }
@@ -620,6 +638,11 @@ function updateStats() {
   document.getElementById("kPctBar").style.width = `${pct}%`;
   document.getElementById("kSession").textContent = sessionEdits.length;
 
+  const sc = document.getElementById("kSessionCard"), sh = document.getElementById("kSessionHint");
+  if (!sessionEdits.length && F.sessionOnly) F.sessionOnly = false;
+  if (sc) sc.classList.toggle("on", F.sessionOnly);
+  if (sh) sh.textContent = F.sessionOnly ? "✓ معروض فقط (اضغط للإلغاء)" : (sessionEdits.length ? "اضغط للمراجعة" : "لم يُعدل بعد");
+
   document.getElementById("cAll").textContent = total;
   document.getElementById("cWait").textContent = pending;
   document.getElementById("cOk").textContent = filled;
@@ -627,8 +650,10 @@ function updateStats() {
 
 function applyFilters() {
   updateStats();
-  const q = F.q.toLowerCase();
+  const q = normAr(F.q);
+  const sessionSet = F.sessionOnly ? new Set(sessionEdits.map(x => x.oid)) : null;
   FILTERED = D.filter(s => {
+    if (sessionSet && !sessionSet.has(s.oid)) return false;
     const done = hasEntry(s);
     if (F.status === "filled" && !done) return false;
     if (F.status === "pending" && done) return false;
@@ -636,7 +661,7 @@ function applyFilters() {
     if (F.type && s.type !== F.type) return false;
     if (F.rating && (s.commercial_rating || "").trim() !== F.rating) return false;
     if (q) {
-      const hay = [s.code, s.type, s.commercial_rating, s.notes, String(s.seq)].join(" ").toLowerCase();
+      const hay = normAr([s.code, s.type, s.commercial_rating, s.notes, String(s.seq), String(s.no)].join(" "));
       if (!hay.includes(q)) return false;
     }
     return true;
@@ -674,9 +699,16 @@ function renderList() {
         ${previewText ? `<div class="sc-preview">${esc(previewText)}</div>` : ""}
       </div>`;
   }).join("");
+}
 
-  el.querySelectorAll(".site-card").forEach(card => {
-    card.onclick = () => selectSite(Number(card.dataset.oid), true);
+function updateMarkerSelection(prevOid, nextOid) {
+  [prevOid, nextOid].forEach(id => {
+    if (id == null) return;
+    const m = markerByOid.get(id), s = D.find(x => x.oid === id);
+    if (m && s) {
+      m.setIcon(pinIcon(s));
+      m.setZIndexOffset(id === selectedOid ? 3000 : (s.p ? 1000 : 0));
+    }
   });
 }
 
@@ -710,17 +742,22 @@ function selectSite(oid, fly = true) {
   }
   const s = D.find(x => x.oid === oid);
   if (!s) return;
+  const prevOid = selectedOid;
   selectedOid = oid;
   queuedFiles = [];
   setDirty(false);
   hideFeedback();
 
   renderSelectedForm(s, true);
-  renderList();
-  renderMapMarkers();
-
-  const activeCard = document.querySelector(`.site-card[data-oid="${oid}"]`);
-  if (activeCard) activeCard.scrollIntoView({ block: "nearest", behavior: "smooth" });
+  const listEl = document.getElementById("siteList");
+  const prevCard = prevOid != null ? listEl.querySelector(`.site-card[data-oid="${prevOid}"]`) : null;
+  if (prevCard) prevCard.classList.remove("active");
+  const nextCard = listEl.querySelector(`.site-card[data-oid="${oid}"]`);
+  if (nextCard) {
+    nextCard.classList.add("active");
+    nextCard.scrollIntoView({ block: "nearest", behavior: "smooth" });
+  }
+  updateMarkerSelection(prevOid, oid);
 
   if (fly) {
     map.flyTo([s.lat, s.lon], Math.max(map.getZoom(), 16), { duration: 0.55 });
@@ -756,7 +793,7 @@ function renderSelectedForm(s, loadAtts) {
 }
 
 function renderRatingPresets() {
-  const existing = [...new Set(D.map(s => (s.commercial_rating || "").trim()).filter(Boolean))];
+  const existing = [...new Set(D.map(s => (s.commercial_rating || "").trim()).filter(r => r && r.length <= 28))];
   const allPresets = [...new Set([...PRESET_RATINGS, ...existing])];
   const cur = document.getElementById("inRating").value.trim();
   const box = document.getElementById("ratingPresets");
@@ -800,7 +837,7 @@ function updateAttachmentModeUI() {
     badge.textContent = "(غير مفعّل في ArcGIS)";
     badge.style.color = "#f0bf5a";
     warn.style.display = "block";
-    warn.innerHTML = `خاصية المرفقات (<b>Attachments</b>) غير مفعّلة حالياً على هذه الطبقة في ArcGIS Online. فعّل خيار <b>Enable Attachments</b> من إعدادات الطبقة ليتفعل الرفع والعرض هنا تلقائياً بدون أي تعديل.`;
+    warn.innerHTML = `المرفقات غير مفعّلة حالياً على الطبقة (فعّل <b>Enable Attachments</b> في ArcGIS لتظهر تلقائياً).`;
     drop.style.display = "none";
   }
 }
@@ -812,12 +849,14 @@ async function loadAttachmentsForSite(oid) {
   box.innerHTML = `<span style="color:var(--muted)">جاري جلب المرفقات...</span>`;
   try {
     const data = await esriGet("/queryAttachments", { objectIds: String(oid) });
+    if (selectedOid !== oid) return;
     const infos = (data.attachmentGroups && data.attachmentGroups[0] && data.attachmentGroups[0].attachmentInfos) || [];
     if (!infos.length) {
       box.innerHTML = `<span style="color:var(--muted)">لا توجد مرفقات محفوظة لهذا الموقع.</span>`;
       return;
     }
     const token = await getEsriToken(false);
+    if (selectedOid !== oid) return;
     box.innerHTML = infos.map(a => {
       const url = `${LAYER_URL}/${oid}/attachments/${a.id}${token ? `?token=${encodeURIComponent(token)}` : ""}`;
       return `<div class="att-item">
@@ -838,7 +877,9 @@ async function loadAttachmentsForSite(oid) {
       };
     });
   } catch (err) {
-    box.innerHTML = `<span style="color:var(--r)">تعذّر تحميل المرفقات: ${esc(err.message)}</span>`;
+    if (selectedOid === oid) {
+      box.innerHTML = `<span style="color:var(--r)">تعذّر تحميل المرفقات: ${esc(err.message)}</span>`;
+    }
   }
 }
 
@@ -880,9 +921,16 @@ async function saveCurrentSite(moveToNextPending = false) {
     return;
   }
 
+  if (!rating && !notes && !hasEntry(s) && !(hasAttachments && queuedFiles.length)) {
+    showFeedback("err", "الرجاء اختيار التقييم التجاري أو كتابة ملاحظات قبل الحفظ.");
+    return;
+  }
+
+  const nextOidBeforeSave = moveToNextPending ? findNextPendingOid(s.oid) : null;
   const b1 = document.getElementById("btnSave"), b2 = document.getElementById("btnSaveNext");
   b1.disabled = true; b2.disabled = true;
-  b1.textContent = "⏳ جاري الحفظ في الطبقة...";
+  if (moveToNextPending) b2.textContent = "⏳ جاري الحفظ والانتقال...";
+  else b1.textContent = "⏳ جاري الحفظ في الطبقة...";
   hideFeedback();
 
   try {
@@ -920,9 +968,13 @@ async function saveCurrentSite(moveToNextPending = false) {
     setDirty(false);
 
     const idxSess = sessionEdits.findIndex(x => x.oid === s.oid);
-    const entryRec = { oid: s.oid, code: s.code, rating, notes };
-    if (idxSess >= 0) sessionEdits[idxSess] = entryRec;
-    else sessionEdits.push(entryRec);
+    if (rating || notes || uploadedCount) {
+      const entryRec = { oid: s.oid, code: s.code, rating, notes };
+      if (idxSess >= 0) sessionEdits[idxSess] = entryRec;
+      else sessionEdits.push(entryRec);
+    } else if (idxSess >= 0) {
+      sessionEdits.splice(idxSess, 1);
+    }
 
     refreshRatingFilter();
     applyFilters();
@@ -937,9 +989,8 @@ async function saveCurrentSite(moveToNextPending = false) {
     showFeedback("ok", `✓ تم حفظ الموقع <b>${esc(s.code)}</b> (${msgParts.join(" · ")}) — إجمالي تعديلات جلستك: <b>${sessionEdits.length}</b>`);
 
     if (moveToNextPending) {
-      const nextOid = findNextPendingOid(s.oid);
-      if (nextOid) {
-        selectSite(nextOid, true);
+      if (nextOidBeforeSave) {
+        selectSite(nextOidBeforeSave, true);
         showFeedback("ok", `✓ تم حفظ <b>${esc(s.code)}</b> والانتقال للموقع التالي المتبقي.`);
         document.getElementById("inRating").focus();
       } else {
@@ -952,10 +1003,20 @@ async function saveCurrentSite(moveToNextPending = false) {
   } finally {
     b1.disabled = false; b2.disabled = false;
     b1.textContent = "💾 حفظ البيانات في الطبقة";
+    b2.textContent = "💾⏭ حفظ والانتقال للموقع التالي المتبقي";
   }
 }
 
 /* ---------- Events ---------- */
+document.getElementById("siteList").addEventListener("click", e => {
+  const card = e.target.closest(".site-card");
+  if (card) selectSite(Number(card.dataset.oid), true);
+});
+document.getElementById("kSessionCard").onclick = () => {
+  if (!sessionEdits.length && !F.sessionOnly) return;
+  F.sessionOnly = !F.sessionOnly;
+  applyFilters();
+};
 document.querySelectorAll("#statusSeg button").forEach(b => b.onclick = () => {
   document.querySelectorAll("#statusSeg button").forEach(x => x.classList.remove("on"));
   b.classList.add("on");
@@ -970,9 +1031,14 @@ document.querySelectorAll("#catSeg button").forEach(b => b.onclick = () => {
 });
 document.getElementById("fType").onchange = e => { F.type = e.target.value; applyFilters(); };
 document.getElementById("fRating").onchange = e => { F.rating = e.target.value; applyFilters(); };
-document.getElementById("fSearch").oninput = e => { F.q = e.target.value.trim(); applyFilters(); };
+let _searchTimer = null;
+document.getElementById("fSearch").oninput = e => {
+  const val = e.target.value.trim();
+  clearTimeout(_searchTimer);
+  _searchTimer = setTimeout(() => { F.q = val; applyFilters(); }, 110);
+};
 document.getElementById("resetFilters").onclick = () => {
-  F.status = "all"; F.cat = "all"; F.type = ""; F.rating = ""; F.q = "";
+  F.status = "all"; F.cat = "all"; F.type = ""; F.rating = ""; F.q = ""; F.sessionOnly = false;
   document.querySelectorAll("#statusSeg button").forEach((x, i) => x.classList.toggle("on", i === 0));
   document.querySelectorAll("#catSeg button").forEach((x, i) => x.classList.toggle("on", i === 0));
   document.getElementById("fType").value = "";
@@ -994,8 +1060,15 @@ document.getElementById("jumpFirstPending").onclick = () => {
 
 document.getElementById("btnSave").onclick = () => saveCurrentSite(false);
 document.getElementById("btnSaveNext").onclick = () => saveCurrentSite(true);
-document.getElementById("refreshBtn").onclick = () => loadLayer(true);
+document.getElementById("refreshBtn").onclick = () => {
+  if (isDirty && !confirm("لديك تعديلات لم يتم حفظها. هل تريد إعادة التحميل من السيرفر وفقدانها؟")) return;
+  setDirty(false);
+  loadLayer(true);
+};
 document.getElementById("loaderRetry").onclick = () => loadLayer(true);
+window.addEventListener("beforeunload", e => {
+  if (isDirty) { e.preventDefault(); e.returnValue = ""; }
+});
 
 const dz = document.getElementById("attDropzone");
 const attInput = document.getElementById("attInput");
