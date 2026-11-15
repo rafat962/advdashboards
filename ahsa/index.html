@@ -120,9 +120,8 @@ const COL={"أعمدة إنارة":"#2a7fba","لوحات موبي":"#0f6e5c","ل
 let TYPES=Object.keys(COL),cat="all",on=new Set(TYPES),q="",didInitialFit=false;
 const esc=v=>v==null||v===""?"":String(v).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const map=L.map('map',{zoomSnap:.25,zoomDelta:.5}).setView([25.40,49.60],12);
-const osm=L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{maxZoom:19,attribution:'© OpenStreetMap © CARTO'});
 const sat=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:19,attribution:'Esri'});
-const lbl=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}',{maxZoom:19,attribution:'Esri'});sat.addTo(map);lbl.addTo(map);L.control.layers({"قمر صناعي":sat,"خريطة داكنة":osm},{"أسماء الأماكن":lbl}).addTo(map);
+const lbl=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}',{maxZoom:19,attribution:'Esri'});sat.addTo(map);lbl.addTo(map);L.control.layers({"قمر صناعي":sat},{"أسماء الأماكن":lbl}).addTo(map);
 const GLY={
 "أعمدة إنارة":'<path d="M12 5v14M9 19h6M12 5h4" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/><circle cx="16.5" cy="7" r="1.6" fill="#fff"/>',
 "لوحات موبي":'<rect x="8.5" y="5" width="7" height="11" rx="1" fill="#fff"/><path d="M12 16v3" stroke="#fff" stroke-width="1.8"/>',
