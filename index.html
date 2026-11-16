@@ -4384,7 +4384,14 @@ html{scrollbar-color:#d4a853 #0a1430;scrollbar-width:auto}
                     window._pkey.set(pk);
                     const mr = document.querySelector(".hero-map .mright"), mb = document.querySelector(".hero-map .mapbox");
                     const fit = () => {
-                        const el = window._pkey.el;
+                        const el = window._pkey.el, mp = document.getElementById("map");
+                        if (window.innerWidth <= 900 && mp) {
+                            if (el.previousElementSibling !== mp) mp.insertAdjacentElement("afterend", el);
+                            Object.assign(el.style, { position: "relative", left: "auto", right: "auto", bottom: "auto", top: "auto", width: "auto", maxWidth: "none", margin: "8px 12px 12px", boxSizing: "border-box", zIndex: 2 });
+                            return;
+                        }
+                        if (el.parentElement !== mb) { mb.appendChild(el); }
+                        Object.assign(el.style, { position: "absolute", margin: "0", bottom: "16px", top: "auto" });
                         if (mr && mb && getComputedStyle(mr).display !== "none") {
                             const r = mr.getBoundingClientRect(), b = mb.getBoundingClientRect();
                             const rt = Math.max(8, Math.round(b.right - r.right)), w = Math.min(Math.round(r.width), Math.round(b.width) - rt - 8);
@@ -5029,7 +5036,12 @@ function vNav(u){const f=document.getElementById("vFrame");try{f.contentWindow.l
     e.preventDefault();show(a.getAttribute("href"),a.dataset.title,true);
   });
   document.getElementById("vClose").onclick=()=>hide(false);
-  document.addEventListener("keydown",e=>{if(e.key==="Escape"&&open)hide(false);});
+  const innerModal=()=>{try{const w=F.contentWindow,d=w.document;
+    if(typeof w.isAttModalOpen==="function"&&w.isAttModalOpen()){w.closeAttachmentModal();return true;}
+    const m=[...d.querySelectorAll('#attModal,#att-modal,.modal,#dmodal,#fmModal,#lb,#modal,.att-modal-overlay,[role="dialog"]')].find(x=>{const cs=w.getComputedStyle(x);return cs.display!=="none"&&cs.visibility!=="hidden"&&x.getBoundingClientRect().width>0;});
+    if(m){const x=m.querySelector('[data-close],[data-mclose],.att-modal-close,.fmx,#dclose,#lbx,.x,.close');if(x){x.click();}else{m.classList.remove("on","open");m.style.display="none";}return true;}
+  }catch(err){}return false;};
+  document.addEventListener("keydown",e=>{if(e.key==="Escape"&&open){if(innerModal())return;hide(false);}});
   window.addEventListener("popstate",e=>{
     if(e.state&&e.state.dash&&location.hash==="#view"){show(e.state.dash,e.state.title,false);}else hide(true);
   });
